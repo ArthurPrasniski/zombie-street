@@ -1,0 +1,79 @@
+{
+  "box": 100,
+  "worldBox": 80,
+  "footX": 50,
+  "footY": 94,
+  "frame": 160,
+  "bigFrame": { "brute": 288, "riot": 288, "hulk": 288, "general": 288, "yeti": 288, "colossus": 288, "director": 288, "padChief": 288, "commander": 288, "lunarWorm": 288, "marsTitan": 288, "queen": 288 },
+  "worldPx": 2,
+  "views": { "front": 0, "back": 1, "side": 2 },
+  "troops": {
+    "idle": { "start": 0, "count": 8 },
+    "attack": { "start": 8, "count": 8 },
+    "down": { "start": 16, "count": 1 },
+    "walk": { "start": 17, "count": 8 }
+  },
+  "zombies": {
+    "walk": { "start": 0, "count": 8 },
+    "attack": { "start": 8, "count": 8 },
+    "death": { "start": 16, "count": 5 }
+  },
+  "muzzle": {
+    "sniper": {
+      "front": [54, 86],
+      "back": [66, 32],
+      "side": [90, 67]
+    },
+    "sheriff": {
+      "front": [54, 76],
+      "back": [65, 49],
+      "side": [71, 67]
+    },
+    "shotgun": {
+      "front": [54, 83],
+      "back": [66, 38],
+      "side": [84, 67]
+    },
+    "chainsaw": {
+      "front": [53, 88],
+      "back": [78, 53],
+      "side": [80, 89]
+    },
+    "soldier": {
+      "front": [54, 85],
+      "back": [66, 33],
+      "side": [89, 67]
+    },
+    "firefighter": {
+      "front": [54, 83],
+      "back": [66, 38],
+      "side": [84, 67]
+    },
+    "crossbow": {
+      "front": [54, 81],
+      "back": [66, 41],
+      "side": [80, 67]
+    },
+    "turret": {
+      "front": [50, 67],
+      "back": [50, 40],
+      "side": [71, 53]
+    },
+    "laser": {
+      "front": [54, 84],
+      "back": [66, 35],
+      "side": [87, 67]
+    },
+    "drone": {
+      "front": [50, 59],
+      "back": [50, 48],
+      "side": [59, 55]
+    }
+  },
+  "base": {
+    "width": 600,
+    "height": 135,
+    "frames": 4,
+    "y": 765
+  }
+}
