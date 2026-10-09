@@ -24,6 +24,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         // `||`: a variável vazia (copiada do .env.example) também usa o ID de teste
         androidAppId: env.ADMOB_ANDROID_APP_ID || ADMOB_TEST_ANDROID,
         iosAppId: env.ADMOB_IOS_APP_ID || ADMOB_TEST_IOS,
+        // SDK padrão, explícito de propósito: sem essa opção, o Gradle da biblioteca (17.2) acha o
+        // app.json sem a chave "react-native-google-mobile-ads", grava a propriedade com o nome
+        // errado (googleAdsJson) e o build Android quebra lendo googleMobileAdsJson.
+        androidSdk: 'classic',
         userTrackingUsageDescription: 'Usamos isso para mostrar propagandas mais relevantes quando você escolhe assistir uma para ganhar prêmios.',
       },
     ],

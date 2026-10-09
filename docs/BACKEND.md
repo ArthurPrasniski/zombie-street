@@ -172,9 +172,9 @@ transação da loja), `subscriptions` (passe ativo até `expires_at`), `pass_pro
      de conta de serviço (FCM V1) é enviada com `eas credentials`.
    - Opcional: "Enhanced security" no expo.dev e o token em `EXPO_ACCESS_TOKEN` no servidor.
    - `ADMIN_TOKEN` no servidor para mandar novidades.
-7. **Hospedagem**: um serviço com Docker (Railway, Render, Fly…) e Postgres gerenciado.
-   Imagem: `docker build -f apps/server/Dockerfile .` (da raiz). Variáveis do
-   `apps/server/.env.example`.
+7. **Hospedagem**: qualquer serviço com Docker e Postgres. Na VPS com Dokploy, siga o
+   docs/DEPLOY.md (banco, aplicação, variáveis, domínio e as variáveis do app). Imagem:
+   `docker build -f apps/server/Dockerfile .` (da raiz). Variáveis do `apps/server/.env.example`.
 8. **Lojas**: política de privacidade publicada, "Excluir conta" (já no app), formulário
    de segurança de dados (Play) e privacidade (App Store) declarando login, compras e
    anúncios.

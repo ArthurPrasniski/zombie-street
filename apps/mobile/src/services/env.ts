@@ -9,8 +9,8 @@ export const IS_EXPO_GO = Constants.executionEnvironment === ExecutionEnvironmen
 /** Serviços nativos de verdade (development build ou build da loja). */
 export const NATIVE = !IS_EXPO_GO && Platform.OS !== 'web';
 
-/** Endereço do servidor; sem ele, o jogo fica só offline (sem conta, loja nem passe). */
-export const API_URL = process.env.EXPO_PUBLIC_API_URL ?? null;
+/** Endereço do servidor (sem a barra do fim); sem ele, o jogo fica só offline (sem conta, loja nem passe). */
+export const API_URL = process.env.EXPO_PUBLIC_API_URL?.replace(/\/+$/, '') || null;
 
 export const KEYS = {
   googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '',

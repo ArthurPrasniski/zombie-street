@@ -24,5 +24,5 @@ npm run art          # recria as imagens (apps/mobile/assets/images)
 npm run sfx          # recria os sons
 ```
 
-Mais detalhes em [docs/ARQUITETURA.md](docs/ARQUITETURA.md) e
-[docs/BACKEND.md](docs/BACKEND.md).
+Mais detalhes em [docs/ARQUITETURA.md](docs/ARQUITETURA.md), [docs/BACKEND.md](docs/BACKEND.md)
+e, para colocar o servidor no ar (Dokploy), [docs/DEPLOY.md](docs/DEPLOY.md).
