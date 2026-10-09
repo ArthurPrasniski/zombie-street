@@ -36,14 +36,17 @@ interface ProgressActions {
   recordSurvival(waves: number): boolean;
   /** Marca a mensagem de rádio como ouvida. */
   hearRadio(id: string): void;
+  /** Troca o progresso inteiro (save da nuvem), já conferido pela migração. */
+  replace(saved: unknown, version: number): void;
 }
 
 export type ProgressStore = rules.Progress & ProgressActions;
 
 // Suba a versão e trate em migrateProgress sempre que o formato salvo mudar.
-const STORAGE_VERSION = 8;
+export const STORAGE_VERSION = 8;
 
-function pick(state: rules.Progress): rules.Progress {
+/** Só os campos salvos do progresso (sem as ações). */
+export function pick(state: rules.Progress): rules.Progress {
   const { cash, cardLevels, deck, currentStage, highestCleared, stars, truck, seen, kills, cardsPlayed, claimed, survivalBest, radioHeard } = state;
   return { cash, cardLevels, deck, currentStage, highestCleared, stars, truck, seen, kills, cardsPlayed, claimed, survivalBest, radioHeard };
 }
@@ -79,6 +82,7 @@ export const useProgressStore = create<ProgressStore>()(
           apply((p) => recordMatch(p, record));
         },
         recordSurvival: (waves: number) => apply((p) => rules.recordSurvival(p, waves)),
+        replace: (saved: unknown, version: number) => set(migrateProgress(saved, version)),
         hearRadio: (id: string) => {
           apply((p) => hearRadio(p, id));
         },

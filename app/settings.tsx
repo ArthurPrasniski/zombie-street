@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { pt } from '@/i18n/pt';
 import { useProgressStore } from '@/state/progressStore';
 import { type SettingKey, useSettingsStore } from '@/state/settingsStore';
+import { AccountPanel } from '@/ui/account/AccountPanel';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { Chunky } from '@/ui/kit/Chunky';
@@ -51,7 +52,11 @@ export default function SettingsScreen() {
       <SafeAreaView style={styles.content} edges={['top', 'left', 'right', 'bottom']}>
         <ScreenHeader title={pt.settings.title} />
         <ScrollView contentContainerStyle={styles.list}>
-          <AppText variant="eyebrow">{pt.settings.game}</AppText>
+          <AppText variant="eyebrow">{pt.account.section}</AppText>
+          <AccountPanel />
+          <AppText variant="eyebrow" style={styles.section}>
+            {pt.settings.game}
+          </AppText>
           {TOGGLES.map(({ key, label, hint }) => (
             <Row key={key} label={label} hint={hint}>
               <Toggle value={settings[key]} onChange={(value) => settings.setSetting(key, value)} label={label} />

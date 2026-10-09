@@ -1,5 +1,6 @@
 import type { Speaker } from '@/game/data/story';
 import { RADIO_MESSAGES } from '@/i18n/ptRadio';
+import { ptShop } from '@/i18n/ptShop';
 import type { TroopRole } from '@/game/types';
 
 const roles: Record<TroopRole, string> = { ranged: 'Atirador', melee: 'Corpo a corpo', structure: 'Construção', support: 'Suporte' };
@@ -365,12 +366,14 @@ export const pt = {
     starBonus: (n: number) => (n === 1 ? 'Bônus de 1 estrela nova' : `Bônus de ${n} estrelas novas`),
     next: 'Próxima fase',
     retry: 'Repetir',
+    exit: 'Sair',
   },
   stageFailed: {
     eyebrow: 'Derrota',
     title: 'A base caiu!',
     earned: 'Dinheiro ganho',
     retry: 'Repetir',
-    stages: 'Fases',
+    exit: 'Sair',
   },
+  ...ptShop,
 };

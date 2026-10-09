@@ -1,6 +1,7 @@
 # GDD — Zombie Road (MVP, versão com cartas)
 
-Status: aprovado e implementado (etapas C1 a C29). Substitui a versão idle
+Status: aprovado; implementado até C29, com C30 a C34 (conta, loja, passe e propagandas)
+prontas no app e no servidor, faltando só as contas externas (docs/BACKEND.md). Substitui a versão idle
 (heróis fixos que atacam sozinhos). Os números são ponto de partida; ajuste
 em src/game/data.
 
@@ -59,8 +60,8 @@ dinheiro ganho subindo o nível das cartas e monta o deck.
 O "custo" das cartas é sangue (combina com o tema). Nas versões antigas do GDD
 ele se chamava energia; no código é `blood` (BLOOD, world.blood).
 
-- Começa em 5, máximo 10.
-- Recarga: +1 a cada 2,5 s. Na onda 5, a recarga dobra (+1 a cada 1,25 s).
+- Começa em 1, máximo 10.
+- Recarga: +1 a cada 3,5 s. Na onda do chefe, a recarga dobra (+1 a cada 1,75 s).
 - A recarga continua entre as ondas e congela com o jogo pausado.
 - O sangue aparece como barra vermelha de 10 segmentos, com uma gota e o valor
   inteiro ao lado. Nas cartas, o custo vem numa gota de sangue.
@@ -98,7 +99,7 @@ do tiro, até o alcance.
 - Corpo a corpo: anda até o zumbi mais próximo a até 350 de distância e
   ataca quando chega no alcance. Sem zumbi a 350, fica parada.
 - As tropas que andam não saem da área das tropas: abaixo da faixa do topo da
-  arena (cerca, cemitério, arame; y a partir de 110), acima do muro e nas
+  arena (só avançam até y = 330, uns 140 à frente da linha de mobilização), acima do muro e nas
   laterais da zona de mobilização. Zumbis que elas não alcançam de dentro da
   área (ainda no alto da arena) não viram alvo; na borda, a tropa desliza ao
   longo dela até alcançar o zumbi.
@@ -188,16 +189,16 @@ do tiro, até o alcance.
   dano x (1 + 0.04·(s-1)), recompensa x (1 + 0.08·(s-1)) (arredondada para
   baixo). Fase 10 ~2,7x de vida, fase 30 ~7x, fase 50 ~11,7x.
 - Simulação com o jogador simples e o deck inicial (todas as cartas no mesmo
-  nível, com os zumbis especiais e o limite de tropas): fases 1 a 8 no nível 1,
-  11 no 2, 12 no 3, 15 no 6, 20 no 9, 25 no 10, 30 no 12, 35 no 15, 40 no 16,
-  45 no 18, 50 no 20. As cartas novas, a Oficina e as evoluções dão folga.
+  nível; sangue começando em 1 e +1 a cada 3,5 s): fases 1 a 8 no nível 1, 11 no
+  3, 15 no 9, 20 no 11, 30 no 16, 40 no 24, 50 no 27. As cartas novas, a Oficina e
+  as evoluções dão folga.
 
 ## 9. Fim da partida e recompensas
 
 - Vitória: dinheiro dos zumbis mortos + bônus de 50 x s. Modal "Fase s
-  vencida!" com o total, botões "Próxima fase" e "Repetir".
+  vencida!" com o total, botões "Sair", "Repetir" e "Próxima fase".
 - Derrota (base em 0): modal "A base caiu!" com o dinheiro ganho, botões
-  "Repetir" e "Fases".
+  "Sair" e "Repetir".
 - Sair pelo "< Voltar" no meio da fase pede confirmação e conta como
   derrota (o dinheiro já ganho fica).
 
@@ -354,6 +355,11 @@ Tudo gerado por código.
 | C27 | Armas do Ato 3: Criogenia, Escudo de Energia, Buraco Negro, Canhão Orbital; teto 50 (18.4) |
 | C28 | Fronteira infinita: planetas gerados com tema, ameaça e chefe mutado (18.5) |
 | C29 | Balanceamento da campanha inteira e da Fronteira (18.6) |
+| C30 | Servidor próprio, conta (convidado, Google, Apple), development build (docs/BACKEND.md) |
+| C31 | Save na nuvem com conflito entre aparelhos e excluir conta |
+| C32 | Loja: gemas (RevenueCat) e moedas por gemas (seção 19) |
+| C33 | Passe de Batalha mensal (seção 19.3) |
+| C34 | Propaganda premiada "Assista e dobre" (AdMob, seção 19.4) |
 
 ## 17. Expansão (C13 a C22)
 
@@ -381,7 +387,7 @@ Os números ficam em src/game/data; aqui vão as regras e os valores iniciais.
   próprios:
   - Lataria: vida da base +15% por nível (máximo 20).
   - Metralhadora: dano da base x 1,12 por nível (máximo 20).
-  - Tanque de sangue: sangue inicial +1 por nível (máximo 5, de 5 a 10).
+  - Tanque de sangue: sangue inicial +1 por nível (máximo 5, de 1 a 6).
 - Custo da peça: base x crescimento^(nível - 1). Lataria e Metralhadora:
   60 x 1,25; Tanque: 400 x 2.
 
@@ -556,8 +562,59 @@ de cada uma).
   patamar da fase 50); a vida e o dano seguem a curva da seção 8, e o desafio
   vem dos zumbis novos, dos eventos e, na Fronteira, das ameaças e mutações.
 - Simulação com o jogador simples e o deck inicial (todas as cartas no mesmo
-  nível): fase 50 no nível 20, 80 no 22, 90 no 30, 120 no 32, 145 no 37 e 200
-  no 42. As armas novas e a Oficina dão folga.
+  nível, sangue começando em 1 e +1 a cada 3,5 s): fase 80 no nível 32, 90 no 34,
+  100 no 36, 110 no 37. A fase 120 (Rainha Colmeia) não foi vencida pelo bot nem no
+  nível 60: o chefe final precisa de ajuste com o sangue mais lento.
 - Cosmonauta e Comandante passam por cima das tropas; o Casulo e o evento
   Esporos aparecem no meio do campo; Xenos vêm em trios (por isso Marte tem 40%
   e a Colmeia 50% da quantidade normal do zumbi do mundo).
+
+## 19. Loja e monetização (C30 a C34)
+
+Arquitetura e configuração em docs/BACKEND.md. Números em shared/catalog.ts e
+shared/pass.ts (os mesmos no app e no servidor).
+
+### 19.1 Gemas (moeda premium)
+
+- Compradas com dinheiro (App Store / Google Play via RevenueCat) e guardadas só no
+  servidor: valem em todos os aparelhos da conta. Preços sugeridos (definidos nas lojas):
+
+| Produto | Gemas | Preço sugerido |
+| ------- | ----- | -------------- |
+| zr_gems_80 | 80 | R$ 4,90 |
+| zr_gems_500 | 500 (Popular) | R$ 24,90 |
+| zr_gems_1200 | 1.200 | R$ 49,90 |
+| zr_gems_2600 | 2.600 | R$ 99,90 |
+| zr_gems_7000 | 7.000 (Melhor valor) | R$ 249,90 |
+
+### 19.2 Moedas por gemas
+
+- Saco (60 gemas), Baú (300, +10%) e Cofre (1.200, +20%). Cada gema vale
+  25 x (1 + 0,08 x (fase - 1)) moedas, a mesma curva da recompensa dos zumbis: o pacote
+  continua útil em qualquer ponto do jogo (60 gemas ≈ uma fase vencida).
+
+### 19.3 Passe de Batalha (assinatura mensal)
+
+- Assinatura `zr_pass_monthly` (sugestão: R$ 19,90/mês). Temporada = mês do calendário
+  (UTC), 30 níveis de 100 XP, trilha grátis e premium; o premium libera também os níveis
+  já alcançados antes de assinar.
+- XP: vitória 40 + 10 por estrela, derrota 15, Sobrevivência 5 por onda (até 100).
+  Teto de 600 XP por dia.
+- Prêmios: moedas em quase todos os níveis (grátis 100 + 10 x nível, premium 250 + 10 x
+  nível, crescendo com a fase do jogador); gemas na grátis nos níveis 10, 20 e 30 (15
+  cada) e na premium nos 5, 10, 15, 20 e 25 (40 cada) e 30 (150): 350 gemas por mês.
+
+### 19.4 Propagandas
+
+- Só premiadas e só quando o jogador escolhe: no fim de cada partida (vitória, derrota
+  ou Sobrevivência), "Assistir e dobrar (+N)" soma de novo as moedas da partida. Até 10
+  vezes por dia. Nenhuma propaganda forçada.
+- Antes da primeira, o pedido de consentimento (LGPD/GDPR e o aviso de rastreamento do
+  iOS), pelo SDK do AdMob.
+
+### 19.5 Conta
+
+- Todo aparelho começa como convidado (sem pedir nada). "Entrar com Google" (e "Entrar
+  com Apple" no iOS, exigência da Apple) salva na nuvem e leva o progresso para outros
+  aparelhos. Ajustes: entrar, sair, excluir conta e quando foi o último save na nuvem.
+

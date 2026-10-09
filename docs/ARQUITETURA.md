@@ -18,7 +18,9 @@ app/                      Expo Router (pilha, sem abas)
   bestiary.tsx            Bestiário: zumbis vistos, ficha e abates
   diary.tsx               Diário: mensagens de rádio já ouvidas, por ato
   achievements.tsx        Conquistas: marcos e resgate
-  settings.tsx            Ajustes: som, vibração, números de dano, apagar progresso
+  settings.tsx            Ajustes: conta (Google/Apple, sair, excluir), som, vibração, números de dano
+  shop.tsx                Loja: Passe em destaque, gemas (dinheiro) e moedas (gemas)
+  pass.tsx                Passe de Batalha: temporada, assinatura e as duas trilhas
 src/
   game/
     types.ts              tipos compartilhados (fonte da verdade)
@@ -73,6 +75,7 @@ src/
     stars.ts, truck.ts, bestiary.ts, achievements.ts, radio.ts   regras de cada recurso
     progressStore.ts      persistido (v8)
     settingsStore.ts      Ajustes, persistidos à parte
+    accountStore.ts       conta, gemas, passe e estado da nuvem (cópia do servidor)
     sessionStore.ts       efêmero: modo, onda, mão, sangue, base, campo cheio, pausa
   hooks/
     useGameLoop.ts        liga motor, snapshot, stores, comandos e AppState
@@ -80,6 +83,9 @@ src/
     useCombatLayout.ts    tamanhos do campo e da mão
     useMatchRecord.ts     vistos, abates e cartas jogadas, gravados no fim da partida
     useCardDrag.ts        arrastar cartas da mão para o campo
+    useAccountSync.ts     sessão, propagandas e save na nuvem (no layout raiz)
+  services/               conta e loja (docs/BACKEND.md): env, api, session, cloudSave, economy,
+                          purchases (RevenueCat), ads (AdMob), signIn, rewards; simulados no Expo Go
   audio/
     sfx.ts                sons (expo-audio) e vibração por evento e por recompensa
   ui/
@@ -91,10 +97,14 @@ src/
     combat/               CardHand, BloodBar, CombatHud, CombatModals, WaveBanner, EventBanner
     modals/               GameModal, StageClear, StageFailed, SurvivalOver
     garage/, bestiary/, achievements/, radio/   linhas, fichas e o modal do rádio
+    shop/, pass/, account/   cartões da loja, níveis do passe, painel da conta e conflito do save
+    GemLabel, FakeAdOverlay (propaganda de teste do Expo Go), modals/DoubleCoinsButton
     worldInfo.ts          nome, detalhes e tom de cor do mundo (planetas da Fronteira)
     CashLabel, ScreenHeader, StageTile, StarRow, WorldBanner, theme.ts
   i18n/pt.ts, ptRadio.ts  textos (as falas do rádio à parte)
   utils/format.ts         1.2K, 3.4M, 1.150, tempo
+shared/                   contrato comum app/servidor: catálogo da loja, regras do passe, API
+server/                   servidor próprio (docs/BACKEND.md)
 assets/                   imagens, fontes e sons (gerados pelos scripts)
 scripts/art/              arte vetorial (CanvasKit): `npm run art` recria assets/images;
                           `npm run art -- ui sprites=spitter` gera só as partes pedidas;

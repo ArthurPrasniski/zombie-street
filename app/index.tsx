@@ -9,6 +9,7 @@ import { globalStage, stageLabel, STAGES_PER_WORLD, WORLDS, worldOf } from '@/ga
 import { pt } from '@/i18n/pt';
 import { useProgressStore } from '@/state/progressStore';
 import { CashPill } from '@/ui/CashLabel';
+import { GemPill } from '@/ui/GemLabel';
 import { HazardButton } from '@/ui/home/HazardButton';
 import { HomeShortcuts } from '@/ui/home/HomeShortcuts';
 import { RouteProgress } from '@/ui/home/RouteProgress';
@@ -66,7 +67,10 @@ export default function HomeScreen() {
                 <IconButton icon={ICONS.gear} label={pt.settings.open} onPress={() => router.push('/settings')} size={42} />
                 <Pill icon={ICONS.check} label={pt.home.km(highestCleared, STAGE_COUNT)} />
               </View>
-              <CashPill />
+              <View style={styles.topLeft}>
+                <GemPill />
+                <CashPill />
+              </View>
             </View>
             <Image
               source={LOGO}

@@ -4,7 +4,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
+import { useAccountSync } from '@/hooks/useAccountSync';
 import { useProgressHydrated } from '@/state/progressStore';
+import { SaveConflictModal } from '@/ui/account/SaveConflictModal';
+import { FakeAdOverlay } from '@/ui/FakeAdOverlay';
 import { colors, fonts } from '@/ui/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +28,8 @@ export default function RootLayout() {
   const hydrated = useProgressHydrated();
   // Se a fonte falhar, segue com a do sistema em vez de travar na splash.
   const ready = (fontsLoaded || fontError !== null) && hydrated;
+  // Conta, save na nuvem e propagandas (docs/BACKEND.md)
+  useAccountSync(ready);
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -35,6 +40,8 @@ export default function RootLayout() {
     <ThemeProvider value={theme}>
       <StatusBar style="light" hidden />
       <Stack screenOptions={{ headerShown: false, animation: 'fade', contentStyle: { backgroundColor: colors.background } }} />
+      <SaveConflictModal />
+      <FakeAdOverlay />
     </ThemeProvider>
   );
 }

@@ -8,6 +8,8 @@ import { useProgressStore } from '@/state/progressStore';
 import { outroFor } from '@/game/data/story';
 import { isHeard } from '@/state/radio';
 import { newStars } from '@/state/stars';
+import { addPassXp } from '@/services/economy';
+import { stageXp, survivalXp } from '@shared/pass';
 
 /** Fim da partida, para os modais: vitória (com estrelas), derrota ou fim da Sobrevivência. */
 export type CombatResult =
@@ -58,16 +60,19 @@ export function useCombatEvents() {
         // Fechamento do mundo no rádio (só na primeira vez que vence o chefe)
         const outro = outroFor(event.stage);
         setResult({ kind: 'cleared', stage: event.stage, cash: event.cashEarned, stars: event.stars, bonus, newStars: gained, outro: outro && !isHeard(progress, outro) ? outro : null });
+        addPassXp(stageXp(true, event.stars));
         return;
       }
       case 'stageFailed':
         match.flush();
         setResult({ kind: 'failed', cash: event.cashEarned });
+        addPassXp(stageXp(false, 0));
         return;
       case 'survivalOver': {
         match.flush();
         const record = progress.recordSurvival(event.waves);
         setResult({ kind: 'survival', waves: event.waves, cash: event.cashEarned, best: Math.max(progress.survivalBest, event.waves), record });
+        addPassXp(survivalXp(event.waves));
         return;
       }
     }

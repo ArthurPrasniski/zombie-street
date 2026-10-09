@@ -13,7 +13,7 @@ export const DEPLOY_ZONE = { minX: 40, maxX: 560, minY: 470, maxY: 760 };
  * Onde as tropas que andam (Serra, Rex) podem ir: abaixo da faixa do topo das arenas (cerca,
  * cemitério, arame, onde os zumbis surgem), acima do muro e nas laterais da zona de mobilização.
  */
-export const TROOP_FIELD = { minX: DEPLOY_ZONE.minX, maxX: DEPLOY_ZONE.maxX, minY: 110, maxY: DEPLOY_ZONE.maxY };
+export const TROOP_FIELD = { minX: DEPLOY_ZONE.minX, maxX: DEPLOY_ZONE.maxX, minY: 330, maxY: DEPLOY_ZONE.maxY };
 /** Onde as armas especiais podem cair (o campo todo acima da base). */
 export const SPELL_ZONE = { minX: 0, maxX: WORLD_WIDTH, minY: 0, maxY: 780 };
 
@@ -21,7 +21,7 @@ export const SPELL_ZONE = { minX: 0, maxX: WORLD_WIDTH, minY: 0, maxY: 780 };
 export const BASE = { hp: 1000, damage: 8, attackInterval: 0.7, range: 300, frontY: 780, gunX: 300, gunY: 800 };
 
 // Seção 5: sangue
-export const BLOOD = { start: 5, max: 10, perSecond: 1 / 2.5, bossWaveMultiplier: 2 };
+export const BLOOD = { start: 1, max: 10, perSecond: 1 / 3.5, bossWaveMultiplier: 2 };
 
 // Seções 6 e 7: comportamento das unidades
 /** Tropa congelada (golpe do Congelado/Abominável): ataca e anda mais devagar. */

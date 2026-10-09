@@ -9,7 +9,9 @@ import { pt } from '@/i18n/pt';
 import { canUpgradeCard } from '@/state/progress';
 import { canUpgradeTruck } from '@/state/truck';
 import { claimableCount } from '@/state/achievements';
+import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
+import { countClaimable } from '@/ui/pass/claimable';
 import { CardView } from '@/ui/cards/CardView';
 import { HomeTile } from '@/ui/home/HomeTile';
 import { SurvivalCard } from '@/ui/home/SurvivalCard';
@@ -29,6 +31,9 @@ export function HomeShortcuts() {
   const upgradable = deck.filter((card) => canUpgradeCard(progress, card)).length;
   const parts = TRUCK_PART_IDS.filter((part) => canUpgradeTruck(progress, part)).length;
   const claims = claimableCount(progress);
+  // Prêmios do passe esperando resgate (aviso no atalho)
+  const pass = useAccountStore((s) => s.pass);
+  const claimablePass = pass ? countClaimable(pass) : 0;
   return (
     <View style={styles.list}>
       <View style={styles.row}>
@@ -69,6 +74,25 @@ export function HomeShortcuts() {
             </AppText>
           </Card>
         </View>
+      </View>
+      <View style={styles.row}>
+        <HomeTile
+          icon={ICONS.bag}
+          title={pt.shop.open}
+          subtitle={pt.shop.subtitle}
+          color={colors.featured}
+          subtitleColor="#ffe2d6"
+          onPress={() => router.push('/shop')}
+        />
+        <HomeTile
+          icon={ICONS.crown}
+          title={pt.pass.open}
+          subtitle={pass ? pt.pass.tier(pass.tier) : pt.pass.title}
+          color="#5a2a8a"
+          subtitleColor="#e0c8ff"
+          badge={claimablePass}
+          onPress={() => router.push('/pass')}
+        />
       </View>
       <SurvivalCard />
       <View style={styles.row}>

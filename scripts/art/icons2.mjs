@@ -86,4 +86,43 @@ function evo(c) {
   for (const y of [22, 46]) line(c, [[30, y + 22], [50, y], [70, y + 22]], '#ffffff', 8);
 }
 
-export const MORE_UI_ICONS = { star, starEmpty, gear, up, wrench, shield, bullet, book, trophy, hourglass, evo, radio };
+// ---------- Loja e Passe (GDD seção 19) ----------
+
+/** Gema: lapidação em losango verde-água com facetas claras. */
+function gem(c) {
+  const body = poly([[50, 8], [86, 34], [50, 94], [14, 34]]);
+  toon(c, body, '#2fd8c0', { line: 4.5, depth: 7, light: '#c8fff4' });
+  fill(c, poly([[50, 8], [86, 34], [50, 40], [14, 34]]), '#8ff4e4', 0.85);
+  fill(c, poly([[14, 34], [50, 40], [50, 94]]), '#1fa38f', 0.5);
+  line(c, [[14, 34], [50, 40], [86, 34]], darken('#2fd8c0', 0.45), 2);
+  line(c, [[50, 40], [50, 92]], darken('#2fd8c0', 0.45), 2);
+  fill(c, poly([[36, 18], [46, 14], [40, 28]]), '#ffffff', 0.85);
+}
+
+/** Coroa dourada do Passe. */
+function crown(c) {
+  toon(c, poly([[12, 78], [16, 30], [36, 52], [50, 18], [64, 52], [84, 30], [88, 78]]), GOLD, { line: 4.5, depth: 6, light: '#fff1a8' });
+  toon(c, rrect(10, 72, 80, 16, 5), darken(GOLD, 0.15), { line: 4, depth: 3 });
+  for (const [x, col] of [[30, '#d8263a'], [50, '#2fd8c0'], [70, '#d8263a']]) toon(c, circle(x, 80, 4.6), col, { line: 2, depth: 1, light: '#ffffff' });
+  for (const [x, y] of [[16, 30], [50, 18], [84, 30]]) toon(c, circle(x, y, 5), GOLD, { line: 2.4, depth: 1 });
+}
+
+/** Sacola da Loja com uma moeda. */
+function bag(c) {
+  toon(c, capsule([36, 30], [36, 14], 4), '#7a5a3a', { line: 3, depth: 1 });
+  toon(c, capsule([64, 30], [64, 14], 4), '#7a5a3a', { line: 3, depth: 1 });
+  line(c, [[36, 14], [50, 6], [64, 14]], '#7a5a3a', 6);
+  toon(c, poly([[18, 30], [82, 30], [90, 90], [10, 90]]), '#e8572a', { line: 4.5, depth: 7, light: '#ffb08a' });
+  toon(c, circle(50, 60, 15), GOLD, { line: 3, depth: 3, light: '#fff1a8' });
+  fill(c, rrect(46, 51, 8, 18, 4), '#fff1a8');
+}
+
+/** TV com o botão de play: assistir propaganda. */
+function tv(c) {
+  line(c, [[38, 6], [50, 20], [62, 6]], OUTLINE, 6);
+  toon(c, rrect(8, 20, 84, 66, 14), '#3a3f52', { line: 4.5, depth: 6 });
+  toon(c, rrect(16, 28, 68, 50, 9), '#2fae9a', { line: 3, depth: 2, light: '#9ff4e4' });
+  toon(c, poly([[42, 38], [64, 53], [42, 68]]), '#ffffff', { line: 3, depth: 1, noLight: true });
+}
+
+export const MORE_UI_ICONS = { star, starEmpty, gear, up, wrench, shield, bullet, book, trophy, hourglass, evo, radio, gem, crown, bag, tv };

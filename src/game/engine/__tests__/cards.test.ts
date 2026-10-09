@@ -16,6 +16,7 @@ describe('deck e mão', () => {
 
   it('a carta jogada vai para o fim da fila e a próxima entra no mesmo espaço', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     giveCard(world, 'dog');
     const next = world.queue[0];
     expect(playCard(world, 0, 300, 600)).toBe(true);
@@ -28,9 +29,10 @@ describe('deck e mão', () => {
 describe('jogar carta', () => {
   it('tropa: desconta o sangue e surge onde foi solta, com fumaça', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     giveCard(world, 'sheriff');
     playCard(world, 0, 250, 600);
-    expect(world.blood).toBe(BLOOD.start - TROOPS.sheriff.cost);
+    expect(world.blood).toBe(BLOOD.max - TROOPS.sheriff.cost);
     expect(world.troops).toHaveLength(1);
     expect(world.troops[0]).toMatchObject({ x: 250, y: 600, hp: 120 });
     expect(world.effects.some((e) => e.kind === 'smoke')).toBe(true);
@@ -47,6 +49,7 @@ describe('jogar carta', () => {
 
   it('tropa fora da zona de mobilização (metade de baixo) é recusada; arma especial vale no campo todo', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     giveCard(world, 'sheriff');
     expect(playCard(world, 0, 300, 300)).toBe(false);
     giveCard(world, 'grenade');
@@ -68,6 +71,7 @@ describe('jogar carta', () => {
 
   it('não joga depois que a partida acabou', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     world.phase = 'failed';
     giveCard(world, 'dog');
     expect(playCard(world, 0, 300, 600)).toBe(false);
@@ -87,6 +91,7 @@ describe('jogar carta', () => {
 describe('armas especiais', () => {
   it('granada: 70 de dano só a até 110 do ponto', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     const near = addZombie(world, 'brute', 300, 400);
     const far = addZombie(world, 'brute', 300, 520);
     giveCard(world, 'grenade');
@@ -99,6 +104,7 @@ describe('armas especiais', () => {
 
   it('kit médico cura 50% da vida máxima sem passar do máximo', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     const hurt = addTroop(world, 'chainsaw', 300, 600);
     const almost = addTroop(world, 'sheriff', 320, 600);
     hurt.hp = 50;
@@ -111,6 +117,7 @@ describe('armas especiais', () => {
 
   it('molotov queima 25/s por 4 s e some', () => {
     const world = fightingWorld();
+    world.blood = BLOOD.max;
     const zombie = addZombie(world, 'brute', 300, 300);
     zombie.def = { ...zombie.def, speed: 0 };
     giveCard(world, 'molotov');

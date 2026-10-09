@@ -32,7 +32,16 @@ das cartas com o dinheiro ganho.
   progresso salvo
 - expo-audio (sons) e expo-haptics (vibração)
 - Jest: testes do motor e das fórmulas
-- Tudo precisa rodar no Expo Go. Instale dependências com `npx expo install`.
+- Conta, loja e propagandas (docs/BACKEND.md): @react-native-google-signin/google-signin,
+  expo-apple-authentication, react-native-purchases (RevenueCat),
+  react-native-google-mobile-ads (AdMob), expo-secure-store, expo-crypto e expo-dev-client.
+  Eles só funcionam no development build (EAS); no Expo Go, src/services usa versões
+  simuladas, e o jogo precisa continuar abrindo no Expo Go. Nunca importe esses módulos
+  no topo de um arquivo: só com `require` dentro dos serviços, depois de checar `NATIVE`.
+- Servidor próprio em server/ (Node 24, Fastify, Postgres; PGlite no desenvolvimento e
+  nos testes) e o contrato comum em shared/. Os números da loja e do passe moram em
+  shared/. Rode `cd server && npm test` quando mexer no servidor.
+- Instale dependências do app com `npx expo install`.
 
 ## Arquitetura (obrigatória)
 

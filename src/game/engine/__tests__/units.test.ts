@@ -14,11 +14,11 @@ const run = (world: World, seconds: number) => {
 };
 
 describe('sangue', () => {
-  it('começa em 5, ganha 1 a cada 2,5 s e para em 10', () => {
+  it('começa em 1, ganha 1 a cada 3,5 s e para em 10', () => {
     const world = fightingWorld();
-    expect(world.blood).toBe(BLOOD.start);
-    blood(world, 2.5);
-    expect(world.blood).toBeCloseTo(6);
+    expect(world.blood).toBe(1);
+    blood(world, 3.5);
+    expect(world.blood).toBeCloseTo(2);
     blood(world, 100);
     expect(world.blood).toBe(10);
   });
@@ -27,7 +27,7 @@ describe('sangue', () => {
     const world = fightingWorld();
     world.waveIndex = 4;
     world.blood = 0;
-    blood(world, 2.5);
+    blood(world, 3.5);
     expect(world.blood).toBeCloseTo(2);
   });
 });
@@ -88,7 +88,7 @@ describe('tropas', () => {
 
   it('corpo a corpo não sai da área das tropas: desliza na borda de cima até alcançar', () => {
     const world = fightingWorld();
-    const serra = addTroop(world, 'chainsaw', 100, 200);
+    const serra = addTroop(world, 'chainsaw', 100, 450);
     const zombie = addZombie(world, 'brute', 400, TROOP_FIELD.minY - 40);
     zombie.def = { ...zombie.def, speed: 0 };
     let highest = serra.y;
@@ -114,9 +114,9 @@ describe('tropas', () => {
 
   it('não persegue zumbi no alto da arena (fora de alcance); vai no que alcança, mesmo mais longe', () => {
     const world = fightingWorld();
-    const dog = addTroop(world, 'dog', 300, 260);
-    const above = addZombie(world, 'brute', 300, 40);
-    const below = addZombie(world, 'brute', 300, 520);
+    const dog = addTroop(world, 'dog', 300, 400);
+    const above = addZombie(world, 'brute', 300, 200);
+    const below = addZombie(world, 'brute', 300, 650);
     above.def = { ...above.def, speed: 0 };
     below.def = { ...below.def, speed: 0 };
     movement(world, 1 / 60);

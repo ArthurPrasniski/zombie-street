@@ -5,6 +5,7 @@ import Animated, { ZoomIn } from 'react-native-reanimated';
 import { rewardHaptic } from '@/audio/sfx';
 import { pt } from '@/i18n/pt';
 import { CountUp } from '@/ui/fx/CountUp';
+import { DoubleCoinsButton } from '@/ui/modals/DoubleCoinsButton';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { GameModal } from '@/ui/modals/GameModal';
@@ -54,6 +55,7 @@ export function SurvivalOverModal({ waves, best, record, cashEarned, onRetry, on
       )}
       <AppText color={colors.textMuted}>{pt.survival.earned}</AppText>
       <CountUp amount={cashEarned} size={32} delay={STAMP_MS + 300} />
+      <DoubleCoinsButton coins={cashEarned} />
     </GameModal>
   );
 }

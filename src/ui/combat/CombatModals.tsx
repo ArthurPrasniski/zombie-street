@@ -40,10 +40,11 @@ export function CombatModals({ result, radio, onRadioClose, paused, confirmExit,
         hasNext
         onNext={onNext}
         onRetry={onRetry}
+        onExit={back}
       />
     );
   }
-  if (result?.kind === 'failed') return <StageFailedModal cashEarned={result.cash} onRetry={onRetry} onStages={back} />;
+  if (result?.kind === 'failed') return <StageFailedModal cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
   if (result?.kind === 'survival') {
     return <SurvivalOverModal waves={result.waves} best={result.best} record={result.record} cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
   }

@@ -21,4 +21,8 @@ export const ICONS = {
   hourglass: require('@/assets/images/ui/hourglass.png'),
   evo: require('@/assets/images/ui/evo.png'),
   radio: require('@/assets/images/ui/radio.png'),
+  gem: require('@/assets/images/ui/gem.png'),
+  crown: require('@/assets/images/ui/crown.png'),
+  bag: require('@/assets/images/ui/bag.png'),
+  tv: require('@/assets/images/ui/tv.png'),
 };

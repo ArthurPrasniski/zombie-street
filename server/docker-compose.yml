@@ -1,0 +1,16 @@
+# Postgres local, para testar o servidor com o mesmo banco da produção (opcional: sem ele, o
+# servidor usa o PGlite). Uso: docker compose -f server/docker-compose.yml up -d
+# e DATABASE_URL=postgres://zombie:zombie@localhost:5432/zombieroad
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: zombie
+      POSTGRES_PASSWORD: zombie
+      POSTGRES_DB: zombieroad
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
