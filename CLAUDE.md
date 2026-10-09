@@ -17,6 +17,20 @@ armas especiais pagas com sangue, que se acumula sozinho. A história vai da est
 segue sem fim na Fronteira (planetas gerados). Entre as fases, monta o deck de 8 e sobe o nível
 das cartas com o dinheiro ganho.
 
+## Repositório (monorepo, npm workspaces)
+
+```
+apps/mobile/       o jogo (Expo): app/, src/, assets/, scripts/  -> @zombie-road/mobile
+apps/server/       o servidor (Fastify + Postgres)                -> @zombie-road/server
+packages/shared/   contrato comum app/servidor (loja, passe, API) -> @zombie-road/shared
+docs/              GDD, arquitetura e backend
+```
+
+Os caminhos do app citados abaixo (src/..., app/..., assets/..., scripts/...) são relativos
+a apps/mobile. Um `npm install` na raiz instala tudo (um package-lock.json só). Atalhos da
+raiz: `npm run start` (Expo), `npm run server`, `npm test` e `npm run typecheck` (todos os
+pacotes), `npm run lint`, `npm run art`, `npm run art:brand` e `npm run sfx`.
+
 ## Stack (não troque nem adicione bibliotecas sem perguntar)
 
 - Node 24 (fixado em `.nvmrc`; rode `nvm use` antes de qualquer comando).
@@ -31,6 +45,8 @@ das cartas com o dinheiro ganho.
 - zustand + middleware persist com @react-native-async-storage/async-storage:
   progresso salvo
 - expo-audio (sons) e expo-haptics (vibração)
+- expo-notifications: avisos locais e remotos (GDD seção 20), carregado só por
+  src/services/push/notifications.ts (com `require`: no Expo Go do Android ele pode recusar)
 - Jest: testes do motor e das fórmulas
 - Conta, loja e propagandas (docs/BACKEND.md): @react-native-google-signin/google-signin,
   expo-apple-authentication, react-native-purchases (RevenueCat),
@@ -38,10 +54,12 @@ das cartas com o dinheiro ganho.
   Eles só funcionam no development build (EAS); no Expo Go, src/services usa versões
   simuladas, e o jogo precisa continuar abrindo no Expo Go. Nunca importe esses módulos
   no topo de um arquivo: só com `require` dentro dos serviços, depois de checar `NATIVE`.
-- Servidor próprio em server/ (Node 24, Fastify, Postgres; PGlite no desenvolvimento e
-  nos testes) e o contrato comum em shared/. Os números da loja e do passe moram em
-  shared/. Rode `cd server && npm test` quando mexer no servidor.
-- Instale dependências do app com `npx expo install`.
+- Servidor próprio em apps/server (Node 24, Fastify, Postgres; PGlite no desenvolvimento e
+  nos testes) e o contrato comum em packages/shared, importado como
+  `@zombie-road/shared/catalog` (também `/pass`, `/push` e `/api`) pelo app e pelo servidor. Os
+  números da loja e do passe moram lá. Servidor e shared testam com `node:test`.
+- Instale dependências do app com `npx expo install` dentro de apps/mobile; as do
+  servidor com `npm install <lib> -w @zombie-road/server` na raiz.
 
 ## Arquitetura (obrigatória)
 
@@ -93,7 +111,7 @@ das cartas com o dinheiro ganho.
 - Antes de codar, liste em até 5 linhas o que vai criar ou alterar.
 - Implemente só o escopo da etapa. Ideias extras vão numa lista "Sugestões"
   no fim da resposta.
-- Rode `npx tsc --noEmit` e `npm test` antes de terminar. Os dois precisam
-  passar.
+- Rode `npm run typecheck` e `npm test` na raiz antes de terminar (cobrem app,
+  servidor e shared). Os dois precisam passar.
 - Termine com: arquivos alterados, como testar no celular e o checklist dos
   critérios de aceite marcado.

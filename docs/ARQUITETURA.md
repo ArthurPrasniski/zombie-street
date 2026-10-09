@@ -7,6 +7,22 @@ tela envia um comando.
 
 ## Pastas
 
+Monorepo com npm workspaces (um `npm install` e um package-lock.json na raiz):
+
+```
+apps/mobile/              o jogo (Expo): @zombie-road/mobile, árvore abaixo
+apps/server/              servidor próprio (docs/BACKEND.md): @zombie-road/server
+packages/shared/          contrato comum app/servidor: @zombie-road/shared
+  src/catalog.ts          catálogo da loja (gemas, moedas, produto do passe)
+  src/pass.ts             regras puras do Passe de Batalha
+  src/api.ts              corpos de pedido e resposta da API
+  src/push.ts             notificações: tipos, categorias, janela do dia e a tela de cada aviso
+docs/                     GDD, arquitetura e backend
+```
+
+O app e o servidor importam `@zombie-road/shared/catalog` (também `/pass`, `/push` e `/api`): o pacote
+exporta o TypeScript direto, sem build. Dentro de apps/mobile:
+
 ```
 app/                      Expo Router (pilha, sem abas)
   _layout.tsx             layout raiz: fontes (Lilita One e Rubik) e progresso salvo
@@ -84,8 +100,11 @@ src/
     useMatchRecord.ts     vistos, abates e cartas jogadas, gravados no fim da partida
     useCardDrag.ts        arrastar cartas da mão para o campo
     useAccountSync.ts     sessão, propagandas e save na nuvem (no layout raiz)
+    usePushSync.ts        notificações: cancela/agenda os avisos locais, abre a tela do aviso
   services/               conta e loja (docs/BACKEND.md): env, api, session, cloudSave, economy,
                           purchases (RevenueCat), ads (AdMob), signIn, rewards; simulados no Expo Go
+    push/                 notificações (GDD seção 20): plan.ts (plano puro dos avisos locais),
+                          local.ts (agenda), notifications.ts (módulo e permissão), remote.ts (token)
   audio/
     sfx.ts                sons (expo-audio) e vibração por evento e por recompensa
   ui/
@@ -98,13 +117,13 @@ src/
     modals/               GameModal, StageClear, StageFailed, SurvivalOver
     garage/, bestiary/, achievements/, radio/   linhas, fichas e o modal do rádio
     shop/, pass/, account/   cartões da loja, níveis do passe, painel da conta e conflito do save
+    push/                 PushPrompt (pergunta na Home) e PushSettings (seção de Ajustes)
+    SettingRow.tsx        linha de Ajustes (nome, explicação e controle)
     GemLabel, FakeAdOverlay (propaganda de teste do Expo Go), modals/DoubleCoinsButton
     worldInfo.ts          nome, detalhes e tom de cor do mundo (planetas da Fronteira)
     CashLabel, ScreenHeader, StageTile, StarRow, WorldBanner, theme.ts
-  i18n/pt.ts, ptRadio.ts  textos (as falas do rádio à parte)
+  i18n/pt.ts, ptRadio.ts  textos (as falas do rádio à parte; ptShop e ptPush: loja e avisos)
   utils/format.ts         1.2K, 3.4M, 1.150, tempo
-shared/                   contrato comum app/servidor: catálogo da loja, regras do passe, API
-server/                   servidor próprio (docs/BACKEND.md)
 assets/                   imagens, fontes e sons (gerados pelos scripts)
 scripts/art/              arte vetorial (CanvasKit): `npm run art` recria assets/images;
                           `npm run art -- ui sprites=spitter` gera só as partes pedidas;

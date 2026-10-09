@@ -1,77 +1,24 @@
 {
-  "name": "estrada-zumbi",
-  "main": "expo-router/entry",
-  "version": "1.0.0",
-  "dependencies": {
-    "@react-native-async-storage/async-storage": "2.2.0",
-    "@react-native-google-signin/google-signin": "^16.1.5",
-    "@shopify/react-native-skia": "2.6.2",
-    "expo": "~57.0.27",
-    "expo-apple-authentication": "~57.0.2",
-    "expo-asset": "~57.0.19",
-    "expo-audio": "~57.0.5",
-    "expo-constants": "~57.0.21",
-    "expo-crypto": "~57.0.3",
-    "expo-dev-client": "~57.0.19",
-    "expo-font": "~57.0.4",
-    "expo-haptics": "~57.0.3",
-    "expo-linking": "~57.0.12",
-    "expo-router": "~57.0.25",
-    "expo-secure-store": "~57.0.4",
-    "expo-splash-screen": "~57.0.9",
-    "expo-status-bar": "~57.0.1",
-    "expo-system-ui": "~57.0.4",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-native": "0.86.3",
-    "react-native-gesture-handler": "~2.32.0",
-    "react-native-google-mobile-ads": "^17.2.0",
-    "react-native-purchases": "^10.12.2",
-    "react-native-reanimated": "4.5.1",
-    "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "~4.26.0",
-    "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.10.1",
-    "zustand": "^5.0.15"
-  },
-  "devDependencies": {
-    "@types/jest": "29.5.14",
-    "@types/react": "~19.2.2",
-    "eslint": "^9.0.0",
-    "eslint-config-expo": "~57.0.2",
-    "jest": "~29.7.0",
-    "jest-expo": "~57.0.5",
-    "typescript": "~6.0.3"
-  },
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "lint": "expo lint",
-    "test": "jest",
-    "art": "node scripts/art/build.mjs",
-    "art:brand": "node scripts/art/buildBrand.mjs",
-    "sfx": "node scripts/audio/build.mjs"
-  },
+  "name": "zombie-road",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
     "node": ">=24 <25"
   },
-  "jest": {
-    "preset": "jest-expo",
-    "moduleNameMapper": {
-      "^@shared/(.*)$": "<rootDir>/shared/$1",
-      "^@/assets/(.*)$": "<rootDir>/assets/$1",
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "testMatch": [
-      "**/__tests__/**/*.test.ts?(x)"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "<rootDir>/server/"
-    ]
+  "scripts": {
+    "start": "npm run start -w @zombie-road/mobile --",
+    "ios": "npm run ios -w @zombie-road/mobile --",
+    "android": "npm run android -w @zombie-road/mobile --",
+    "server": "npm run dev -w @zombie-road/server",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint -w @zombie-road/mobile",
+    "art": "npm run art -w @zombie-road/mobile --",
+    "art:brand": "npm run art:brand -w @zombie-road/mobile --",
+    "sfx": "npm run sfx -w @zombie-road/mobile --"
   },
   "allowScripts": {
     "@shopify/react-native-skia@2.6.2": true

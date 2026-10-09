@@ -1,0 +1,12 @@
+# Contexto do `docker build -f apps/server/Dockerfile .` (da raiz): só o que a imagem do servidor usa.
+**/node_modules
+**/.data
+**/.env
+**/.env.*
+.git
+.expo
+docs
+*.pdf
+# Do app, a imagem só precisa do package.json (o lockfile é do monorepo inteiro)
+apps/mobile/*
+!apps/mobile/package.json

@@ -571,8 +571,8 @@ de cada uma).
 
 ## 19. Loja e monetização (C30 a C34)
 
-Arquitetura e configuração em docs/BACKEND.md. Números em shared/catalog.ts e
-shared/pass.ts (os mesmos no app e no servidor).
+Arquitetura e configuração em docs/BACKEND.md. Números em packages/shared/src/catalog.ts e
+pass.ts (os mesmos no app e no servidor).
 
 ### 19.1 Gemas (moeda premium)
 
@@ -618,3 +618,55 @@ shared/pass.ts (os mesmos no app e no servidor).
   com Apple" no iOS, exigência da Apple) salva na nuvem e leva o progresso para outros
   aparelhos. Ajustes: entrar, sair, excluir conta e quando foi o último save na nuvem.
 
+
+## 20. Notificações (C35)
+
+Avisos curtos, na voz do rádio quando dá, para trazer o jogador de volta sem incomodar. Regras
+para todos: no máximo 1 por dia, só entre 9h e 21h (hora do jogador) e cada categoria liga e
+desliga em Ajustes. Contrato comum em packages/shared/src/push.ts.
+
+### 20.1 Locais (o aparelho agenda ao sair do app)
+
+Ao abrir o app, tudo o que estava agendado é cancelado; ao sair, o plano é refeito com o
+progresso de agora. Funcionam offline e no Expo Go (iOS).
+
+| Aviso | Quando | Categoria | Abre |
+| ----- | ------ | --------- | ---- |
+| Volta para a estrada (Xerife, Mira, Doutora Vega) | 1, 3 e 7 dias depois, no mesmo horário | Progresso | Home |
+| Melhoria disponível | dia 1 ou 2, se já der para subir uma carta do deck | Progresso | Deck |
+| Prêmios no Passe | dia 1 ou 2, se houver prêmio para resgatar | Passe | Passe |
+| Fim da temporada | 3 dias e 1 dia antes do fim, às 18h, se houver prêmio pendente | Passe | Passe |
+| Novo dia | dia 1 ou 2, se hoje bateu o teto de XP do Passe ou usou os 10 dobros | Progresso | Home |
+| Recorde da Sobrevivência | no lugar do aviso do dia 3, para quem já jogou | Progresso | Home |
+
+Quando dois avisos caem no mesmo dia, fica o mais importante: fim da temporada, depois os do
+dia 1 e 2 (prêmios, melhoria, novo dia) e por último a volta para a estrada. Horário fora da
+janela é puxado para dentro do mesmo dia (madrugada vira 9h, noite vira 20h). Nada na primeira
+hora depois de sair.
+
+### 20.2 Remotos (o servidor manda)
+
+Só no development build e no aparelho de verdade (o Expo Go e o simulador não recebem push
+remoto). O app registra o token da Expo, o fuso e as categorias; o servidor guarda os avisos
+numa fila e manda pelo serviço de push da Expo.
+
+| Aviso | Quando | Categoria | Abre |
+| ----- | ------ | --------- | ---- |
+| Compra confirmada (gemas ou Passe) | o webhook do RevenueCat confirmou; chega na hora, a qualquer hora | Compras | Loja |
+| Problema no pagamento do Passe | a loja não conseguiu renovar (BILLING_ISSUE) | Compras | Passe |
+| Nova temporada | nos 3 primeiros dias do mês, uma vez | Passe | Passe |
+| Novidades | enviado pela administração (`POST /admin/push`) | Novidades | a rota escolhida |
+
+A compra confirmada é urgente: ignora a janela e o limite diário. Os outros esperam a janela do
+dia e pelo menos 20 h desde o último aviso remoto da conta; depois de 3 dias sem conseguir sair,
+o aviso vence. Com o app aberto, a compra confirmada não aparece (a loja já mostra) e só atualiza
+as gemas.
+
+### 20.3 Permissão e Ajustes
+
+- Depois da primeira vitória, a Home pergunta uma vez ("Avisos do rádio": "Quero avisos" ou
+  "Agora não"); só quem aceita vê o pedido do sistema.
+- Ajustes, seção Notificações: sem permissão, um botão "Ativar" (ou "Abrir", que leva aos
+  ajustes do celular quando o sistema já recusou); com permissão, as chaves Progresso, Passe de
+  Batalha, Compras e Novidades.
+- Android: canal "Avisos do rádio" e ícone branco do zumbi (scripts/art/brand.mjs).
