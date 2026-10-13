@@ -60,6 +60,8 @@ export const ptShop = {
     deleteConfirm: 'Excluir',
     cancel: 'Cancelar',
     synced: (when: string) => `Salvo na nuvem ${when}`,
+    justNow: 'agora',
+    minutesAgo: (minutes: number) => `há ${minutes} min`,
     notSynced: 'Ainda não salvo na nuvem',
     offline: 'Sem conexão com o servidor: o jogo segue offline.',
     failed: 'Não foi possível entrar. Tente de novo.',

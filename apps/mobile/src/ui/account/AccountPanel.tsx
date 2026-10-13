@@ -4,8 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import type { Provider } from '@zombie-road/shared/api';
 
 import { t as pt } from '@/i18n';
-import { localeTag } from '@/i18n/locale';
-import { formatDate } from '@/utils/format';
+import { formatSyncTime } from '@/utils/syncTime';
 import { IS_EXPO_GO } from '@/services/env';
 import { deleteAccount, signIn, signOut } from '@/services/session';
 import { appleAvailable } from '@/services/signIn';
@@ -17,14 +16,6 @@ import { GameModal } from '@/ui/modals/GameModal';
 import { colors, radius } from '@/ui/theme';
 
 const NAMES: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
-
-/** Quando foi o último envio para a nuvem, em palavras curtas. */
-function when(iso: string | null): string | null {
-  if (!iso) return null;
-  const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
-  if (minutes < 60) return new Intl.RelativeTimeFormat(localeTag, { numeric: 'auto', style: 'short' }).format(-Math.max(0, minutes), 'minute');
-  return formatDate(iso);
-}
 
 /** Conta nos Ajustes: status, entrar com Google/Apple, sair e excluir a conta. */
 export function AccountPanel() {
@@ -50,7 +41,7 @@ export function AccountPanel() {
   };
 
   const providers = user?.providers ?? [];
-  const synced = when(cloud.syncedAt);
+  const synced = formatSyncTime(cloud.syncedAt);
   return (
     <Chunky face={colors.surfaceHigh} edge="#16131a" radius={radius.m} depth={4} gloss={0.05} faceStyle={styles.panel}>
       <AppText variant="label">{providers.length ? pt.account.linked(providers.map((p) => NAMES[p]).join(' e ')) : pt.account.guest}</AppText>

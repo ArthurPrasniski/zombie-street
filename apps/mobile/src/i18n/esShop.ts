@@ -60,6 +60,8 @@ export const esShop = {
     deleteConfirm: "Eliminar",
     cancel: "Cancelar",
     synced: (when: string) => `Guardado en la nube ${when}`,
+    justNow: 'ahora',
+    minutesAgo: (minutes: number) => `hace ${minutes} min`,
     notSynced: "Todavía no guardado en la nube",
     offline: "Sin conexión con el servidor: el juego continúa sin conexión.",
     failed: "No se pudo iniciar sesión. Inténtalo de nuevo.",

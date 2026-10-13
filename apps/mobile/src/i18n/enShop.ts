@@ -60,6 +60,8 @@ export const enShop = {
     deleteConfirm: "Delete",
     cancel: "Cancel",
     synced: (when: string) => `Saved to the cloud ${when}`,
+    justNow: 'now',
+    minutesAgo: (minutes: number) => `${minutes} min ago`,
     notSynced: "Not saved to the cloud yet",
     offline: "No server connection: the game continues offline.",
     failed: "Could not sign in. Try again.",
