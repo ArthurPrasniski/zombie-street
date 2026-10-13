@@ -43,6 +43,7 @@ export interface BuyCoinsResult { requestId: string; gems: number; coins: number
 
 export interface PassState {
   season: string;
+  startsAt: string;
   endsAt: string;
   xp: number;
   tier: number;
@@ -62,6 +63,7 @@ export interface ApiError { error: string }
 /** Aparelho que recebe avisos remotos, com o fuso (para a janela do dia) e as categorias ligadas. */
 export interface PushRegister {
   token: string;
+  language?: 'pt' | 'en' | 'es';
   platform: 'ios' | 'android';
   timeZone: string;
   prefs: PushPrefs;

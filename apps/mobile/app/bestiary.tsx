@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ZOMBIES } from '@/game/data/zombies';
 import type { ZombieId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { totalKills, zombieKills } from '@/state/bestiary';
 import { useProgressStore } from '@/state/progressStore';
 import { BESTIARY_ORDER, ZOMBIE_ART } from '@/ui/bestiary/zombieInfo';

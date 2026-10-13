@@ -3,7 +3,9 @@ import { StyleSheet, View } from 'react-native';
 
 import type { Provider } from '@zombie-road/shared/api';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
+import { localeTag } from '@/i18n/locale';
+import { formatDate } from '@/utils/format';
 import { IS_EXPO_GO } from '@/services/env';
 import { deleteAccount, signIn, signOut } from '@/services/session';
 import { appleAvailable } from '@/services/signIn';
@@ -20,10 +22,8 @@ const NAMES: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
 function when(iso: string | null): string | null {
   if (!iso) return null;
   const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
-  if (minutes < 1) return 'agora';
-  if (minutes < 60) return `há ${minutes} min`;
-  const d = new Date(iso);
-  return `em ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+  if (minutes < 60) return new Intl.RelativeTimeFormat(localeTag, { numeric: 'auto', style: 'short' }).format(-Math.max(0, minutes), 'minute');
+  return formatDate(iso);
 }
 
 /** Conta nos Ajustes: status, entrar com Google/Apple, sair e excluir a conta. */

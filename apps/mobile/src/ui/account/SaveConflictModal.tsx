@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { stageLabel } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { resolveConflict } from '@/services/cloudSave';
 import { migrateProgress } from '@/state/migrate';
 import { useAccountStore } from '@/state/accountStore';

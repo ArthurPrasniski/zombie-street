@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { EVOLUTION_LEVELS, evolutionTier } from '@/game/data/evolutions';
 import type { CardId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { evolutionText } from '@/ui/cards/stats';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';

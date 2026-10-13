@@ -18,7 +18,7 @@ import { useCardDrag } from '@/hooks/useCardDrag';
 import { useCombatEvents } from '@/hooks/useCombatEvents';
 import { useCombatLayout } from '@/hooks/useCombatLayout';
 import { type DevOptions, type MatchKind, matchDeck, useGameLoop } from '@/hooks/useGameLoop';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { isHeard } from '@/state/radio';
 import { useSessionStore } from '@/state/sessionStore';

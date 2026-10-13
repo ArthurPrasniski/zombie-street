@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { rewardHaptic } from '@/audio/sfx';
 
 import { baseStats, TRUCK_PARTS, type TruckLevels, type TruckPart } from '@/game/data/truck';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
@@ -11,7 +11,7 @@ import { Chunky } from '@/ui/kit/Chunky';
 import { Segments } from '@/ui/kit/Pill';
 import { Pop } from '@/ui/fx/Pop';
 import { colors, radius } from '@/ui/theme';
-import { formatCash, formatInt } from '@/utils/format';
+import { formatCash, formatDecimal, formatInt } from '@/utils/format';
 
 const PART_ICONS: Record<TruckPart, number> = { hull: ICONS.shield, gun: ICONS.bullet, tank: ICONS.blood };
 
@@ -19,7 +19,7 @@ const PART_ICONS: Record<TruckPart, number> = { hull: ICONS.shield, gun: ICONS.b
 export function statText(part: TruckPart, levels: TruckLevels): string {
   const stats = baseStats(levels);
   if (part === 'hull') return formatInt(stats.hp);
-  if (part === 'gun') return stats.damage.toFixed(1).replace('.', ',');
+  if (part === 'gun') return formatDecimal(stats.damage);
   return `${stats.startBlood}`;
 }
 

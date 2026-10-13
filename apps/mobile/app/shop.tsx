@@ -7,9 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, GEM_PACKS } from '@zombie-road/shared/catalog';
 
 import { stageLabel } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { useProductPrices } from '@/hooks/useProductPrices';
+import { t as pt } from '@/i18n';
 import { buyCoins, buyProduct, refreshEconomy } from '@/services/economy';
-import { productPrices, purchasesAvailable } from '@/services/purchases';
+import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 import { GemPill } from '@/ui/GemLabel';
@@ -22,18 +23,19 @@ import { CoinPackCard, GemPackCard } from '@/ui/shop/ShopCards';
 import { colors, radius } from '@/ui/theme';
 import { formatCash } from '@/utils/format';
 
+const GEM_PRODUCT_IDS = GEM_PACKS.map((pack) => pack.productId);
+
 /** Loja (GDD seção 19): Passe em destaque, gemas por dinheiro e moedas por gemas. */
 export default function ShopScreen() {
   const { user, online, gems } = useAccountStore();
   const stage = useProgressStore((s) => s.highestCleared) + 1;
-  const [prices, setPrices] = useState<Record<string, string>>({});
+  const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(GEM_PRODUCT_IDS);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const connected = user !== null && online;
 
   useEffect(() => {
     refreshEconomy();
-    productPrices().then(setPrices).catch(() => null);
   }, []);
 
   const run = async (task: () => Promise<string | null>) => {
@@ -84,10 +86,16 @@ export default function ShopScreen() {
           <AppText variant="small" color={colors.textMuted}>
             {purchasesAvailable() ? pt.shop.gemsHint : pt.shop.noStore}
           </AppText>
+          {pricesError && (
+            <View style={{ gap: 8 }}>
+              <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
+              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={busy || loading} onPress={retryPrices} />
+            </View>
+          )}
           <View style={styles.grid}>
             {GEM_PACKS.map((pack) => (
               <View key={pack.productId} style={styles.cell}>
-                <GemPackCard pack={pack} price={prices[pack.productId] ?? null} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(pack.productId)} />
+                <GemPackCard pack={pack} price={prices[pack.productId] ?? null} loading={loading} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(pack.productId)} />
               </View>
             ))}
           </View>

@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { FadeOut, ZoomIn } from 'react-native-reanimated';
 
 import type { ScenarioEventId } from '@/game/data/events';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
 import { colors } from '@/ui/theme';

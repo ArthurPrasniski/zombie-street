@@ -15,6 +15,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const env = process.env;
   const plugins: ExpoConfig['plugins'] = [
     ...(config.plugins ?? []),
+    ['expo-localization', { supportedLocales: { ios: ['pt-BR', 'en', 'es'], android: ['pt-BR', 'en', 'es'] } }],
     'expo-apple-authentication',
     // Push no iOS: ambiente "production" só no build da loja (perfil production do EAS)
     ['expo-notifications', { icon: './assets/images/notification-icon.png', color: NOTIFICATION_COLOR, mode: env.EAS_BUILD_PROFILE === 'production' ? 'production' : 'development' }],
@@ -39,7 +40,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...config,
     name: config.name ?? 'Zombie Road',
     slug: config.slug ?? 'estrada-zumbi',
-    ios: { ...config.ios, bundleIdentifier: BUNDLE_ID, usesAppleSignIn: true },
+    ios: { ...config.ios, bundleIdentifier: BUNDLE_ID, usesAppleSignIn: true, infoPlist: { ...config.ios?.infoPlist, CFBundleDevelopmentRegion: 'en' } },
     // Push remoto no Android (FCM): caminho do google-services.json (no EAS, uma variável do tipo arquivo)
     android: { ...config.android, ...(env.GOOGLE_SERVICES_JSON ? { googleServicesFile: env.GOOGLE_SERVICES_JSON } : {}) },
     plugins,

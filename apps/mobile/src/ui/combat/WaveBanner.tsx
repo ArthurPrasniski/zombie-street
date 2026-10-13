@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { SURVIVAL_BOSS_EVERY } from '@/game/data/survival';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useSessionStore } from '@/state/sessionStore';
 import { AppText } from '@/ui/kit/AppText';
 import { colors } from '@/ui/theme';

@@ -358,7 +358,7 @@ Tudo gerado por código.
 | C30 | Servidor próprio, conta (convidado, Google, Apple), development build (docs/BACKEND.md) |
 | C31 | Save na nuvem com conflito entre aparelhos e excluir conta |
 | C32 | Loja: gemas (RevenueCat) e moedas por gemas (seção 19) |
-| C33 | Passe de Batalha mensal (seção 19.3) |
+| C33 | Passe de Batalha por temporada de 90 dias (seção 19.3) |
 | C34 | Propaganda premiada "Assista e dobre" (AdMob, seção 19.4) |
 
 ## 17. Expansão (C13 a C22)
@@ -593,16 +593,19 @@ pass.ts (os mesmos no app e no servidor).
   25 x (1 + 0,08 x (fase - 1)) moedas, a mesma curva da recompensa dos zumbis: o pacote
   continua útil em qualquer ponto do jogo (60 gemas ≈ uma fase vencida).
 
-### 19.3 Passe de Batalha (assinatura mensal)
+### 19.3 Passe de Batalha (compra por temporada)
 
-- Assinatura `zr_pass_monthly` (sugestão: R$ 19,90/mês). Temporada = mês do calendário
-  (UTC), 30 níveis de 100 XP, trilha grátis e premium; o premium libera também os níveis
-  já alcançados antes de assinar.
+- Compra única `zr_pass_season` (sugestão: R$ 19,90 ou US$ 3.99 por temporada), sem renovação
+  automática. Temporadas globais de 90 dias, contadas desde 13/10/2026 às 00:00 UTC.
+  A primeira termina em 11/01/2027 às 00:00 UTC, quando começa a próxima. Comprar no meio
+  do período libera a trilha premium até o encerramento da temporada vigente, incluindo os
+  30 níveis de 100 XP já alcançados. Ao mudar o período, XP e resgates recomeçam e o novo
+  passe precisa ser comprado; os prêmios recebidos continuam na conta.
 - XP: vitória 40 + 10 por estrela, derrota 15, Sobrevivência 5 por onda (até 100).
   Teto de 600 XP por dia.
 - Prêmios: moedas em quase todos os níveis (grátis 100 + 10 x nível, premium 250 + 10 x
   nível, crescendo com a fase do jogador); gemas na grátis nos níveis 10, 20 e 30 (15
-  cada) e na premium nos 5, 10, 15, 20 e 25 (40 cada) e 30 (150): 350 gemas por mês.
+  cada) e na premium nos 5, 10, 15, 20 e 25 (40 cada) e 30 (150): 350 gemas por temporada.
 
 ### 19.4 Propagandas
 
@@ -654,7 +657,7 @@ numa fila e manda pelo serviço de push da Expo.
 | ----- | ------ | --------- | ---- |
 | Compra confirmada (gemas ou Passe) | o webhook do RevenueCat confirmou; chega na hora, a qualquer hora | Compras | Loja |
 | Problema no pagamento do Passe | a loja não conseguiu renovar (BILLING_ISSUE) | Compras | Passe |
-| Nova temporada | nos 3 primeiros dias do mês, uma vez | Passe | Passe |
+| Nova temporada | nos 3 primeiros dias da temporada, uma vez | Passe | Passe |
 | Novidades | enviado pela administração (`POST /admin/push`) | Novidades | a rota escolhida |
 
 A compra confirmada é urgente: ignora a janela e o limite diário. Os outros esperam a janela do

@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { SURVIVAL_UNLOCK } from '@/game/data/survival';
 import { stageLabel } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { isDeckComplete } from '@/state/progress';
 import { useProgressStore } from '@/state/progressStore';
 import { ICONS } from '@/ui/icons';

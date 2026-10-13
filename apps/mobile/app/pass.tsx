@@ -5,9 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 import { canClaim, PASS_TIERS, passReward, type PassTrack, XP_PER_TIER } from '@zombie-road/shared/pass';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
+import { formatDate, formatDateTime } from '@/utils/format';
+import { useProductPrices } from '@/hooks/useProductPrices';
 import { buyProduct, claimPass, refreshEconomy } from '@/services/economy';
-import { productPrices, purchasesAvailable } from '@/services/purchases';
+import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 import { GemPill } from '@/ui/GemLabel';
@@ -20,27 +22,24 @@ import { type CellState, TierRow } from '@/ui/pass/TierRow';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { colors, radius } from '@/ui/theme';
 
-const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 const DAY_MS = 24 * 3600 * 1000;
 const TIERS = Array.from({ length: PASS_TIERS }, (_, i) => i + 1);
+const PASS_PRODUCT_IDS = [PASS_PRODUCT_ID];
 
-const dateBR = (iso: string) => {
-  const d = new Date(iso);
-  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-};
+const dateBR = formatDate;
 
-/** Passe de Batalha (GDD seção 19.3): XP da temporada, assinatura e os 30 níveis com as duas trilhas. */
+/** Passe de Batalha: compra única por temporada de 90 dias e 30 níveis nas duas trilhas. */
 export default function PassScreen() {
   const pass = useAccountStore((s) => s.pass);
   const stage = useProgressStore((s) => s.highestCleared) + 1;
-  const [price, setPrice] = useState<string | null>(null);
+  const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(PASS_PRODUCT_IDS);
+  const price = prices[PASS_PRODUCT_ID];
   const [busy, setBusy] = useState(false);
   // Hora em que a tela abriu (para "termina em N dias")
   const [openedAt] = useState(() => Date.now());
 
   useEffect(() => {
     refreshEconomy();
-    productPrices().then((p) => setPrice(p[PASS_PRODUCT_ID] ?? null)).catch(() => null);
   }, []);
 
   const act = async (task: () => Promise<unknown>) => {
@@ -62,7 +61,8 @@ export default function PassScreen() {
     );
   }
 
-  const month = MONTHS[Number(pass.season.slice(5)) - 1];
+  const start = pass.startsAt ?? `${pass.season.slice(0, 7)}-01T00:00:00Z`;
+  const period = `${dateBR(start)} a ${dateBR(pass.endsAt)}`;
   const days = Math.ceil((new Date(pass.endsAt).getTime() - openedAt) / DAY_MS);
   const inTier = pass.tier >= PASS_TIERS ? XP_PER_TIER : pass.xp % XP_PER_TIER;
   const cell = (tier: number, track: PassTrack): CellState => {
@@ -76,7 +76,7 @@ export default function PassScreen() {
       <View style={styles.headRow}>
         <Image source={ICONS.crown} style={styles.crown} />
         <View style={styles.headTexts}>
-          <AppText variant="heading">{pt.pass.season(month)}</AppText>
+          <AppText variant="heading">{pt.pass.season(period)}</AppText>
           <AppText variant="small" color="#e0c8ff">
             {pt.pass.endsIn(days)}
           </AppText>
@@ -94,7 +94,16 @@ export default function PassScreen() {
           {pt.pass.active(dateBR(pass.premiumUntil))}
         </AppText>
       ) : (
-        <Button label={pt.pass.subscribe(price ?? '…')} disabled={busy || !price || !purchasesAvailable()} onPress={() => act(() => buyProduct(PASS_PRODUCT_ID))} />
+        <View style={{ gap: 8 }}>
+          <AppText variant="small" color={colors.textMuted}>{pt.pass.validity(formatDateTime(pass.endsAt))}</AppText>
+          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || !price || !purchasesAvailable()} onPress={() => act(() => buyProduct(PASS_PRODUCT_ID))} />
+          {pricesError && (
+            <>
+              <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
+              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={busy || loading} onPress={retryPrices} />
+            </>
+          )}
+        </View>
       )}
       <View style={styles.tracks}>
         <AppText variant="eyebrow">{pt.pass.free}</AppText>

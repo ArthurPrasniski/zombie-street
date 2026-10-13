@@ -2,7 +2,7 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TRUCK_PART_IDS } from '@/game/data/truck';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { canUpgradeTruck, nextTruckCost } from '@/state/truck';
 import { PartRow, statText } from '@/ui/garage/PartRow';

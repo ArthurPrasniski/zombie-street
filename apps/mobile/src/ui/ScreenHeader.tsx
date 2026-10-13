@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { CashPill } from '@/ui/CashLabel';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';

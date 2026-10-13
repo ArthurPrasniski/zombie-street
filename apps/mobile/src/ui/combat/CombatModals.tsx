@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import type { CombatResult } from '@/hooks/useCombatEvents';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { GameModal } from '@/ui/modals/GameModal';

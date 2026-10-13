@@ -2,7 +2,8 @@ import { cardPower } from '@/game/data/balance';
 import { CARDS, isTroop } from '@/game/data/cards';
 import { evolutionValue } from '@/game/data/evolutions';
 import type { CardId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
+import { localeTag } from '@/i18n/locale';
 
 export interface CardStat {
   label: string;
@@ -70,7 +71,7 @@ export function cardDescription(card: CardId, level: number): string {
 }
 
 const pct = (ratio: number) => `${Math.round(ratio * 100)}%`;
-const decimal = (n: number) => String(n).replace('.', ',');
+const decimal = (n: number) => new Intl.NumberFormat(localeTag, { maximumFractionDigits: 2 }).format(n);
 
 /** Efeito da evolução da carta no nível dado (GDD seção 17.6), ou null se ainda não evoluiu. */
 export function evolutionText(card: CardId, level: number): string | null {

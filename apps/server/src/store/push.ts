@@ -17,9 +17,9 @@ export interface OutboxMessage extends PushText {
 /** Liga o aparelho à conta (ou move para outra conta, depois de entrar/sair). */
 export async function saveToken(q: Queryable, userId: string, reg: PushRegister, now: Date): Promise<void> {
   await q.query(
-    `insert into push_tokens (token, user_id, platform, time_zone, prefs, updated_at) values ($1, $2, $3, $4, $5, $6)
-     on conflict (token) do update set user_id = $2, platform = $3, time_zone = $4, prefs = $5, updated_at = $6`,
-    [reg.token, userId, reg.platform, reg.timeZone, JSON.stringify(reg.prefs), now.toISOString()],
+    `insert into push_tokens (token, user_id, platform, time_zone, prefs, updated_at, language) values ($1, $2, $3, $4, $5, $6, $7)
+     on conflict (token) do update set user_id = $2, platform = $3, time_zone = $4, prefs = $5, updated_at = $6, language = $7`,
+    [reg.token, userId, reg.platform, reg.timeZone, JSON.stringify(reg.prefs), now.toISOString(), reg.language ?? 'pt'],
   );
 }
 
@@ -30,9 +30,9 @@ export async function removeToken(q: Queryable, userId: string, token: string): 
 /** Põe um aviso na fila de uma conta. false = esse aviso (kind + ref) já estava na fila. */
 export async function enqueue(q: Queryable, userId: string, msg: OutboxMessage, now: Date): Promise<boolean> {
   const rows = await q.query(
-    `insert into push_outbox (user_id, kind, ref, title, body, url, urgent, created_at) values ($1, $2, $3, $4, $5, $6, $7, $8)
+    `insert into push_outbox (user_id, kind, ref, title, body, url, urgent, created_at, localized) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      on conflict do nothing returning id`,
-    [userId, msg.kind, msg.ref, msg.title, msg.body, msg.url ?? PUSH_ROUTE[msg.kind], msg.urgent ?? false, now.toISOString()],
+    [userId, msg.kind, msg.ref, msg.title, msg.body, msg.url ?? PUSH_ROUTE[msg.kind], msg.urgent ?? false, now.toISOString(), JSON.stringify(msg.localized ?? {})],
   );
   return rows.length > 0;
 }
@@ -43,10 +43,10 @@ export async function broadcast(db: Db, key: string, msg: OutboxMessage, now: Da
     const fresh = await q.query('insert into push_broadcasts (key, created_at) values ($1, $2) on conflict do nothing returning key', [key, now.toISOString()]);
     if (fresh.length === 0) return 0;
     const rows = await q.query(
-      `insert into push_outbox (user_id, kind, ref, title, body, url, urgent, created_at)
-       select distinct user_id, $1::text, $2::text, $3::text, $4::text, $5::text, false, $6::timestamptz from push_tokens
+      `insert into push_outbox (user_id, kind, ref, title, body, url, urgent, created_at, localized)
+       select distinct user_id, $1::text, $2::text, $3::text, $4::text, $5::text, false, $6::timestamptz, $7::jsonb from push_tokens
        on conflict do nothing returning id`,
-      [msg.kind, msg.ref, msg.title, msg.body, msg.url ?? PUSH_ROUTE[msg.kind], now.toISOString()],
+      [msg.kind, msg.ref, msg.title, msg.body, msg.url ?? PUSH_ROUTE[msg.kind], now.toISOString(), JSON.stringify(msg.localized ?? {})],
     );
     return rows.length;
   });

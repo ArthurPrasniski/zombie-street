@@ -1,7 +1,6 @@
-// Passe de Batalha no servidor (GDD seção 19.3): XP da temporada com teto diário, assinatura
-// premium (vinda do RevenueCat) e resgate dos prêmios de cada nível, uma vez só.
+// Passe de temporada: XP com teto diário, compra única e resgate de cada prêmio uma vez só.
 import type { ClaimPass, ClaimResult, PassState } from '@zombie-road/shared/api';
-import { acceptXp, canClaim, dayOf, passReward, type PassReward, seasonEnd, seasonOf, tierOf } from '@zombie-road/shared/pass';
+import { acceptXp, canClaim, dayOf, passReward, type PassReward, seasonEnd, seasonOf, seasonStart, tierOf } from '@zombie-road/shared/pass';
 import type { Db, Queryable } from '../db';
 import { HttpError } from '../errors';
 import { getGems, moveGems } from './wallet';
@@ -11,9 +10,14 @@ const EMPTY: Row = { xp: 0, claimed_free: [], claimed_premium: [], xp_day: '', x
 
 /** Passe premium ativo e até quando. */
 export async function premiumUntil(q: Queryable, userId: string, now: Date): Promise<Date | null> {
+  const season = seasonOf(now);
+  const end = seasonEnd(season);
+  const [purchase] = await q.query('select transaction_id from pass_purchases where user_id = $1 and season = $2 and refunded = false limit 1', [userId, season]);
+  if (purchase) return end;
+  // Honra o período já pago de assinaturas antigas, sem estendê-lo à nova temporada.
   const [row] = await q.query<{ expires_at: Date | string }>('select expires_at from subscriptions where user_id = $1', [userId]);
   const until = row ? new Date(row.expires_at) : null;
-  return until && until > now ? until : null;
+  return until && until > now ? new Date(Math.min(until.getTime(), end.getTime())) : null;
 }
 
 async function loadRow(q: Queryable, userId: string, season: string, lock = false): Promise<Row> {
@@ -26,6 +30,7 @@ function toState(season: string, row: Row, until: Date | null, now: Date): PassS
   const today = dayOf(now);
   return {
     season,
+    startsAt: seasonStart(season).toISOString(),
     endsAt: seasonEnd(season).toISOString(),
     xp: row.xp,
     tier: tierOf(row.xp),

@@ -1,9 +1,12 @@
-// Passe de Batalha (GDD seção 19.3): temporada = mês do calendário (UTC), 30 níveis, trilha grátis e
-// premium (assinatura). Regras puras, usadas pelo app e pelo servidor.
+// Passe de Batalha: temporadas globais de 90 dias (UTC), 30 níveis, trilha grátis e premium.
+// A compra única libera apenas a temporada em que foi feita. Regras usadas pelo app e servidor.
 import { progressFactor } from './catalog';
 
 export const PASS_TIERS = 30;
 export const XP_PER_TIER = 100;
+export const PASS_SEASON_DAYS = 90;
+export const PASS_SEASON_ORIGIN = '2026-10-13T00:00:00.000Z';
+const SEASON_MS = PASS_SEASON_DAYS * 24 * 3600 * 1000;
 /** XP máximo por dia (UTC): o XP vem do aparelho, então o teto limita o quanto se pode forçar. */
 export const PASS_DAILY_XP = 600;
 
@@ -13,15 +16,20 @@ export const PASS_XP = { stageClear: 40, perStar: 10, stageFailed: 15, perSurviv
 export type PassTrack = 'free' | 'premium';
 export type PassReward = { kind: 'coins'; amount: number } | { kind: 'gems'; amount: number };
 
-/** Temporada atual, ex.: "2026-10". */
+/** Id da temporada: sua data de início em UTC, ex.: "2026-10-13". */
 export function seasonOf(date: Date): string {
-  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+  const origin = new Date(PASS_SEASON_ORIGIN).getTime();
+  const index = Math.floor((date.getTime() - origin) / SEASON_MS);
+  return new Date(origin + index * SEASON_MS).toISOString().slice(0, 10);
 }
 
-/** Fim da temporada (primeiro instante do mês seguinte, UTC). */
+export function seasonStart(season: string): Date {
+  return new Date(`${season}T00:00:00.000Z`);
+}
+
+/** Fim exclusivo da temporada: nesse instante começa a próxima. */
 export function seasonEnd(season: string): Date {
-  const [y, m] = season.split('-').map(Number);
-  return new Date(Date.UTC(y, m, 1));
+  return new Date(seasonStart(season).getTime() + SEASON_MS);
 }
 
 /** Dia (UTC) para o teto diário de XP, ex.: "2026-10-09". */

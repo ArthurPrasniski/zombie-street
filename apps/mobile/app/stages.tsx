@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { globalStage, stageLabel, STAGES_PER_WORLD, worldOf } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { isDeckComplete, isStageUnlocked } from '@/state/progress';
 import { useProgressStore } from '@/state/progressStore';
 import { worldStars } from '@/state/stars';

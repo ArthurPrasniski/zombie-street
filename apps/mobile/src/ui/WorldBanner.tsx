@@ -3,7 +3,7 @@ import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { MAX_STARS } from '@/game/data/balance';
 import { isFrontier, STAGES_PER_WORLD, worldDef } from '@/game/data/worlds';
 import type { WorldId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { IconButton, Segments } from '@/ui/kit/Pill';

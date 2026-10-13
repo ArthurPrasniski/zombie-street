@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { ZOMBIES } from '@/game/data/zombies';
 import type { ZombieId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { ZOMBIE_ART, zombieWhere } from '@/ui/bestiary/zombieInfo';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';

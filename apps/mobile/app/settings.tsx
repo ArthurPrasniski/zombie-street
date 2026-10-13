@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { pt } from '@/i18n/pt';
-import { ptPush } from '@/i18n/ptPush';
+import { t as pt, pushText as ptPush } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { type SettingKey, useSettingsStore } from '@/state/settingsStore';
 import { AccountPanel } from '@/ui/account/AccountPanel';

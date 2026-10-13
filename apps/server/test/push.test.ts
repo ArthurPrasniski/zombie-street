@@ -69,6 +69,30 @@ describe('notificações remotas', () => {
     assert.deepEqual(await deliver(), {});
   });
 
+  it('a mesma conta recebe notificações no idioma de cada aparelho', async () => {
+    await register('ExponentPushToken[pt]');
+    for (const language of ['en', 'es']) {
+      await call(ctx.app, 'POST', '/push/token', user.token, { token: `ExponentPushToken[${language}]`, language, platform: 'ios', timeZone: TZ, prefs: PREFS });
+    }
+    await buyGems('tx-localized');
+    assert.deepEqual(await deliver(), { sent: 1 });
+    const byToken = Object.fromEntries(push.sent.map((m) => [m.to, m]));
+    assert.match(byToken['ExponentPushToken[pt]'].body, /gemas na sua conta/);
+    assert.equal(byToken['ExponentPushToken[en]'].title, 'Purchase confirmed');
+    assert.match(byToken['ExponentPushToken[en]'].body, /gems in your account/);
+    assert.match(byToken['ExponentPushToken[es]'].body, /gemas en tu cuenta/);
+  });
+
+  it('validar idioma e atualizar o idioma de um token existente', async () => {
+    const payload = { token: 'ExponentPushToken[lang]', platform: 'ios', timeZone: TZ, prefs: PREFS };
+    assert.equal((await call(ctx.app, 'POST', '/push/token', user.token, { ...payload, language: 'invalid' })).status, 400);
+    await call(ctx.app, 'POST', '/push/token', user.token, { ...payload, language: 'en' });
+    await call(ctx.app, 'POST', '/push/token', user.token, { ...payload, language: 'es' });
+    await buyGems('tx-language-changed');
+    await deliver();
+    assert.match(push.sent[0].body, /gemas en tu cuenta/);
+  });
+
   it('problema na cobrança do passe: espera a janela do dia', async () => {
     await register('ExponentPushToken[a1]');
     at('2026-10-09T06:00:00Z');
@@ -92,23 +116,23 @@ describe('notificações remotas', () => {
 
   it('no máximo 1 aviso não urgente por dia', async () => {
     await register('ExponentPushToken[a1]');
-    at('2026-11-01T14:00:00Z');
+    at('2027-01-11T14:00:00Z');
     assert.equal(await queueSeasonStart(ctx.db, ctx.clock.now), 1);
     assert.equal((await admin({ id: 'n1', title: 'Novidade', body: 'Mundo novo!' })).statusCode, 200);
     assert.deepEqual(await deliver(), { sent: 1 });
-    assert.match(push.sent[0].body, /novembro/);
-    at('2026-11-01T20:00:00Z');
+    assert.match(push.sent[0].body, /90 dias/);
+    at('2027-01-11T20:00:00Z');
     assert.deepEqual(await deliver(), {});
-    at('2026-11-02T14:00:00Z');
+    at('2027-01-12T14:00:00Z');
     assert.deepEqual(await deliver(), { sent: 1 });
     assert.equal(push.sent[1].title, 'Novidade');
   });
 
-  it('temporada nova: uma vez, só nos primeiros dias do mês', async () => {
+  it('temporada nova: uma vez, só nos primeiros dias do período', async () => {
     await register('ExponentPushToken[a1]');
-    assert.equal(await queueSeasonStart(ctx.db, new Date('2026-11-01T00:30:00Z')), 1);
-    assert.equal(await queueSeasonStart(ctx.db, new Date('2026-11-02T00:30:00Z')), 0);
-    assert.equal(await queueSeasonStart(ctx.db, new Date('2026-12-05T12:00:00Z')), 0);
+    assert.equal(await queueSeasonStart(ctx.db, new Date('2027-01-11T00:30:00Z')), 1);
+    assert.equal(await queueSeasonStart(ctx.db, new Date('2027-01-12T00:30:00Z')), 0);
+    assert.equal(await queueSeasonStart(ctx.db, new Date('2027-01-15T12:00:00Z')), 0);
   });
 
   it('aviso para todos: só com a senha e com rota do app', async () => {

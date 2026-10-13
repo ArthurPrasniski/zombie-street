@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import type { PushRegister } from '@zombie-road/shared/api';
 
 import { api, hasApiToken } from '@/services/api';
+import { language } from '@/i18n/locale';
 import { NATIVE } from '@/services/env';
 import { notifications, pushPermission } from '@/services/push/notifications';
 import { useSettingsStore } from '@/state/settingsStore';
@@ -36,7 +37,7 @@ export async function syncPushToken(): Promise<void> {
   const prefs = useSettingsStore.getState().push;
   const wantsRemote = prefs.pass || prefs.shop || prefs.news;
   if (wantsRemote && (await pushPermission()) === 'granted') {
-    const body: PushRegister = { token, platform: Platform.OS === 'ios' ? 'ios' : 'android', timeZone: timeZone(), prefs };
+    const body: PushRegister = { token, language, platform: Platform.OS === 'ios' ? 'ios' : 'android', timeZone: timeZone(), prefs };
     await api('POST', '/push/token', body);
   } else {
     await api('DELETE', '/push/token', { token });

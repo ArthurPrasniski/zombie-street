@@ -1,6 +1,6 @@
 import { worldDef } from '@/game/data/worlds';
 import { ZOMBIES } from '@/game/data/zombies';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 
 /** Nome do mundo para a tela; na Fronteira, o planeta e o tema (ex.: "Planeta de Lava · Tóxico"). */
 export function worldName(w: number): string {

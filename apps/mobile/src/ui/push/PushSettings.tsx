@@ -3,7 +3,7 @@ import { AppState, Linking } from 'react-native';
 
 import type { PushCategory } from '@zombie-road/shared/push';
 
-import { ptPush } from '@/i18n/ptPush';
+import { pushText as ptPush } from '@/i18n';
 import { notifications, type PushPermission, pushPermission, requestPushPermission } from '@/services/push/notifications';
 import { syncPushToken } from '@/services/push/remote';
 import { useSettingsStore } from '@/state/settingsStore';

@@ -20,8 +20,10 @@ export const GEM_PACKS: GemPack[] = [
 
 export const gemPack = (productId: string): GemPack | undefined => GEM_PACKS.find((p) => p.productId === productId);
 
-/** Assinatura mensal do Passe de Batalha e o direito (entitlement) que ela libera no RevenueCat. */
-export const PASS_PRODUCT_ID = 'zr_pass_monthly';
+/** Compra única do Passe da temporada. O servidor controla a validade por temporada. */
+export const PASS_PRODUCT_ID = 'zr_pass_season';
+/** Produto antigo: apenas para conciliar assinaturas já compradas. */
+export const LEGACY_PASS_PRODUCT_ID = 'zr_pass_monthly';
 export const PASS_ENTITLEMENT = 'pass';
 
 // ---------- Moedas compradas com gemas ----------

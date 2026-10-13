@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { COIN_PACKS, coinPackCoins, COINS_PER_GEM, gemPack, GEM_PACKS, progressFactor } from '../src/catalog';
-import { acceptXp, canClaim, PASS_DAILY_XP, PASS_TIERS, passReward, seasonEnd, seasonOf, stageXp, survivalXp, tierOf, XP_PER_TIER } from '../src/pass';
+import { acceptXp, canClaim, PASS_DAILY_XP, PASS_SEASON_DAYS, PASS_TIERS, passReward, seasonEnd, seasonOf, seasonStart, stageXp, survivalXp, tierOf, XP_PER_TIER } from '../src/pass';
 
 describe('loja (GDD seção 19)', () => {
   it('cada pacote de gemas tem um produto único', () => {
@@ -23,9 +23,13 @@ describe('loja (GDD seção 19)', () => {
 });
 
 describe('Passe de Batalha (GDD seção 19.3)', () => {
-  it('temporada é o mês (UTC) e termina no começo do mês seguinte', () => {
-    assert.equal(seasonOf(new Date('2026-10-31T23:59:59Z')), '2026-10');
-    assert.equal(seasonEnd('2026-12').toISOString(), '2027-01-01T00:00:00.000Z');
+  it('temporadas globais duram 90 dias e só mudam no encerramento do período', () => {
+    assert.equal(seasonOf(new Date('2026-10-13T00:00:00Z')), '2026-10-13');
+    assert.equal(seasonOf(new Date('2026-11-01T00:00:00Z')), '2026-10-13');
+    assert.equal(seasonOf(new Date('2027-01-10T23:59:59.999Z')), '2026-10-13');
+    assert.equal(seasonOf(new Date('2027-01-11T00:00:00Z')), '2027-01-11');
+    assert.equal(seasonEnd('2026-10-13').toISOString(), '2027-01-11T00:00:00.000Z');
+    assert.equal(seasonEnd('2027-01-11').getTime() - seasonStart('2027-01-11').getTime(), PASS_SEASON_DAYS * 86400000);
   });
 
   it('nível pelo XP, com teto de 30', () => {

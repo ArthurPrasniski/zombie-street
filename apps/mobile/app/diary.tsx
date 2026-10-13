@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ACTS, FRONTIER_WORLD, radioId } from '@/game/data/story';
 import { WORLDS } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { AppText } from '@/ui/kit/AppText';
 import { DiaryEntry } from '@/ui/radio/DiaryEntry';

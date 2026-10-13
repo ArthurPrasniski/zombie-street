@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View } from 'react-native';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
 import { RADIO_ART, SPEAKER_COLORS } from '@/ui/radio/radioArt';

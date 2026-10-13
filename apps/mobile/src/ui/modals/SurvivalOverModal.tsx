@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import { rewardHaptic } from '@/audio/sfx';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { CountUp } from '@/ui/fx/CountUp';
 import { DoubleCoinsButton } from '@/ui/modals/DoubleCoinsButton';
 import { AppText } from '@/ui/kit/AppText';

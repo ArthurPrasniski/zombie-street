@@ -18,7 +18,7 @@ export function pushRoutes(app: FastifyInstance, deps: Deps): void {
 
   app.post<{ Body: PushRegister }>(
     '/push/token',
-    { schema: { body: { type: 'object', required: ['token', 'platform', 'timeZone', 'prefs'], properties: { token: text(200), platform: { enum: ['ios', 'android'] }, timeZone: text(64), prefs } } } },
+    { schema: { body: { type: 'object', required: ['token', 'platform', 'timeZone', 'prefs'], properties: { token: text(200), language: { enum: ['pt', 'en', 'es'] }, platform: { enum: ['ios', 'android'] }, timeZone: text(64), prefs } } } },
     async (req) => {
       const userId = await sessions.verify(req.headers.authorization);
       if (!isExpoPushToken(req.body.token)) throw new HttpError(400, 'token de push inválido');

@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { BASE, BLOOD } from '@/game/data/constants';
 
 // Seção 17.3: peças da caminhonete (Oficina). Nível 0 = sem melhoria.
@@ -14,9 +15,9 @@ export interface TruckPartDef {
 }
 
 export const TRUCK_PARTS: Record<TruckPart, TruckPartDef> = {
-  hull: { id: 'hull', name: 'Lataria', maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
-  gun: { id: 'gun', name: 'Metralhadora', maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
-  tank: { id: 'tank', name: 'Tanque de sangue', maxLevel: 5, baseCost: 400, costGrowth: 2 },
+  hull: { id: 'hull', name: localizedName('Lataria'), maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
+  gun: { id: 'gun', name: localizedName('Metralhadora'), maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
+  tank: { id: 'tank', name: localizedName('Tanque de sangue'), maxLevel: 5, baseCost: 400, costGrowth: 2 },
 };
 
 export const TRUCK_PART_IDS = Object.keys(TRUCK_PARTS) as TruckPart[];

@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import type { ScenarioEventId } from '@/game/data/events';
 import type { WorldDef, WorldId, ZombieId } from '@/game/types';
 
@@ -11,10 +12,10 @@ export type MutationId = 'giant' | 'armored' | 'explosive' | 'regen';
 
 /** Cenário que o planeta reaproveita e o tom de cor por cima (no render). */
 export const PLANETS: Record<PlanetKind, { name: string; scene: WorldId; tint: string; event: ScenarioEventId }> = {
-  ice: { name: 'Planeta Gelado', scene: 'moon', tint: '#7fd0ff', event: 'blizzard' },
-  lava: { name: 'Planeta de Lava', scene: 'mars', tint: '#ff5a1f', event: 'meteors' },
-  jungle: { name: 'Selva Alienígena', scene: 'hive', tint: '#4fd86a', event: 'spores' },
-  crystal: { name: 'Planeta de Cristal', scene: 'station', tint: '#c87aff', event: 'debris' },
+  ice: { name: localizedName('Planeta Gelado'), scene: 'moon', tint: '#7fd0ff', event: 'blizzard' },
+  lava: { name: localizedName('Planeta de Lava'), scene: 'mars', tint: '#ff5a1f', event: 'meteors' },
+  jungle: { name: localizedName('Selva Alienígena'), scene: 'hive', tint: '#4fd86a', event: 'spores' },
+  crystal: { name: localizedName('Planeta de Cristal'), scene: 'station', tint: '#c87aff', event: 'debris' },
 };
 export const PLANET_KINDS = Object.keys(PLANETS) as PlanetKind[];
 export const THEMES: ThemeId[] = ['night', 'storm', 'toxic', 'burning'];

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useAdStore } from '@/services/ads';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';

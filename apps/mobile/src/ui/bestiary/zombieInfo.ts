@@ -2,7 +2,7 @@ import { SPECIAL_ZOMBIES } from '@/game/data/stages';
 import { stageLabel, WORLDS } from '@/game/data/worlds';
 import { ZOMBIES } from '@/game/data/zombies';
 import type { ZombieId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 
 /** Retratos do Bestiário (gerados por scripts/art/portraits.mjs). */
 export const ZOMBIE_ART: Record<ZombieId, number> = {

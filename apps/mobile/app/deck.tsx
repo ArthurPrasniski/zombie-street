@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CARD_IDS, DECK_SIZE } from '@/game/data/cards';
 import { stageLabel } from '@/game/data/worlds';
 import type { CardId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { canUpgradeCard, isCardUnlocked, isDeckComplete, nextCardCost, unlockStage } from '@/state/progress';
 import { useProgressStore } from '@/state/progressStore';
 import type { CardAction } from '@/ui/cards/CardActions';

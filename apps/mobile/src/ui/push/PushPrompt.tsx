@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { ptPush } from '@/i18n/ptPush';
+import { pushText as ptPush } from '@/i18n';
 import { type PushPermission, pushPermission, requestPushPermission } from '@/services/push/notifications';
 import { syncPushToken } from '@/services/push/remote';
 import { useProgressStore } from '@/state/progressStore';

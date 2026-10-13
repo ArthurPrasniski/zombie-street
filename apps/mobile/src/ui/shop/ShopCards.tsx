@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import type { GemPack } from '@zombie-road/shared/catalog';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { CashLabel } from '@/ui/CashLabel';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
@@ -15,7 +15,7 @@ import { formatInt } from '@/utils/format';
 const pileSize = (gems: number) => (gems >= 2600 ? 4 : gems >= 1200 ? 3 : gems >= 500 ? 2 : 1);
 
 /** Pacote de gemas: pilha de gemas, quantidade, selo e o preço da loja no botão. */
-export function GemPackCard({ pack, price, disabled, onBuy }: { pack: GemPack; price: string | null; disabled: boolean; onBuy: () => void }) {
+export function GemPackCard({ pack, price, loading = false, disabled, onBuy }: { pack: GemPack; price: string | null; loading?: boolean; disabled: boolean; onBuy: () => void }) {
   const badge = pack.badge === 'popular' ? pt.shop.popular : pack.badge === 'best' ? pt.shop.best : null;
   return (
     <Chunky face="#1d3a4a" edge="#0f2028" radius={radius.m} depth={5} gloss={0.08} style={styles.card} faceStyle={styles.face}>
@@ -34,7 +34,7 @@ export function GemPackCard({ pack, price, disabled, onBuy }: { pack: GemPack; p
       <AppText variant="heading" color="#c8fff4">
         {pt.shop.gemsAmount(formatInt(pack.gems))}
       </AppText>
-      <Button label={price ?? '…'} size="s" disabled={disabled || !price} onPress={onBuy} style={styles.button} />
+      <Button label={price ?? (loading ? '…' : pt.shop.priceUnavailable)} size="s" disabled={disabled || !price} onPress={onBuy} style={styles.button} />
     </Chunky>
   );
 }

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import { ptPush } from '@/i18n/ptPush';
+import { pushText as ptPush } from '@/i18n';
 
 // Acesso ao expo-notifications (GDD seção 20). O módulo é carregado com `require`: no Expo Go do
 // Android ele pode recusar (sem push remoto desde o SDK 53) e no web não existe. Nesses casos as

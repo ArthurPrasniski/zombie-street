@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DECK_SIZE } from '@/game/data/cards';
 import { STAGE_COUNT } from '@/game/data/stages';
 import { globalStage, stageLabel, STAGES_PER_WORLD, WORLDS, worldOf } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { CashPill } from '@/ui/CashLabel';
 import { GemPill } from '@/ui/GemLabel';

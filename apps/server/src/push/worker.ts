@@ -1,7 +1,7 @@
 // Worker das notificações: a cada rodada, põe na fila o aviso de temporada nova (nos 3 primeiros
-// dias do mês) e manda o que estiver pendente. Rode um só por banco (PUSH_WORKER=0 nas outras
+// dias do período) e manda o que estiver pendente. Rode um só por banco (PUSH_WORKER=0 nas outras
 // instâncias), senão dois workers podem mandar o mesmo aviso.
-import { seasonOf } from '@zombie-road/shared/pass';
+import { seasonOf, seasonStart } from '@zombie-road/shared/pass';
 import type { Db } from '../db';
 import { broadcast } from '../store/push';
 import { deliverPushes } from './deliver';
@@ -14,7 +14,7 @@ const SEASON_NOTICE_MS = 72 * 3600 * 1000;
 /** Aviso de temporada nova para todos, uma vez por temporada. */
 export async function queueSeasonStart(db: Db, now: Date): Promise<number> {
   const season = seasonOf(now);
-  if (now.getTime() - new Date(`${season}-01T00:00:00Z`).getTime() > SEASON_NOTICE_MS) return 0;
+  if (now.getTime() - seasonStart(season).getTime() >= SEASON_NOTICE_MS) return 0;
   return broadcast(db, `season:${season}`, { kind: 'season', ref: season, ...pushTexts.season(season) }, now);
 }
 

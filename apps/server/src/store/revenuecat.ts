@@ -1,7 +1,8 @@
-// Webhook do RevenueCat: compras de gemas (consumíveis) e a assinatura do passe. Cada evento é
+// Webhook do RevenueCat: gemas e passe por temporada, com conciliação do produto mensal antigo. Cada evento é
 // processado uma vez (tabela webhook_events). O app_user_id é o id da nossa conta, porque o app
 // chama Purchases.logIn(userId) logo depois do login.
-import { gemPack, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
+import { gemPack, LEGACY_PASS_PRODUCT_ID, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
+import { seasonOf } from '@zombie-road/shared/pass';
 import type { Db, Queryable } from '../db';
 import { pushTexts } from '../push/texts';
 import { enqueue } from './push';
@@ -16,6 +17,7 @@ export interface RevenueCatEvent {
   aliases?: string[];
   product_id: string;
   transaction_id?: string;
+  purchased_at_ms?: number | null;
   expiration_at_ms?: number | null;
   cancel_reason?: string | null;
 }
@@ -58,7 +60,39 @@ export async function handleRevenueCat(db: Db, event: RevenueCatEvent, now: Date
       }
       return 'ignored';
     }
-    if (event.product_id !== PASS_PRODUCT_ID) return 'ignored';
+    if (event.product_id === PASS_PRODUCT_ID) {
+      if (!userId) return 'unknown-user';
+      if (!event.transaction_id) return 'ignored';
+      if (event.type === 'NON_RENEWING_PURCHASE') {
+        // Use a data da compra: um webhook atrasado não libera a temporada seguinte.
+        if (!event.purchased_at_ms || !Number.isFinite(event.purchased_at_ms)) return 'ignored';
+        const purchasedAt = new Date(event.purchased_at_ms);
+        if (!Number.isFinite(purchasedAt.getTime())) return 'ignored';
+        const season = seasonOf(purchasedAt);
+        const inserted = await q.query(
+          `insert into pass_purchases (transaction_id, user_id, product_id, season, purchased_at)
+           values ($1, $2, $3, $4, $5) on conflict do nothing returning transaction_id`,
+          [event.transaction_id, userId, event.product_id, season, purchasedAt.toISOString()],
+        );
+        if (inserted.length && season === seasonOf(now)) {
+          await enqueue(q, userId, { kind: 'purchase', ref: event.transaction_id, urgent: true, ...pushTexts.pass() }, now);
+        }
+        return 'pass';
+      }
+      if (event.type === 'CANCELLATION' && event.cancel_reason === 'CUSTOMER_SUPPORT') {
+        const purchasedAt = new Date(event.purchased_at_ms ?? now.getTime());
+        if (!Number.isFinite(purchasedAt.getTime())) return 'ignored';
+        await q.query(
+          `insert into pass_purchases (transaction_id, user_id, product_id, season, purchased_at, refunded)
+           values ($1, $2, $3, $4, $5, true)
+           on conflict (transaction_id) do update set refunded = true where pass_purchases.user_id = $2`,
+          [event.transaction_id, userId, event.product_id, seasonOf(purchasedAt), purchasedAt.toISOString()],
+        );
+        return 'refund';
+      }
+      return 'ignored';
+    }
+    if (event.product_id !== LEGACY_PASS_PRODUCT_ID) return 'ignored';
     if (!userId) return 'unknown-user';
     // A loja não conseguiu cobrar a renovação: avisa antes de o passe vencer
     if (event.type === 'BILLING_ISSUE') {

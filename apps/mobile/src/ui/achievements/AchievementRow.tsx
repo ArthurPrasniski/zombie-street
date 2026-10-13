@@ -4,7 +4,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { rewardHaptic } from '@/audio/sfx';
 
 import { type AchievementDef, MEDALS } from '@/game/data/achievements';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';

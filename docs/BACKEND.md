@@ -17,7 +17,7 @@ Servidor próprio (apps/server: Node 24 + Fastify + Postgres)
  ├─ confere os tokens do Google/Apple (chaves públicas, JWKS) e dá a sessão (JWT)
  ├─ save na nuvem com revisão (detecta conflito entre aparelhos)
  ├─ carteira de gemas (só o servidor mexe), loja de moedas, Passe
- ├─ webhook do RevenueCat ◄── compras e assinatura confirmadas pela loja
+ ├─ webhook do RevenueCat ◄── compras de gemas e passe confirmadas pela loja
  └─ fila de notificações ──► serviço de push da Expo ──► APNs (iOS) / FCM (Android)
 ```
 
@@ -27,7 +27,7 @@ Servidor próprio (apps/server: Node 24 + Fastify + Postgres)
 | ---- | ---- | ------- |
 | Progresso (fases, cartas, deck, estrelas, moedas…) | Aparelho, com cópia na nuvem | Joga offline; trocar de aparelho não perde nada |
 | Gemas | Só no servidor | Compradas com dinheiro: só a loja (via RevenueCat) credita |
-| Passe (XP, prêmios pegos, assinatura) | Servidor | A assinatura vem da loja; prêmios uma vez só |
+| Passe (XP, prêmios pegos, premium) | Servidor | Compra única por temporada; prêmios uma vez só |
 | "Assista e dobre" | Aparelho (limite por dia) | Dobra moedas, que já são do aparelho |
 | Avisos locais (volta, melhoria, prêmios, fim de temporada) | Aparelho (agenda ao sair do app) | Dependem do progresso, que é do aparelho |
 | Avisos remotos e o token do aparelho | Servidor | Compra, cobrança e temporada acontecem no servidor |
@@ -88,7 +88,7 @@ Todas as rotas, menos login, health e webhook, pedem `Authorization: Bearer <ses
 | `GET /wallet` | Gemas |
 | `POST /shop/coins {pack, stage, requestId}` | Gemas → moedas (repetível pelo `requestId`) |
 | `GET /pass` · `POST /pass/xp {amount}` · `POST /pass/claim {tier, track, stage}` | Passe |
-| `POST /webhooks/revenuecat` | Compras e assinatura (cabeçalho `Authorization` combinado) |
+| `POST /webhooks/revenuecat` | Compras de gemas e passe (cabeçalho `Authorization` combinado) |
 | `POST /dev/purchase {productId}` | Só em dev: simula a compra para a conta logada |
 | `POST /push/token {token, platform, timeZone, prefs}` · `DELETE /push/token {token}` | Liga/desliga o aparelho dos avisos remotos |
 | `POST /admin/push {id, title, body, url?}` | Novidade para todos (cabeçalho `Authorization: Bearer ADMIN_TOKEN`; `id` evita repetir) |
@@ -120,7 +120,7 @@ transação da loja), `subscriptions` (passe ativo até `expires_at`), `pass_pro
 - **Moedas por gemas**: o servidor desconta as gemas e devolve as moedas; o app soma no
   progresso uma vez por `requestId`.
 - **Passe**: XP vem das partidas (com teto diário no servidor, porque o jogo roda no
-  aparelho). Premium = assinatura ativa (webhook). Prêmio pego uma vez por nível e
+  aparelho). Premium = compra confirmada para a temporada vigente (webhook). Prêmio pego uma vez por nível e
   trilha; gemas vão para a carteira, moedas o app soma.
 - **Propaganda**: AdMob premiada, depois do consentimento (UMP: LGPD/GDPR e o aviso de
   rastreamento do iOS). Só aparece o botão com propaganda carregada.
@@ -155,10 +155,10 @@ transação da loja), `subscriptions` (passe ativo até `expires_at`), `pass_pro
    publicada.
 2. **Apple Developer**: ativar "Sign in with Apple" no App ID. `APPLE_AUDIENCES` = bundle ID.
 3. **App Store Connect / Play Console**: produtos consumíveis `zr_gems_80`, `zr_gems_500`,
-   `zr_gems_1200`, `zr_gems_2600`, `zr_gems_7000` e a assinatura mensal
-   `zr_pass_monthly`, com os preços (sugestão no GDD seção 19).
-4. **RevenueCat**: projeto com os apps iOS e Android, os mesmos produtos, o entitlement
-   `pass` ligado à assinatura, as chaves públicas no `.env.local` e o webhook apontando
+   `zr_gems_1200`, `zr_gems_2600`, `zr_gems_7000` e o passe `zr_pass_season`, todos como
+   produtos consumíveis (compra única), com os preços (sugestão no GDD seção 19).
+4. **RevenueCat**: projeto com os apps iOS e Android, os mesmos produtos,
+   as chaves públicas no `.env.local` e o webhook apontando
    para `https://SEU-DOMINIO/webhooks/revenuecat` com um cabeçalho `Authorization` igual
    ao `REVENUECAT_WEBHOOK_AUTH` do servidor.
 5. **AdMob**: app iOS e Android (IDs em `ADMOB_*_APP_ID`), um bloco "Premiado" por
@@ -178,3 +178,19 @@ transação da loja), `subscriptions` (passe ativo até `expires_at`), `pass_pro
 8. **Lojas**: política de privacidade publicada, "Excluir conta" (já no app), formulário
    de segurança de dados (Play) e privacidade (App Store) declarando login, compras e
    anúncios.
+
+### Passe por temporada
+
+- O calendário global de 90 dias fica em `packages/shared/src/pass.ts` (`PASS_SEASON_ORIGIN` e
+  `PASS_SEASON_DAYS`). O servidor devolve o início e o fim do período; não são 90 dias após a compra.
+- Cadastre `zr_pass_season` como **Consumable** na Test Store e nas lojas reais. O app busca
+  seu preço como `NON_SUBSCRIPTION`, sem renovação automática. O premium é controlado pelo
+  servidor, sem depender de um entitlement permanente do RevenueCat.
+- O webhook `NON_RENEWING_PURCHASE` precisa de `transaction_id` e `purchased_at_ms`.
+  A temporada é a da compra, mesmo se a entrega do webhook acontecer após o fim do período.
+  Eventos repetidos não estendem o passe. Reembolsos revogam apenas a transação correspondente.
+- A migração `003_season_pass.sql` cria as compras por temporada e conserva XP/resgates de
+  outubro de 2026 na primeira temporada. Assinaturas antigas são conciliadas pelo produto
+  `zr_pass_monthly`, mas o app passa a vender exclusivamente o novo passe.
+- Faça o deploy do servidor atualizado antes de testar o novo produto no app. As migrações
+  rodam automaticamente na subida do servidor. A URL do webhook permanece a mesma.

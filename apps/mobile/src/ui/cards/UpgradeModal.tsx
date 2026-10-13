@@ -6,7 +6,7 @@ import { rewardHaptic } from '@/audio/sfx';
 import { CARDS } from '@/game/data/cards';
 import { evolutionTier } from '@/game/data/evolutions';
 import type { CardId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { canUpgradeCard, nextCardCost } from '@/state/progress';
 import { useProgressStore } from '@/state/progressStore';
 import { CardView } from '@/ui/cards/CardView';

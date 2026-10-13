@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { Chunky } from '@/ui/kit/Chunky';

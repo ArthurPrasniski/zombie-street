@@ -1,7 +1,7 @@
 import { Image, StyleSheet, View } from 'react-native';
 
 import { localStage, stageLabel, STAGES_PER_WORLD } from '@/game/data/worlds';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { StarRow } from '@/ui/StarRow';
 import { ICONS } from '@/ui/icons';

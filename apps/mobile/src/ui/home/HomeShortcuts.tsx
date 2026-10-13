@@ -5,7 +5,7 @@ import { STAGE_COUNT } from '@/game/data/stages';
 import { TRUCK_PART_IDS } from '@/game/data/truck';
 import { WORLDS } from '@/game/data/worlds';
 import { ZOMBIE_IDS } from '@/game/data/zombies';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { canUpgradeCard } from '@/state/progress';
 import { canUpgradeTruck } from '@/state/truck';
 import { claimableCount } from '@/state/achievements';

@@ -1,4 +1,4 @@
-// Webhook do RevenueCat (compras e assinatura) e, só em desenvolvimento, a compra simulada que o
+// Webhook do RevenueCat (gemas e passe) e, só em desenvolvimento, a compra simulada que o
 // app usa no Expo Go (onde não há loja de verdade).
 import { randomUUID } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
@@ -7,8 +7,6 @@ import { gemPack, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 import type { Deps } from '../app';
 import { HttpError } from '../errors';
 import { handleRevenueCat, type RevenueCatEvent } from '../store/revenuecat';
-
-const MONTH_MS = 30 * 24 * 3600 * 1000;
 
 export function webhookRoutes(app: FastifyInstance, deps: Deps): void {
   const { db, config, sessions, now, log } = deps;
@@ -25,7 +23,7 @@ export function webhookRoutes(app: FastifyInstance, deps: Deps): void {
 
   if (!config.devRoutes) return;
 
-  /** Simula o webhook de uma compra para a conta logada (gemas ou passe por 30 dias). */
+  /** Simula uma compra única de gemas ou do passe da temporada. */
   app.post<{ Body: { productId: string } }>('/dev/purchase', { schema: { body: { type: 'object', required: ['productId'], properties: { productId: { type: 'string' } } } } }, async (req) => {
     const userId = await sessions.verify(req.headers.authorization);
     const isPass = req.body.productId === PASS_PRODUCT_ID;
@@ -33,11 +31,11 @@ export function webhookRoutes(app: FastifyInstance, deps: Deps): void {
     const id = randomUUID();
     const event: RevenueCatEvent = {
       id,
-      type: isPass ? 'INITIAL_PURCHASE' : 'NON_RENEWING_PURCHASE',
+      type: 'NON_RENEWING_PURCHASE',
       app_user_id: userId,
       product_id: req.body.productId,
       transaction_id: `dev-${id}`,
-      expiration_at_ms: isPass ? now().getTime() + MONTH_MS : null,
+      purchased_at_ms: now().getTime(),
     };
     return { ok: true, outcome: await handleRevenueCat(db, event, now()) };
   });

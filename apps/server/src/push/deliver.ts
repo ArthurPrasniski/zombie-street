@@ -20,6 +20,7 @@ interface OutboxRow {
   kind: RemotePushKind;
   title: string;
   body: string;
+  localized: Partial<Record<'en' | 'es', { title: string; body: string }>>;
   url: string;
   urgent: boolean;
   created_at: Date | string;
@@ -30,6 +31,7 @@ interface TokenRow {
   user_id: string;
   time_zone: string;
   prefs: Partial<PushPrefs>;
+  language: 'pt' | 'en' | 'es';
 }
 
 export type PushOutcome = 'sent' | 'error' | 'no-device' | 'opted-out' | 'expired';
@@ -50,10 +52,10 @@ export function isTimeZone(timeZone: string): boolean {
 
 /** Manda o que pode sair agora. Devolve quantos avisos tiveram cada resultado (os que esperam não contam). */
 export async function deliverPushes(db: Db, send: PushSender, now: Date): Promise<Partial<Record<PushOutcome, number>>> {
-  const rows = await db.query<OutboxRow>('select id::text as id, user_id, kind, title, body, url, urgent, created_at from push_outbox where sent_at is null order by id limit $1', [BATCH]);
+  const rows = await db.query<OutboxRow>('select id::text as id, user_id, kind, title, body, localized, url, urgent, created_at from push_outbox where sent_at is null order by id limit $1', [BATCH]);
   if (rows.length === 0) return {};
   const users = [...new Set(rows.map((r) => r.user_id))];
-  const tokens = await db.query<TokenRow>('select token, user_id, time_zone, prefs from push_tokens where user_id = any($1::uuid[])', [users]);
+  const tokens = await db.query<TokenRow>('select token, user_id, time_zone, prefs, language from push_tokens where user_id = any($1::uuid[])', [users]);
   const recent = await db.query<{ user_id: string; last: Date | string }>(
     "select user_id, max(sent_at) as last from push_outbox where user_id = any($1::uuid[]) and urgent = false and outcome = 'sent' group by user_id",
     [users],
@@ -61,7 +63,7 @@ export async function deliverPushes(db: Db, send: PushSender, now: Date): Promis
   const lastSent = new Map(recent.map((r) => [r.user_id, new Date(r.last).getTime()]));
 
   const outcomes = new Map<string, PushOutcome>();
-  const outgoing: { row: OutboxRow; token: string }[] = [];
+  const outgoing: { row: OutboxRow; token: string; language: TokenRow['language'] }[] = [];
   for (const row of rows) {
     if (now.getTime() - new Date(row.created_at).getTime() > EXPIRE_MS) {
       outcomes.set(row.id, 'expired');
@@ -82,12 +84,15 @@ export async function deliverPushes(db: Db, send: PushSender, now: Date): Promis
       // Outro aviso da mesma conta nesta rodada fica para o dia seguinte
       lastSent.set(row.user_id, now.getTime());
     }
-    for (const t of targets) outgoing.push({ row, token: t.token });
+    for (const t of targets) outgoing.push({ row, token: t.token, language: t.language });
   }
 
   const unregistered: string[] = [];
   if (outgoing.length > 0) {
-    const messages: PushMessage[] = outgoing.map(({ row, token }) => ({ to: token, title: row.title, body: row.body, data: pushData(row.kind, row.url), sound: 'default', channelId: PUSH_CHANNEL }));
+    const messages: PushMessage[] = outgoing.map(({ row, token, language }) => {
+      const copy = language === 'pt' ? row : (row.localized[language] ?? row);
+      return { to: token, title: copy.title, body: copy.body, data: pushData(row.kind, row.url), sound: 'default', channelId: PUSH_CHANNEL };
+    });
     const results = await send(messages);
     outgoing.forEach(({ row, token }, i) => {
       const result = results[i];

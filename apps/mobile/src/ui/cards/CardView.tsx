@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { CARDS } from '@/game/data/cards';
 import { evolutionTier } from '@/game/data/evolutions';
 import type { CardId } from '@/game/types';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { colors } from '@/ui/theme';

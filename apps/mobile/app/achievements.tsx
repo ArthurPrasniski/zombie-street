@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ACHIEVEMENTS } from '@/game/data/achievements';
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { achievementValue, claimableCount, medalsReached, nextGoal, nextReward } from '@/state/achievements';
 import { useProgressStore } from '@/state/progressStore';
 import { AchievementRow } from '@/ui/achievements/AchievementRow';

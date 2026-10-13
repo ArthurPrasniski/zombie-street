@@ -1,4 +1,4 @@
-import { pt } from '@/i18n/pt';
+import { t as pt } from '@/i18n';
 import { CashLabel } from '@/ui/CashLabel';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
