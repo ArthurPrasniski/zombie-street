@@ -5,10 +5,12 @@ import type { Provider } from '@zombie-road/shared/api';
 
 import { t as pt } from '@/i18n';
 import { formatSyncTime } from '@/utils/syncTime';
+import { ApiError } from '@/services/api';
 import { IS_EXPO_GO } from '@/services/env';
 import { deleteAccount, signIn, signOut } from '@/services/session';
 import { appleAvailable } from '@/services/signIn';
 import { useAccountStore } from '@/state/accountStore';
+import { ProviderLoginButtons } from '@/ui/account/ProviderLoginButtons';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { Chunky } from '@/ui/kit/Chunky';
@@ -33,7 +35,17 @@ export function AccountPanel() {
     setError(null);
     try {
       await task();
-    } catch {
+    } catch (cause) {
+      // Mantém tokens e dados pessoais fora do log; registra apenas códigos de diagnóstico.
+      if (__DEV__) {
+        const diagnostic = cause as { code?: unknown; status?: unknown } | null;
+        console.warn('[Account] Falha na operação da conta', {
+          code: typeof diagnostic?.code === 'string' || typeof diagnostic?.code === 'number' ? diagnostic.code : 'unknown',
+          httpStatus: typeof diagnostic?.status === 'number' ? diagnostic.status : null,
+          endpoint: cause instanceof ApiError ? cause.requestPath : null,
+          reason: cause instanceof ApiError && ['token google inválido', 'token apple inválido', 'sessão inválida', 'sem sessão'].includes(cause.message) ? cause.message : null,
+        });
+      }
       setError(pt.account.failed);
     } finally {
       setBusy(false);
@@ -55,9 +67,16 @@ export function AccountPanel() {
       )}
       {error && <AppText color={colors.danger}>{error}</AppText>}
       {online && (
+        <ProviderLoginButtons
+          providers={providers}
+          appleAvailable={apple}
+          busy={busy}
+          onGoogle={() => run(() => signIn('google'))}
+          onApple={() => run(() => signIn('apple'))}
+        />
+      )}
+      {online && (
         <View style={styles.buttons}>
-          {!providers.includes('google') && <Button label={pt.account.google} variant="solid" color="#4a7ae8" size="s" disabled={busy} onPress={() => run(() => signIn('google'))} />}
-          {apple && !providers.includes('apple') && <Button label={pt.account.apple} variant="solid" color="#2a2533" size="s" disabled={busy} onPress={() => run(() => signIn('apple'))} />}
           {providers.length > 0 && <Button label={pt.account.signOut} variant="dark" size="s" disabled={busy} onPress={() => run(signOut)} />}
           {user && <Button label={pt.account.delete} variant="solid" color={colors.danger} size="s" disabled={busy} onPress={() => setConfirm(true)} />}
         </View>

@@ -25,6 +25,7 @@ export default function RootLayout() {
     [fonts.bold]: require('@/assets/fonts/Rubik-Bold.ttf'),
     [fonts.black]: require('@/assets/fonts/Rubik-Black.ttf'),
     [fonts.display]: require('@/assets/fonts/LilitaOne-Regular.ttf'),
+    GoogleSans: require('@/assets/fonts/GoogleSans.ttf'),
   });
   const hydrated = useProgressHydrated();
   // Se a fonte falhar, segue com a do sistema em vez de travar na splash.
