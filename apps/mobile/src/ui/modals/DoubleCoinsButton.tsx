@@ -10,11 +10,14 @@ import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
 import { colors } from '@/ui/theme';
 import { formatCash } from '@/utils/format';
+import { useMembershipActive } from '@/hooks/useMembershipActive';
 
 /** "Assistir e dobrar" no fim da partida (GDD seção 19.4): só aparece com propaganda pronta. */
 export function DoubleCoinsButton({ coins }: { coins: number }) {
   const ready = useAdStore((s) => s.ready);
   const [state, setState] = useState<'idle' | 'busy' | 'done'>('idle');
+  const member = useMembershipActive();
+  if (member) return null;
   if (state === 'done') {
     return (
       <Animated.View entering={ZoomIn.springify().damping(9)}>

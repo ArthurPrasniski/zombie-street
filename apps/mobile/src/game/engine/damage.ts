@@ -1,3 +1,4 @@
+import { EXPEDITION_REWARD_FACTOR } from '@/game/data/expedition';
 import { CORPSE_TTL, DAMAGE_TEXT_HEIGHT, DAMAGE_TEXT_TTL, EXPLOSION_TTL, HIT_FLASH_DURATION } from '@/game/data/constants';
 import { distance, isTargetable } from '@/game/engine/queries';
 import { createZombie } from '@/game/engine/world';
@@ -14,7 +15,9 @@ export function damageZombie(world: World, zombie: ZombieEntity, amount: number,
   amount *= zombie.def.resist?.[kind] ?? 1;
   if (flash) amount *= shieldFactor(world, zombie);
   if (flash && zombie.def.armor) amount = Math.max(1, amount - zombie.def.armor);
+  const before = zombie.hp + zombie.suit;
   zombie.hp -= throughSuit(zombie, amount);
+  world.stats.damage += Math.max(0, before - Math.max(0, zombie.hp) - zombie.suit);
   if (flash) {
     // Golpe direto: pisca e mostra o número (o fogo, contínuo, não).
     zombie.hitFlash = HIT_FLASH_DURATION;
@@ -25,10 +28,12 @@ export function damageZombie(world: World, zombie: ZombieEntity, amount: number,
   zombie.hp = 0;
   zombie.state = 'dead';
   world.effects.push({ kind: 'corpse', unit: zombie.def.id, x: zombie.x, y: zombie.y, dirX: zombie.dirX, dirY: zombie.dirY, ttl: CORPSE_TTL });
-  world.pendingCash += zombie.reward;
-  world.stageCash += zombie.reward;
+  const reward = Math.round(zombie.reward * (world.expedition ? EXPEDITION_REWARD_FACTOR : 1));
+  world.pendingCash += reward;
+  world.stageCash += reward;
+  world.stats.kills++;
   world.killedThisWave++;
-  world.events.push({ type: 'zombieKilled', zombie: zombie.def.id, reward: zombie.reward });
+  world.events.push({ type: 'zombieKilled', zombie: zombie.def.id, reward });
   splitApart(world, zombie);
   const burst = zombie.def.burst;
   if (!burst) return;
@@ -93,6 +98,7 @@ export function damageTroop(world: World, troop: TroopEntity, amount: number, ch
 
 export function damageBase(world: World, amount: number): void {
   if (world.base.hp <= 0) return;
+  world.stats.baseDamage += Math.min(world.base.hp, Math.max(0, amount));
   world.base.hp = Math.max(0, world.base.hp - amount);
   world.events.push({ type: 'baseHit' });
 }

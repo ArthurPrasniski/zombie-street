@@ -11,8 +11,20 @@ export interface Progress {
   cash: number;
   cardLevels: CardLevels;
   deck: CardId[];
+  savedDecks: import('./decks').SavedDeck[];
+  selectedDeck: number;
+  tutorialStep: number;
+  serverRewards: string[];
+  mastery: Partial<Record<CardId, number>>;
+  truckPaint: import('@/game/data/cosmetics').TruckPaint;
+  seasonCosmetics: string[];
+  diaryRead: string[];
   currentStage: number;
   highestCleared: number;
+  /** Maior fase encerrada em derrota: repetir exige anúncio mesmo após reabrir o app. */
+  highestFailedStage: number;
+  /** Recibos de moedas mensais e estornos, sincronizados junto com o saldo. */
+  membershipRewards: string[];
   /** Melhor marca de estrelas (0 a 3) de cada fase; índice = fase - 1. */
   stars: number[];
   /** Níveis das peças da caminhonete (0 = sem melhoria). */
@@ -24,6 +36,7 @@ export interface Progress {
   /** Marcos de cada conquista já resgatados (0 a 3). */
   claimed: Partial<Record<AchievementId, number>>;
   /** Maior onda vencida na Sobrevivência. */
+  expeditionBest: number;
   survivalBest: number;
   /** Mensagens de rádio já ouvidas (ids de src/game/data/story.ts). */
   radioHeard: string[];
@@ -34,14 +47,25 @@ export function initialProgress(): Progress {
     cash: 0,
     cardLevels: Object.fromEntries(CARD_IDS.map((id) => [id, 1])) as CardLevels,
     deck: [...STARTER_DECK],
+    savedDecks: Array.from({ length: 3 }, (_, i) => ({ name: `Deck ${i + 1}`, cards: [...STARTER_DECK] })),
+    selectedDeck: 0,
+    tutorialStep: 0,
+    serverRewards: [],
+    mastery: {},
+    truckPaint: 'stock',
+    seasonCosmetics: [],
+    diaryRead: [],
     currentStage: 1,
     highestCleared: 0,
+    highestFailedStage: 0,
+    membershipRewards: [],
     stars: new Array(STAGE_COUNT).fill(0),
     truck: { ...STOCK_TRUCK },
     seen: [],
     kills: {},
     cardsPlayed: 0,
     claimed: {},
+    expeditionBest: 0,
     survivalBest: 0,
     radioHeard: [],
   };
@@ -64,6 +88,15 @@ export function selectStage(p: Progress, stage: number): Progress {
  */
 export function clearStage(p: Progress, stage: number, stars = 1): Progress {
   return recordStars({ ...p, highestCleared: Math.max(p.highestCleared, stage) }, stage, stars);
+}
+
+export function failStage(p: Progress, stage: number): Progress {
+  return stage > p.highestFailedStage ? { ...p, highestFailedStage: stage } : p;
+}
+
+/** A primeira tentativa é livre; fases já vencidas ou perdidas exigem anúncio. */
+export function requiresReplayAd(p: Pick<Progress, 'highestCleared' | 'highestFailedStage'>, stage: number): boolean {
+  return stage <= Math.max(p.highestCleared, p.highestFailedStage);
 }
 
 /** Guarda o recorde de ondas vencidas na Sobrevivência (só se for maior). */

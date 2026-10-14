@@ -123,6 +123,10 @@ export const pt = {
     },
   },
   deck: {
+    upgrades: (n: number) => `${n} cartas do deck podem melhorar. Toque para ver.`,
+    tapHint: 'Toque em uma carta para editar.',
+    nextUnlock: 'Próxima carta a desbloquear',
+    lockedCount: (n: number) => `Cartas bloqueadas (${n})`,
     title: 'Deck',
     deck: 'Seu deck',
     count: (n: number, total: number) => `${n}/${total}`,

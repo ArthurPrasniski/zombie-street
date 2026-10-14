@@ -1,0 +1,7 @@
+import { language } from './locale';
+const dictionaries = {
+ pt: { title: 'Transmissões diárias', wins: 'Vença uma fase', kills: 'Derrote 40 zumbis', cards: 'Use 12 cartas', claim: 'Resgatar', claimed: 'Resgatado', offline: 'Conecte-se para consultar as missões do dia.', retry: 'Atualizar', failed: 'Não foi possível resgatar. Tente novamente.', next: 'Próxima meta', stars: 'Buscar três estrelas', thresholds: 'Estrelas: 1 ao vencer · 2 com 35% de vida · 3 com 70% de vida da base.' },
+ en: { title: 'Daily broadcasts', wins: 'Win a stage', kills: 'Defeat 40 zombies', cards: 'Play 12 cards', claim: 'Claim', claimed: 'Claimed', offline: 'Connect to check today’s missions.', retry: 'Refresh', failed: 'Could not claim. Try again.', next: 'Next goal', stars: 'Find three-star stages', thresholds: 'Stars: 1 for winning · 2 with 35% health · 3 with 70% base health.' },
+ es: { title: 'Transmisiones diarias', wins: 'Gana una fase', kills: 'Derrota a 40 zombis', cards: 'Usa 12 cartas', claim: 'Reclamar', claimed: 'Reclamado', offline: 'Conéctate para consultar las misiones del día.', retry: 'Actualizar', failed: 'No se pudo reclamar. Reintenta.', next: 'Próxima meta', stars: 'Buscar tres estrellas', thresholds: 'Estrellas: 1 al ganar · 2 con 35% de vida · 3 con 70% de vida de la base.' },
+};
+export const missionsText = new Proxy({} as typeof dictionaries.pt, { get: (_target, key) => dictionaries[language][key as keyof typeof dictionaries.pt] });

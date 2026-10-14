@@ -1,6 +1,6 @@
 import { CARD_MAX_LEVEL, MAX_STARS } from '@/game/data/balance';
 import { ACHIEVEMENT_IDS, type AchievementId, MEDALS } from '@/game/data/achievements';
-import { CARD_IDS, DECK_SIZE } from '@/game/data/cards';
+import { CARD_IDS, CARD_UNLOCKS, DECK_SIZE } from '@/game/data/cards';
 import { STAGE_COUNT, stageZombies } from '@/game/data/stages';
 import { radioId } from '@/game/data/story';
 import { globalStage, STAGES_PER_WORLD } from '@/game/data/worlds';
@@ -84,7 +84,8 @@ function migrateSeen(saved: unknown, highestCleared: number): ZombieId[] {
  * valor inicial. v1 (idle): heroLevels de 3 heróis. v2: níveis por carta e deck. v3: estrelas.
  * v4: peças da caminhonete. v5: bestiário (vistos, abates) e cartas jogadas. v6: conquistas
  * resgatadas e recorde da Sobrevivência. v7: mensagens de rádio ouvidas. v8: mais mundos (as
- * estrelas acompanham o número de fases).
+ * estrelas acompanham o número de fases). v9: fase perdida que exige anúncio para repetir.
+ * v10: recibos das recompensas de moedas da assinatura mensal.
  */
 export function migrateProgress(saved: unknown, version: number): Progress {
   const base = initialProgress();
@@ -98,18 +99,35 @@ export function migrateProgress(saved: unknown, version: number): Progress {
     }
   }
   const highestCleared = isCount(old.highestCleared) ? Math.floor(old.highestCleared) : 0;
+  const selectedDeck = Number.isInteger(old.selectedDeck) && typeof old.selectedDeck === 'number' && old.selectedDeck >= 0 && old.selectedDeck < 3 ? old.selectedDeck : 0;
+  const deck = isValidDeck(old.deck) ? old.deck : base.deck;
+  const savedDecks = Array.from({ length: 3 }, (_, i) => {
+    const value = Array.isArray(old.savedDecks) ? old.savedDecks[i] : null;
+    const cards = value && isValidDeck(value.cards) ? value.cards.filter((c: CardId) => !(c in CARD_UNLOCKS) || highestCleared >= (CARD_UNLOCKS[c] ?? 0)) : [...deck];
+    return { name: typeof value?.name === 'string' && value.name.trim() ? value.name.trim().slice(0, 24) : `Deck ${i + 1}`, cards: i === selectedDeck ? deck : cards };
+  });
   return {
+    savedDecks, selectedDeck,
+    tutorialStep: isCount(old.tutorialStep) ? Math.min(5, Math.floor(old.tutorialStep)) : highestCleared > 0 ? 5 : 0,
     cash: isCount(old.cash) ? old.cash : 0,
     cardLevels,
-    deck: isValidDeck(old.deck) ? old.deck : base.deck,
+    deck,
     currentStage: typeof old.currentStage === 'number' ? old.currentStage : 1,
     highestCleared,
+    highestFailedStage: isCount(old.highestFailedStage) ? Math.min(highestCleared + 1, Math.floor(old.highestFailedStage)) : 0,
+    mastery: Object.fromEntries(CARD_IDS.map((c) => [c, old.mastery && typeof old.mastery === 'object' && isCount((old.mastery as Record<string, unknown>)[c]) ? Math.floor((old.mastery as Record<string, number>)[c]) : 0])),
+    truckPaint: ['stock','crimson','arctic','season'].includes(old.truckPaint as string) ? old.truckPaint as Progress['truckPaint'] : 'stock',
+    seasonCosmetics: Array.isArray(old.seasonCosmetics) ? old.seasonCosmetics.filter((id): id is string => typeof id === 'string') : [],
+    diaryRead: Array.isArray(old.diaryRead) ? old.diaryRead.filter((id): id is string => typeof id === 'string') : migrateRadio(old.radioHeard, highestCleared),
+    serverRewards: Array.isArray(old.serverRewards) ? [...new Set(old.serverRewards.filter((id): id is string => typeof id === 'string'))] : [],
+    membershipRewards: Array.isArray(old.membershipRewards) ? [...new Set(old.membershipRewards.filter((id): id is string => typeof id === 'string'))] : [],
     stars: migrateStars(old.stars, highestCleared),
     truck: migrateTruck(old.truck),
     seen: migrateSeen(old.seen, highestCleared),
     kills: migrateKills(old.kills),
     cardsPlayed: isCount(old.cardsPlayed) ? Math.floor(old.cardsPlayed) : 0,
     claimed: migrateClaimed(old.claimed),
+    expeditionBest: isCount(old.expeditionBest) ? Math.floor(old.expeditionBest) : 0,
     survivalBest: isCount(old.survivalBest) ? Math.floor(old.survivalBest) : 0,
     radioHeard: migrateRadio(old.radioHeard, highestCleared),
   };

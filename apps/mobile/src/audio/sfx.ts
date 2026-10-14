@@ -95,7 +95,7 @@ export function playSound(id: SoundId): void {
   const index = (nextIndex[id] ?? 0) % pool.length;
   nextIndex[id] = index + 1;
   const player = pool[index];
-  player.volume = VOLUME[id] ?? 1;
+  player.volume = (VOLUME[id] ?? 1) * useSettingsStore.getState().soundVolume;
   player.seekTo(0).catch(() => {});
   player.play();
 }

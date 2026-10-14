@@ -1,3 +1,6 @@
+import { localizedName } from '@/i18n/names';
+import { useProgressStore } from '@/state/progressStore';
+import { masteryTier } from '@/game/data/cosmetics';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { CARDS } from '@/game/data/cards';
@@ -49,6 +52,8 @@ interface Props {
   hideName?: boolean;
   /** Seta verde: dá para subir de nível com o dinheiro atual. */
   upgradable?: boolean;
+  /** Visual discreto para organizar a coleção; a mão de combate mantém o padrão. */
+  quiet?: boolean;
 }
 
 export function CardArt({ card, size }: { card: CardId; size: number }) {
@@ -60,49 +65,50 @@ export function CardArt({ card, size }: { card: CardId; size: number }) {
  * ou laranja (arma especial) com luz atrás do retrato, gota de custo saindo do canto, nível e
  * faixa com o nome.
  */
-export function CardView({ card, width, level, dimmed, selected, locked, hideName, upgradable }: Props) {
+export function CardView({ card, width, level, dimmed, selected, locked, hideName, upgradable, quiet = false }: Props) {
+  const mastery = useProgressStore((s) => masteryTier(s.mastery[card] ?? 0));
   const def = CARDS[card];
   const height = Math.round(width * (hideName ? 1.12 : 1.32));
-  const drop = Math.max(22, Math.round(width * 0.42));
+  const drop = Math.max(22, Math.round(width * (quiet ? 0.31 : 0.42)));
   const pad = Math.max(3, Math.round(width * 0.045));
   // Moldura pela evolução: dourada, azul (nível 10) ou roxa (nível 20)
   const tier = level === undefined ? 0 : evolutionTier(level);
   return (
-    <View style={[styles.frame, { width, height, padding: pad, borderRadius: width * 0.18, backgroundColor: FRAMES[tier] }, selected && styles.selected]}>
-      <View style={[styles.inner, { borderRadius: width * 0.13, borderColor: FRAME_EDGES[tier], backgroundColor: def.kind === 'troop' ? '#2f6aa8' : '#b8502a' }]}>
-        <View style={styles.glow} />
+    <View style={[styles.frame, { width, height, padding: pad, borderRadius: width * 0.18, backgroundColor: FRAMES[tier] }, quiet && styles.quietFrame, quiet && tier === 0 ? { backgroundColor: '#746647' } : null, quiet && locked ? styles.quietLocked : null, selected && styles.selected]}>
+      <View style={[styles.inner, { borderRadius: width * 0.13, borderColor: FRAME_EDGES[tier], backgroundColor: def.kind === 'troop' ? '#2f6aa8' : '#b8502a' }, mastery > 0 ? { borderColor: ['#8c8067','#d5b581','#75cace','#c695ff'][mastery] } : null]}>
+        {!quiet && <View style={styles.glow} />}
         <CardArt card={card} size={width * 0.94} />
         {!hideName && (
           <View style={styles.ribbon}>
             <AppText variant="label" numberOfLines={1} adjustsFontSizeToFit style={[styles.name, { fontSize: Math.max(10, width * 0.15), lineHeight: Math.max(12, width * 0.19) }]}>
-              {def.name}
+              {localizedName(def.name)}
             </AppText>
           </View>
         )}
         {dimmed && <View style={styles.dim} />}
         {locked && (
-          <View style={styles.lockOverlay}>
-            <Image source={ICONS.lock} style={styles.lockIcon} />
-            <AppText variant="label" style={styles.lockText}>
+          <View style={quiet ? styles.quietLockOverlay : styles.lockOverlay}>
+            <Image source={ICONS.lock} style={quiet ? styles.quietLockIcon : styles.lockIcon} />
+            {!quiet && <AppText variant="label" style={styles.lockText}>
               {locked}
-            </AppText>
+            </AppText>}
           </View>
         )}
       </View>
-      <View style={[styles.cost, { width: drop, height: drop, left: -drop * 0.28, top: -drop * 0.28 }]}>
+      {!(quiet && locked) && <View style={[styles.cost, { width: drop, height: drop, left: -drop * 0.28, top: -drop * 0.28 }]}>
         <Image source={ICONS.blood} style={{ width: drop, height: drop }} />
         <AppText variant="number" style={[styles.costText, { fontSize: drop * 0.46, lineHeight: drop * 0.56, top: drop * 0.3 }]}>
           {`${def.cost}`}
         </AppText>
-      </View>
-      {upgradable && !locked && (
+      </View>}
+      {upgradable && !locked && !quiet && (
         <Image
           source={ICONS.up}
           accessibilityLabel={pt.cards.canUpgrade}
           style={[styles.up, { width: drop * 0.62, height: drop * 0.62, right: -drop * 0.3, bottom: -drop * 0.26 }]}
         />
       )}
-      {level !== undefined && (
+      {level !== undefined && (!quiet || (level > 1 && !locked)) && (
         <AppText variant="number" color="#ffe27a" style={[styles.level, { fontSize: Math.max(10, width * 0.14), lineHeight: Math.max(12, width * 0.17) }]}>
           {pt.cards.shortLevel(level)}
         </AppText>
@@ -113,6 +119,10 @@ export function CardView({ card, width, level, dimmed, selected, locked, hideNam
 
 const styles = StyleSheet.create({
   frame: { borderWidth: 3, borderColor: colors.outline },
+  quietFrame: { borderWidth: 2 },
+  quietLocked: { backgroundColor: '#48414e', opacity: 0.65 },
+  quietLockOverlay: { position: 'absolute', top: 6, right: 5, padding: 3, borderRadius: 6, backgroundColor: '#141217cc' },
+  quietLockIcon: { width: 16, height: 16 },
   selected: { backgroundColor: colors.accent },
   inner: { flex: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'flex-end', borderWidth: 2 },
   glow: { position: 'absolute', width: '125%', aspectRatio: 1, top: '4%', borderRadius: 999, backgroundColor: 'rgba(255, 255, 255, 0.22)' },

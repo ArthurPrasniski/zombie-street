@@ -7,7 +7,9 @@
     "./api": "./src/api.ts",
     "./catalog": "./src/catalog.ts",
     "./pass": "./src/pass.ts",
-    "./push": "./src/push.ts"
+    "./push": "./src/push.ts",
+    "./missions": "./src/missions.ts",
+    "./weekly": "./src/weekly.ts"
   },
   "scripts": {
     "test": "tsx --test test/*.test.ts",

@@ -1,6 +1,8 @@
 import { Canvas, createPicture, Picture, Skia, useFont } from '@shopify/react-native-skia';
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated';
 
+import { useProgressStore } from '@/state/progressStore';
+import { TRUCK_PAINTS } from '@/game/data/cosmetics';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '@/game/data/constants';
 import type { DragPreview } from '@/game/render/camera';
 import { drawWorld } from '@/game/render/drawWorld';
@@ -30,14 +32,20 @@ export function GameCanvas({ snapshot, drag, width, world, units }: Props) {
   const damageNumbers = useSettingsStore((s) => s.damageNumbers);
   const font = damageNumbers ? loadedFont : null;
 
+  const reducedMotion = useSettingsStore((s) => s.reducedMotion);
+  const visualEffects = useSettingsStore((s) => s.visualEffects);
+  const truck = useProgressStore((s) => s.truck);
+  const paint = useProgressStore((s) => s.truckPaint);
+  const appearance = { color: TRUCK_PAINTS[paint], ...truck };
   const picture = useDerivedValue(() => {
-    const snap = snapshot.get();
+    const original = snapshot.get();
+    const snap = { ...original, shake: reducedMotion ? 0 : original.shake, effects: visualEffects ? original.effects : original.effects.filter((e) => e.kind === 'corpse') };
     const preview = drag.get();
     return createPicture((canvas) => {
       canvas.scale(scale, scale);
-      drawWorld(canvas, snap, sprites, preview, font);
+      drawWorld(canvas, snap, sprites, preview, font, appearance);
     }, Skia.XYWHRect(0, 0, width, height));
-  }, [scale, width, height, sprites, font]);
+  }, [scale, width, height, sprites, font, appearance, reducedMotion, visualEffects]);
 
   return (
     <Canvas style={{ width, height }}>

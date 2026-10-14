@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { CardId, CardLevels } from '@/game/types';
@@ -5,6 +6,8 @@ import { CardActions, type CardAction } from '@/ui/cards/CardActions';
 import { CardView } from '@/ui/cards/CardView';
 import { AppText } from '@/ui/kit/AppText';
 import { colors, radius } from '@/ui/theme';
+import { CARDS } from '@/game/data/cards';
+import { t } from '@/i18n';
 
 interface Props {
   /** Cartas da grade; null = espaço vazio do deck. */
@@ -23,10 +26,11 @@ interface Props {
   emptyLabel?: string;
   actions: CardAction[];
   note?: string | null;
+  quiet?: boolean;
 }
 
 /** Grade de cartas; a escolhida cresce no lugar com as ações embaixo (CardActions). */
-export function CardGrid({ items, cardW, gap, perRow, levels, selected, onSelect, lockedLabel, upgradable, onEmpty, emptyLabel, actions, note }: Props) {
+export function CardGrid({ items, cardW, gap, perRow, levels, selected, onSelect, lockedLabel, upgradable, onEmpty, emptyLabel, actions, note, quiet }: Props) {
   const cardH = Math.round(cardW * 1.3);
   const gridW = perRow * cardW + (perRow - 1) * gap;
   const index = selected ? items.indexOf(selected) : -1;
@@ -36,8 +40,8 @@ export function CardGrid({ items, cardW, gap, perRow, levels, selected, onSelect
     <View style={[styles.grid, { width: gridW, gap }, cell && styles.raised]}>
       {items.map((card, i) =>
         card ? (
-          <Pressable key={card} onPress={() => onSelect(card === selected ? null : card)} style={card === selected && styles.hidden}>
-            <CardView card={card} width={cardW} level={levels[card]} locked={lockedLabel?.(card) ?? null} upgradable={upgradable?.(card)} />
+          <Pressable key={card} accessibilityRole="button" accessibilityState={{ selected: card === selected }} accessibilityLabel={[localizedName(CARDS[card].name), t.cards.shortLevel(levels[card]), lockedLabel?.(card)].filter(Boolean).join(', ')} onPress={() => onSelect(card === selected ? null : card)} style={card === selected && styles.hidden}>
+            <CardView card={card} width={cardW} level={levels[card]} locked={lockedLabel?.(card) ?? null} upgradable={upgradable?.(card)} quiet={quiet} />
           </Pressable>
         ) : (
           <Pressable key={`empty-${i}`} onPress={() => onEmpty?.(i)} accessibilityLabel={emptyLabel}>

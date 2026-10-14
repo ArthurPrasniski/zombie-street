@@ -40,10 +40,16 @@ describe('contas', () => {
     await call(ctx.app, 'POST', '/auth/google', first.token, { idToken: 'google-joao' });
     const other = await guest(ctx.app, 'aparelho-DDDD-0004');
     await webhook(ctx.app, { type: 'NON_RENEWING_PURCHASE', app_user_id: other.id, product_id: 'zr_gems_80', transaction_id: 't-merge' });
+    await call(ctx.app,'POST','/pass/xp',other.token,{amount:100,requestId:'guest-xp-merge-001'});
+    await call(ctx.app,'POST','/missions/match',other.token,{id:'guest-mission-match-001',wins:1,kills:40,cards:12});
+    await call(ctx.app,'POST','/missions/claim',other.token,{id:'wins'});
     const res = await call(ctx.app, 'POST', '/auth/google', other.token, { idToken: 'google-joao' });
     assert.equal(res.body.user.id, first.id);
     assert.equal(res.body.switched, true);
     assert.equal((await call(ctx.app, 'GET', '/wallet', res.body.token)).body.gems, 80);
+    assert.equal((await call(ctx.app,'GET','/purchases',res.body.token)).body.records[0].transactionId,'t-merge');
+    assert.equal((await call(ctx.app,'GET','/pass',res.body.token)).body.xp,120);
+    assert.deepEqual((await call(ctx.app,'GET','/missions',res.body.token)).body.claimed,['wins']);
     // O convidado foi absorvido e não existe mais
     assert.equal((await call(ctx.app, 'GET', '/me', other.token)).status, 401);
   });

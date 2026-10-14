@@ -1,8 +1,18 @@
-import { useLocalSearchParams } from 'expo-router';
+import { localizedName } from '@/i18n/names';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
+import { expeditionText } from '@/i18n/expedition';
+import { EXPEDITION_UNLOCK } from '@/game/data/expedition';
+import type { ExpeditionBoon } from '@/game/data/expedition';
+import { GameModal } from '@/ui/modals/GameModal';
+import { Button } from '@/ui/kit/Button';
+import { useWeeklyStore } from '@/services/weekly';
+import { WEEKLY_DECK } from '@zombie-road/shared/weekly';
+import { TutorialRadio } from '@/ui/combat/TutorialRadio';
+import { tutorialText } from '@/i18n/tutorial';
 import { CARDS, isTroop } from '@/game/data/cards';
 import { MAX_TROOPS } from '@/game/data/constants';
 import { SCENARIO_EVENTS } from '@/game/data/events';
@@ -27,6 +37,7 @@ import { BloodBar } from '@/ui/combat/BloodBar';
 import { CardHand } from '@/ui/combat/CardHand';
 import { CombatHud } from '@/ui/combat/CombatHud';
 import { CombatModals } from '@/ui/combat/CombatModals';
+import { StageReplayGate } from '@/ui/combat/StageReplayGate';
 import { EventBanner } from '@/ui/combat/EventBanner';
 import { WaveBanner } from '@/ui/combat/WaveBanner';
 import { AppText } from '@/ui/kit/AppText';
@@ -52,21 +63,39 @@ function devOptions(dev: Params): DevOptions {
 /** Combate da fase escolhida em Fases (GDD seção 12) ou da Sobrevivência (`?mode=survival`, seção 17.9). */
 export default function CombatScreen() {
   const params = useLocalSearchParams<Params>();
-  const survival = params.mode === 'survival';
+  const savedStage = useProgressStore((s) => s.currentStage);
+  const stage = params.mode === 'weekly' ? useWeeklyStore.getState().attempt?.stage ?? 1 : params.mode === 'training' ? 1 : __DEV__ && params.stage ? Math.max(1, Number(params.stage)) : savedStage;
+  const [attempt, setAttempt] = useState(0);
+  if (params.mode === 'expedition' && useProgressStore.getState().highestCleared < EXPEDITION_UNLOCK) return <Redirect href="/expedition" />;
+  if (params.mode === 'weekly' && !useWeeklyStore.getState().attempt) return <Redirect href="/weekly" />;
+  return (
+    <StageReplayGate key={`${params.mode}:${stage}:${attempt}`} stage={stage} survival={params.mode === 'survival' || params.mode === 'expedition' || params.mode === 'training' || params.mode === 'weekly'}>
+      <CombatMatch onReplay={() => setAttempt((n) => n + 1)} />
+    </StageReplayGate>
+  );
+}
+
+function CombatMatch({ onReplay }: { onReplay: () => void }) {
+  const params = useLocalSearchParams<Params>();
+  const weekly = params.mode === 'weekly';
+  const training = params.mode === 'training' || weekly;
+  const expedition = params.mode === 'expedition';
+  const survival = params.mode === 'survival' || expedition;
+  const [boons,setBoons] = useState<ExpeditionBoon[]>([]);
   const savedStage = useProgressStore((s) => s.currentStage);
   // Em desenvolvimento, `?stage=23` abre qualquer fase (para ver os outros mundos)
-  const stage = __DEV__ && params.stage ? Math.max(1, Number(params.stage)) : savedStage;
+  const stage = params.mode === 'weekly' ? useWeeklyStore.getState().attempt?.stage ?? 1 : params.mode === 'training' ? 1 : __DEV__ && params.stage ? Math.max(1, Number(params.stage)) : savedStage;
   const savedDeck = useProgressStore((s) => s.deck);
   const devDeck = devOptions(params).deck;
-  const deck = devDeck ? matchDeck(devDeck, savedDeck) : savedDeck;
+  const deck = weekly ? [...WEEKLY_DECK] : devDeck ? matchDeck(devDeck, savedDeck) : savedDeck;
   const session = useSessionStore();
   const { insets, sceneW, sceneH, stripH, cardWidth } = useCombatLayout();
   const [runId, setRunId] = useState(0);
   const [confirmExit, setConfirmExit] = useState(false);
-  const { result, clearResult, scenario, onEvent } = useCombatEvents();
+  const { result, clearResult, scenario, onEvent } = useCombatEvents(training, expedition, !weekly && !survival && stage === 1);
   // Rádio: abertura do mundo antes da 1ª fase (com o jogo pausado) e fechamento depois do chefe
   const [intro, setIntro] = useState(() => {
-    const id = survival ? null : introFor(stage);
+    const id = survival || training ? null : introFor(stage);
     return id && !isHeard(useProgressStore.getState(), id) ? id : null;
   });
   const [outroHeard, setOutroHeard] = useState<string | null>(null);
@@ -78,8 +107,8 @@ export default function CombatScreen() {
   const world = survival ? WORLDS[worldIndex] : worldDef(worldIndex);
   const zombies = [...(survival ? survivalZombies(session.wave) : stageZombies(stage)), ...(devOptions(params).spawn ?? [])];
   const units: UnitId[] = [...deck.filter((c) => isTroop(CARDS[c])), ...zombies] as UnitId[];
-  const match: MatchKind = survival ? { mode: 'survival' } : { mode: 'stage', stage };
-  const { snapshot, send } = useGameLoop(match, runId, onEvent, devOptions(params));
+  const match: MatchKind = expedition ? { mode: 'expedition' } : weekly ? { mode: 'weekly' } : training ? { mode: 'training' } : survival ? { mode: 'survival' } : { mode: 'stage', stage };
+  const { snapshot, send } = useGameLoop(match, runId, (event) => { if (event.type === 'expeditionChoice') setBoons(event.choices); onEvent(event); }, devOptions(params));
   const { drag, draggingSlot, canvasView, measure, ghostStyle, handlers } = useCardDrag(session.hand, send, cardWidth);
 
   const togglePause = () => send({ type: 'setPaused', paused: !session.paused });
@@ -92,7 +121,9 @@ export default function CombatScreen() {
     send({ type: 'setPaused', paused: false });
   };
   const restart = () => {
+    if (!survival) { onReplay(); return; }
     clearResult();
+    setBoons([]);
     setRunId((id) => id + 1);
   };
   useEffect(() => {
@@ -122,8 +153,10 @@ export default function CombatScreen() {
         <GameCanvas snapshot={snapshot} drag={drag} width={sceneW} world={world.id} units={units} />
         {!survival && worldTint(worldIndex) && <View style={[styles.tint, { backgroundColor: worldTint(worldIndex) ?? undefined }]} pointerEvents="none" />}
         <View style={styles.hud} pointerEvents="box-none">
-          <CombatHud onBack={askExit} onTogglePause={togglePause} />
+          <CombatHud onSpeed={(speed) => send({ type: 'setSpeed', speed })} onBack={askExit} onTogglePause={togglePause} />
         </View>
+        <TutorialRadio active={!weekly && stage === 1 && !survival && !intro && !result} />
+        {training && <View style={{ position: 'absolute', bottom: 12, left: 12, right: 12 }}><AppText variant="small">{tutorialText.noReward}</AppText></View>}
         {scenario && !result && <EventBanner kind={scenario} />}
         {showBanner && <WaveBanner />}
         {session.troopsFull && !result && (
@@ -143,9 +176,12 @@ export default function CombatScreen() {
         {draggingSlot !== null && session.hand[draggingSlot] && <CardView card={session.hand[draggingSlot]} width={cardWidth} />}
       </Animated.View>
 
-      <CombatModals
+      {!!boons.length && <GameModal title={expeditionText.choose} buttons={<>{boons.map((boon) => <Button key={boon} label={expeditionText[boon]} onPress={() => { send({ type: 'chooseBoon', boon }); setBoons([]); }} />)}</>} />}
+      {!boons.length && <CombatModals
+        weekly={weekly}
+        training={training}
         result={result}
-        radio={radioId ? { id: radioId, place: pt.radio.world(worldIndex + 1, survival ? world.name : worldName(worldIndex)) } : null}
+        radio={radioId ? { id: radioId, place: pt.radio.world(worldIndex + 1, survival ? localizedName(world.name) : worldName(worldIndex)) } : null}
         onRadioClose={closeRadio}
         paused={session.paused}
         confirmExit={confirmExit}
@@ -153,7 +189,7 @@ export default function CombatScreen() {
         onStay={stay}
         onRetry={restart}
         onNext={nextStage}
-      />
+      />}
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
@@ -16,13 +16,14 @@ interface Props {
 
 /** Painel centralizado sobre a tela escurecida. Sem Modal nativo, por causa da rotação travada. */
 export function GameModal({ title, eyebrow, accent = colors.accent, children, buttons }: Props) {
+  const { height } = useWindowDimensions();
   return (
     <View style={styles.backdrop}>
       <View style={styles.wrap}>
         <Chunky face={colors.surface} edge="#100e14" radius={radius.xl} depth={8} gloss={0.05} faceStyle={styles.body}>
           <View style={styles.spacer} />
           {eyebrow && <AppText variant="eyebrow" color={accent}>{eyebrow}</AppText>}
-          {children}
+          <ScrollView style={{ maxHeight: Math.max(120, height * 0.55), alignSelf: 'stretch' }} contentContainerStyle={{ alignItems: 'center', gap: 10 }} bounces={false}>{children}</ScrollView>
           <View style={styles.buttons}>{buttons}</View>
         </Chunky>
         {/* Faixa do título por cima do painel, na cor do resultado */}
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wrap: { width: '100%', maxWidth: 420, paddingTop: 26 },
+  wrap: { width: '100%', maxWidth: 420, maxHeight: '90%', paddingTop: 26 },
   body: { alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingBottom: 22 },
   spacer: { height: 30 },
   ribbon: { position: 'absolute', top: 0, left: 24, right: 24 },

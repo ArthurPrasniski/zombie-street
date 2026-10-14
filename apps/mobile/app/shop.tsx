@@ -4,7 +4,7 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-na
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, GEM_PACKS } from '@zombie-road/shared/catalog';
+import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, GEM_PACKS, MEMBERSHIP } from '@zombie-road/shared/catalog';
 
 import { stageLabel } from '@/game/data/worlds';
 import { useProductPrices } from '@/hooks/useProductPrices';
@@ -21,10 +21,11 @@ import { Button } from '@/ui/kit/Button';
 import { Card } from '@/ui/kit/Card';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { CoinPackCard, GemPackCard } from '@/ui/shop/ShopCards';
+import { MembershipCard } from '@/ui/shop/MembershipCard';
 import { colors, radius } from '@/ui/theme';
 import { formatCash } from '@/utils/format';
 
-const GEM_PRODUCT_IDS = GEM_PACKS.map((pack) => pack.productId);
+const GEM_PRODUCT_IDS = [...GEM_PACKS.map((pack) => pack.productId), MEMBERSHIP.productId];
 
 /** Loja (GDD seção 19): Passe em destaque, gemas por dinheiro e moedas por gemas. */
 export default function ShopScreen() {
@@ -89,6 +90,8 @@ export default function ShopScreen() {
               </View>
             </View>
           </Card>
+
+          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
 
           <AppText variant="eyebrow" style={styles.section}>
             {pt.shop.gems}

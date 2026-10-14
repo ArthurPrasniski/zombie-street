@@ -1,3 +1,5 @@
+import { TruckPaints } from '@/ui/garage/TruckPaints';
+import { TRUCK_PAINTS } from '@/game/data/cosmetics';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,10 +25,13 @@ export default function GarageScreen() {
           <View style={styles.hero}>
             <View style={styles.glow} />
             <Image source={TRUCK} style={styles.truck} />
+            <View style={{ position: 'absolute', top: 145, width: 75, height: 8, backgroundColor: TRUCK_PAINTS[progress.truckPaint], borderRadius: 3 }} />
             <AppText variant="small" color={colors.textMuted} style={styles.summary}>
-              {TRUCK_PART_IDS.map((part) => pt.garage.value(pt.garage.stats[part], statText(part, progress.truck))).join('  ·  ')}
+              <TruckPaints />
+          {TRUCK_PART_IDS.map((part) => pt.garage.value(pt.garage.stats[part], statText(part, progress.truck))).join('  ·  ')}
             </AppText>
           </View>
+          <TruckPaints />
           {TRUCK_PART_IDS.map((part) => (
             <PartRow
               key={part}

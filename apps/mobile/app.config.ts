@@ -13,6 +13,8 @@ const NOTIFICATION_COLOR = '#b8e835';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const env = process.env;
+  const host = env.APP_LINK_HOST?.trim();
+  if (host && !/^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(host)) throw new Error('APP_LINK_HOST deve conter apenas o domínio');
   const plugins: ExpoConfig['plugins'] = [
     ...(config.plugins ?? []),
     // R8 nos builds Android release: otimização, ofuscação e remoção de recursos não usados.
@@ -43,9 +45,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...config,
     name: config.name ?? 'Zombie Road',
     slug: config.slug ?? 'estrada-zumbi',
-    ios: { ...config.ios, bundleIdentifier: BUNDLE_ID, usesAppleSignIn: true, infoPlist: { ...config.ios?.infoPlist, CFBundleDevelopmentRegion: 'en' } },
+    ios: { ...config.ios, bundleIdentifier: BUNDLE_ID, usesAppleSignIn: true, ...(host ? { associatedDomains: [...new Set([...(config.ios?.associatedDomains ?? []), `applinks:${host}`])] } : {}), infoPlist: { ...config.ios?.infoPlist, CFBundleDevelopmentRegion: 'en' } },
     // Push remoto no Android (FCM): caminho do google-services.json (no EAS, uma variável do tipo arquivo)
-    android: { ...config.android, ...(env.GOOGLE_SERVICES_JSON ? { googleServicesFile: env.GOOGLE_SERVICES_JSON } : {}) },
+    android: { ...config.android, ...(host ? { intentFilters: [...(config.android?.intentFilters ?? []), { action: 'VIEW', autoVerify: true, data: [{ scheme: 'https', host, pathPrefix: '/play/' }], category: ['BROWSABLE', 'DEFAULT'] }] } : {}), ...(env.GOOGLE_SERVICES_JSON ? { googleServicesFile: env.GOOGLE_SERVICES_JSON } : {}) },
     plugins,
   };
 };

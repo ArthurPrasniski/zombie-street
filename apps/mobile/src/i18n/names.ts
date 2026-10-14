@@ -44,6 +44,7 @@ const names: Record<string, readonly [string, string]> = {
 
 /** Localiza nomes de conteúdo sem alterar ids, regras ou dados salvos. */
 export function localizedName(value: string): string {
-  if (language === 'pt') return value;
-  return names[value]?.[language === 'en' ? 0 : 1] ?? value;
+  const original = names[value] ? value : Object.keys(names).find((key) => names[key].includes(value)) ?? value;
+  if (language === 'pt') return original;
+  return names[original]?.[language === 'en' ? 0 : 1] ?? original;
 }

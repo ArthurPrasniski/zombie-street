@@ -23,7 +23,7 @@ export function useMatchRecord() {
     const r = record.current;
     if (event.type === 'zombieSpawned' && !r.seen.includes(event.zombie)) r.seen.push(event.zombie);
     else if (event.type === 'zombieKilled') r.kills[event.zombie] = (r.kills[event.zombie] ?? 0) + 1;
-    else if (event.type === 'cardPlayed') r.cardsPlayed++;
+    else if (event.type === 'cardPlayed') { r.cardsPlayed++; r.cardUses ??= {}; r.cardUses[event.card] = (r.cardUses[event.card] ?? 0) + 1; }
   };
 
   return { onEvent, flush };

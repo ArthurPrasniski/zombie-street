@@ -8,6 +8,7 @@ import type { Progress } from '@/state/progress';
 export interface MatchRecord {
   seen: ZombieId[];
   kills: Partial<Record<ZombieId, number>>;
+  cardUses?: Partial<Record<import('@/game/types').CardId, number>>;
   cardsPlayed: number;
 }
 
@@ -20,7 +21,7 @@ export function recordMatch(p: Progress, record: MatchRecord): Progress {
   if (newSeen.length === 0 && !killed && record.cardsPlayed === 0) return p;
   const kills = { ...p.kills };
   for (const [id, n] of Object.entries(record.kills) as [ZombieId, number][]) kills[id] = (kills[id] ?? 0) + n;
-  return { ...p, seen: [...p.seen, ...newSeen], kills, cardsPlayed: p.cardsPlayed + record.cardsPlayed };
+  return { ...p, seen: [...p.seen, ...newSeen], kills, cardsPlayed: p.cardsPlayed + record.cardsPlayed, mastery: { ...p.mastery, ...Object.fromEntries(Object.entries(record.cardUses ?? {}).map(([id, count]) => [id, (p.mastery[id as import('@/game/types').CardId] ?? 0) + (count ?? 0)])) } };
 }
 
 export const zombieKills = (p: Pick<Progress, 'kills'>, id: ZombieId): number => p.kills[id] ?? 0;

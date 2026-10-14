@@ -63,6 +63,43 @@ async function absorbGuest(q: Queryable, guestId: string, targetId: string): Pro
     await q.query('update wallets set gems = gems + $2 where user_id = $1', [targetId, wallet.gems]);
     await q.query("insert into ledger (user_id, delta, reason, ref) values ($1, $2, 'merge', $3)", [targetId, wallet.gems, guestId]);
   }
+  await q.query(
+    `insert into memberships (user_id, expires_at, auto_renew, last_event_ms, period_started_at)
+     select $2, expires_at, auto_renew, last_event_ms, period_started_at from memberships where user_id = $1
+     on conflict (user_id) do update set expires_at = excluded.expires_at, auto_renew = excluded.auto_renew,
+       last_event_ms = excluded.last_event_ms, period_started_at = excluded.period_started_at
+     where memberships.period_started_at < excluded.period_started_at
+       or (memberships.period_started_at = excluded.period_started_at and memberships.last_event_ms < excluded.last_event_ms)`,
+    [guestId, targetId],
+  );
+  await q.query('UPDATE purchases SET user_id=$2 WHERE user_id=$1',[guestId,targetId]);
+  await q.query('UPDATE pass_purchases SET user_id=$2 WHERE user_id=$1',[guestId,targetId]);
+  await q.query('UPDATE weekly_attempts SET user_id=$2 WHERE user_id=$1',[guestId,targetId]);
+  await q.query('INSERT INTO xp_requests(user_id,id) SELECT $2,id FROM xp_requests WHERE user_id=$1 ON CONFLICT DO NOTHING',[guestId,targetId]);
+  await q.query('update membership_cycles set user_id = $2 where user_id = $1', [guestId, targetId]);
+  await q.query(
+    `insert into ledger (user_id, delta, reason, ref, result)
+     select $2, delta, reason, ref, result from ledger where user_id = $1 and reason in ('membership', 'membership-refund', 'pass', 'mission')
+     on conflict do nothing`,
+    [guestId, targetId],
+  );
+  await q.query(`INSERT INTO pass_progress(user_id,season,xp,claimed_free,claimed_premium,xp_day,xp_today)
+    SELECT $2,season,xp,claimed_free,claimed_premium,xp_day,xp_today FROM pass_progress WHERE user_id=$1
+    ON CONFLICT(user_id,season) DO UPDATE SET xp=GREATEST(pass_progress.xp,EXCLUDED.xp),
+      claimed_free=ARRAY(SELECT DISTINCT unnest(pass_progress.claimed_free || EXCLUDED.claimed_free)),
+      claimed_premium=ARRAY(SELECT DISTINCT unnest(pass_progress.claimed_premium || EXCLUDED.claimed_premium)),
+      xp_today=CASE WHEN pass_progress.xp_day=EXCLUDED.xp_day THEN LEAST(600,pass_progress.xp_today+EXCLUDED.xp_today)
+        WHEN pass_progress.xp_day>EXCLUDED.xp_day THEN pass_progress.xp_today ELSE EXCLUDED.xp_today END,
+      xp_day=GREATEST(pass_progress.xp_day,EXCLUDED.xp_day)`,[guestId,targetId]);
+  await q.query(`INSERT INTO daily_progress(user_id,day,wins,kills,cards,claimed)
+    SELECT $2,day,wins,kills,cards,claimed FROM daily_progress WHERE user_id=$1
+    ON CONFLICT(user_id,day) DO UPDATE SET wins=GREATEST(daily_progress.wins,EXCLUDED.wins),
+      kills=GREATEST(daily_progress.kills,EXCLUDED.kills),cards=GREATEST(daily_progress.cards,EXCLUDED.cards),
+      claimed=ARRAY(SELECT DISTINCT unnest(daily_progress.claimed || EXCLUDED.claimed))`,[guestId,targetId]);
+  await q.query('INSERT INTO daily_matches(user_id,id,received_at) SELECT $2,id,received_at FROM daily_matches WHERE user_id=$1 ON CONFLICT DO NOTHING',[guestId,targetId]);
+  await q.query(`INSERT INTO subscriptions(user_id,product_id,expires_at,updated_at)
+    SELECT $2,product_id,expires_at,updated_at FROM subscriptions WHERE user_id=$1
+    ON CONFLICT(user_id) DO UPDATE SET expires_at=GREATEST(subscriptions.expires_at,EXCLUDED.expires_at)`,[guestId,targetId]);
   await q.query('delete from users where id = $1', [guestId]);
 }
 

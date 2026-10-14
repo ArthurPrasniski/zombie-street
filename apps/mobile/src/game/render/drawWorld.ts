@@ -209,7 +209,7 @@ function drawDrag(canvas: SkCanvas, paint: SkPaint, tint: SkPaint, drag: DragPre
 }
 
 /** Desenha o campo inteiro em coordenadas do mundo. Roda no thread de UI. */
-export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: SpriteSet, drag: DragPreview, font: SkFont | null): void {
+export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: SpriteSet, drag: DragPreview, font: SkFont | null, appearance?: { color: string; hull: number; gun: number; tank: number }): void {
   'worklet';
   const paint = Skia.Paint();
   const flash = Skia.Paint();
@@ -230,6 +230,15 @@ export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: Sprit
   drawScenarioGround(canvas, paint, snap.areas, snap.time);
   drawSpellGround(canvas, paint, snap.areas, snap.time);
   drawBase(canvas, paint, snap.base, sprites.base);
+  if (appearance) {
+    rect(canvas, paint, 210, 840, 180, 6, appearance.color);
+    for (let i = 0; i < Math.ceil(appearance.hull / 5); i++) {
+      rect(canvas, paint, 180 + i * 18, 858, 12, 8, '#b8c1c6');
+      rect(canvas, paint, 408 - i * 18, 858, 12, 8, '#b8c1c6');
+    }
+    if (appearance.gun > 0) rect(canvas, paint, BASE.gunX - 3, BASE.gunY - 20 - Math.ceil(appearance.gun / 5) * 3, 6, 18, '#b8c1c6');
+    if (appearance.tank > 0) rect(canvas, paint, 450, 853, 8 + appearance.tank * 3, 14, '#bb3b51');
+  }
   for (const e of snap.effects) {
     if (e.kind !== 'corpse') continue;
     const image = sprites.units[e.unit];

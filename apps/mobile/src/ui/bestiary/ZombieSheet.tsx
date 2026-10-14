@@ -1,3 +1,10 @@
+import { localizedName } from '@/i18n/names';
+import { router } from 'expo-router';
+import { tacticsFor } from './tactics';
+import { CARDS } from '@/game/data/cards';
+import { comfortText } from '@/i18n/comfort';
+import { useProgressStore } from '@/state/progressStore';
+import { isCardUnlocked } from '@/state/progress';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { ZOMBIES } from '@/game/data/zombies';
@@ -13,6 +20,8 @@ import { formatInt } from '@/utils/format';
 /** Ficha do zumbi no Bestiário: retrato, onde aparece, mecânica, atributos na fase 1 e abates. */
 export function ZombieSheet({ zombie, kills, onClose }: { zombie: ZombieId; kills: number; onClose: () => void }) {
   const def = ZOMBIES[zombie];
+  const progress = useProgressStore();
+  const tactic = tacticsFor(zombie);
   const b = pt.bestiary;
   const stats: [string, number][] = [
     [b.hp, def.hp],
@@ -20,7 +29,7 @@ export function ZombieSheet({ zombie, kills, onClose }: { zombie: ZombieId; kill
     [b.speed, def.speed],
   ];
   return (
-    <GameModal title={def.name} eyebrow={zombieWhere(zombie)} accent={def.isBoss ? colors.danger : colors.accent} buttons={<Button label={b.close} variant="dark" onPress={onClose} />}>
+    <GameModal title={localizedName(def.name)} eyebrow={zombieWhere(zombie)} accent={def.isBoss ? colors.danger : colors.accent} buttons={<Button label={b.close} variant="dark" onPress={onClose} />}>
       <Image source={ZOMBIE_ART[zombie]} style={styles.art} />
       <AppText color={colors.textMuted} style={styles.center}>
         {b.descriptions[zombie]}
@@ -28,6 +37,9 @@ export function ZombieSheet({ zombie, kills, onClose }: { zombie: ZombieId; kill
       <AppText variant="label" color={colors.yellow} style={styles.center}>
         {b.abilities[zombie]}
       </AppText>
+      <AppText variant="small">{comfortText.tips[tactic.kind]}</AppText>
+      <AppText variant="small">{comfortText.recommended}</AppText>
+      {tactic.cards.filter((c) => isCardUnlocked(progress,c)).map((c) => <Button key={c} label={localizedName(CARDS[c].name)} variant="dark" size="s" onPress={() => { onClose(); router.push(`/deck?card=${c}`); }} />)}
       <View style={styles.stats}>
         {stats.map(([label, value]) => (
           <View key={label} style={styles.stat}>

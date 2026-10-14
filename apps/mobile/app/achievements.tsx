@@ -1,6 +1,8 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { resultsText } from '@/i18n/results';
+import { Button } from '@/ui/kit/Button';
 import { ACHIEVEMENTS } from '@/game/data/achievements';
 import { t as pt } from '@/i18n';
 import { achievementValue, claimableCount, medalsReached, nextGoal, nextReward } from '@/state/achievements';
@@ -20,6 +22,7 @@ export default function AchievementsScreen() {
         <ScreenHeader title={pt.achievements.title} />
         <ScrollView contentContainerStyle={styles.list}>
           <AppText variant="eyebrow">{pt.achievements.subtitle(claimableCount(progress))}</AppText>
+          <Button label={resultsText.all} disabled={!claimableCount(progress)} onPress={progress.claimAllAchievements} />
           {rows.map((def) => (
             <AchievementRow
               key={def.id}

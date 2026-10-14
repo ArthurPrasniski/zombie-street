@@ -61,3 +61,9 @@ export function nextGoal(p: Progress, id: AchievementId): number {
   const goals = def(id).goals;
   return goals[Math.min(MEDALS - 1, medalsReached(p, id))];
 }
+
+export function claimAllAchievements(p: Progress): Progress {
+  let next = p;
+  for (const achievement of ACHIEVEMENTS) while (nextReward(next, achievement.id) !== null) next = claimAchievement(next, achievement.id);
+  return next;
+}

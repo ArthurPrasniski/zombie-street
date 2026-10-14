@@ -123,6 +123,10 @@ export const es = {
     },
   },
   deck: {
+    upgrades: (n: number) => `${n} cartas del mazo pueden mejorar. Toca para ver.`,
+    tapHint: 'Toca una carta para editar.',
+    nextUnlock: 'Próxima carta por desbloquear',
+    lockedCount: (n: number) => `Cartas bloqueadas (${n})`,
     title: 'Mazo',
     deck: "Tu mazo",
     count: (n: number, total: number) => `${n}/${total}`,

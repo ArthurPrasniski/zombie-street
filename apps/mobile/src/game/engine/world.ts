@@ -1,3 +1,4 @@
+import { EXPEDITION_BALANCE } from '@/game/data/expedition';
 import { cardPower, zombieDamage, zombieHp, zombieReward } from '@/game/data/balance';
 import { CARD_IDS, HAND_SIZE } from '@/game/data/cards';
 import { evolutionTier } from '@/game/data/evolutions';
@@ -10,6 +11,7 @@ import type { CardId, CardLevels, MatchMode, StageDef, TroopDef, TroopEntity, Wo
 
 /** O que o jogador leva para a partida: deck de 8, níveis das cartas e peças da caminhonete. */
 export interface MatchSetup {
+  expedition?: boolean;
   deck: CardId[];
   cardLevels: CardLevels;
   truck?: TruckLevels;
@@ -23,6 +25,8 @@ export function createWorld(stage: StageDef, setup: MatchSetup, seed = DEFAULT_S
   const base = baseStats(setup.truck ?? STOCK_TRUCK);
   return {
     stage,
+    expedition: setup.expedition ? { picked: [], pending: false, choices: [] } : null,
+    stats: { duration: 0, wave: 1, damage: 0, baseDamage: 0, kills: 0, cards: {} },
     mode,
     waveIndex: 0,
     waveTime: 0,
@@ -68,7 +72,7 @@ export function createTroop(world: World, def: TroopDef, level: number, x: numbe
     y,
     hp: maxHp,
     maxHp,
-    damage: def.damage * power,
+    damage: def.damage * power * (1 + (world.expedition?.picked.filter((id) => id === 'attack').length ?? 0) * EXPEDITION_BALANCE.attack),
     cooldown: 0,
     sinceAttack: Number.POSITIVE_INFINITY,
     deployTimer: TROOP_DEPLOY_TIME,

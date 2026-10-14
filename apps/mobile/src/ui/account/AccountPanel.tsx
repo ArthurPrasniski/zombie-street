@@ -3,9 +3,13 @@ import { StyleSheet, View } from 'react-native';
 
 import type { Provider } from '@zombie-road/shared/api';
 
+import { reliabilityText } from '@/i18n/reliability';
+import { pullSave } from '@/services/cloudSave';
 import { t as pt } from '@/i18n';
 import { formatSyncTime } from '@/utils/syncTime';
 import { ApiError } from '@/services/api';
+import { usePurchaseStore } from '@/state/purchaseStore';
+import { refreshEconomy } from '@/services/economy';
 import { IS_EXPO_GO } from '@/services/env';
 import { deleteAccount, signIn, signOut } from '@/services/session';
 import { appleAvailable } from '@/services/signIn';
@@ -21,7 +25,8 @@ const NAMES: Record<Provider, string> = { google: 'Google', apple: 'Apple' };
 
 /** Conta nos Ajustes: status, entrar com Google/Apple, sair e excluir a conta. */
 export function AccountPanel() {
-  const { user, online, cloud } = useAccountStore();
+  const { user, online, cloud, syncStatus } = useAccountStore();
+  const purchasing = usePurchaseStore((s) => s.attempts.some((a) => a.userId === user?.id && ['buying','confirming'].includes(a.status)));
   const [apple, setApple] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,20 +70,22 @@ export function AccountPanel() {
           {synced ? pt.account.synced(synced) : pt.account.notSynced}
         </AppText>
       )}
+      <AppText variant="small">{syncStatus === 'error' ? reliabilityText.failed : reliabilityText[syncStatus]}</AppText>
+      <Button label={reliabilityText.retry} variant="dark" size="s" disabled={syncStatus === 'saving'} onPress={() => run(async () => { await pullSave(); await refreshEconomy(); })} />
       {error && <AppText color={colors.danger}>{error}</AppText>}
       {online && (
         <ProviderLoginButtons
           providers={providers}
           appleAvailable={apple}
-          busy={busy}
+          busy={busy || purchasing}
           onGoogle={() => run(() => signIn('google'))}
           onApple={() => run(() => signIn('apple'))}
         />
       )}
       {online && (
         <View style={styles.buttons}>
-          {providers.length > 0 && <Button label={pt.account.signOut} variant="dark" size="s" disabled={busy} onPress={() => run(signOut)} />}
-          {user && <Button label={pt.account.delete} variant="solid" color={colors.danger} size="s" disabled={busy} onPress={() => setConfirm(true)} />}
+          {providers.length > 0 && <Button label={pt.account.signOut} variant="dark" size="s" disabled={busy || purchasing} onPress={() => run(signOut)} />}
+          {user && <Button label={pt.account.delete} variant="solid" color={colors.danger} size="s" disabled={busy || purchasing} onPress={() => setConfirm(true)} />}
         </View>
       )}
       {IS_EXPO_GO && online && (

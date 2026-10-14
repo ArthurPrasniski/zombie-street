@@ -9,6 +9,8 @@ import { HttpError } from '../errors';
 import { addXp, claim, passState } from '../store/pass';
 import { getSave, putSave } from '../store/saves';
 import { buyCoins, getGems } from '../store/wallet';
+import { membershipState } from '../store/membership';
+import { purchaseHistory } from '../store/purchases';
 
 const int = (min: number, max = 1e9) => ({ type: 'integer', minimum: min, maximum: max });
 
@@ -33,6 +35,8 @@ export function gameRoutes(app: FastifyInstance, deps: Deps): void {
   );
 
   app.get('/wallet', async (req) => ({ gems: await getGems(db, await user(req.headers.authorization)) }));
+  app.get('/membership', async (req) => membershipState(db, await user(req.headers.authorization), now()));
+  app.get('/purchases', async (req) => purchaseHistory(db, await user(req.headers.authorization)));
 
   app.post<{ Body: BuyCoins }>(
     '/shop/coins',
@@ -46,8 +50,8 @@ export function gameRoutes(app: FastifyInstance, deps: Deps): void {
 
   app.get('/pass', async (req) => passState(db, await user(req.headers.authorization), now()));
 
-  app.post<{ Body: AddXp }>('/pass/xp', { schema: { body: { type: 'object', required: ['amount'], properties: { amount: int(0, 10000) } } } }, async (req) =>
-    addXp(db, await user(req.headers.authorization), req.body.amount, now()),
+  app.post<{ Body: AddXp }>('/pass/xp', { schema: { body: { type: 'object', required: ['amount'], properties: { amount: int(0, 10000), requestId: { type: 'string', minLength: 8, maxLength: 64 } } } } }, async (req) =>
+    addXp(db, await user(req.headers.authorization), req.body.amount, now(), req.body.requestId),
   );
 
   app.post<{ Body: ClaimPass }>(

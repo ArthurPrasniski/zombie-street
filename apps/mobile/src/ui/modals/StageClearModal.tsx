@@ -2,6 +2,9 @@ import { StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { stageLabel } from '@/game/data/worlds';
+import type { MatchStats } from '@/game/types';
+import { MatchSummary } from '@/ui/combat/MatchSummary';
+import { stageXp } from '@zombie-road/shared/pass';
 import { t as pt } from '@/i18n';
 import { CashLabel } from '@/ui/CashLabel';
 import { AppText } from '@/ui/kit/AppText';
@@ -17,6 +20,7 @@ import { colors } from '@/ui/theme';
 const CASH_DELAY = STAR_FIRST_MS + 3 * STAR_STEP_MS;
 
 interface Props {
+  stats?: MatchStats;
   stage: number;
   cashEarned: number;
   stars: number;
@@ -30,7 +34,7 @@ interface Props {
 }
 
 /** "Fase s vencida!" com as estrelas, o dinheiro da partida (já com o bônus de vitória) e o bônus das estrelas novas. */
-export function StageClearModal({ stage, cashEarned, stars, starBonus, newStars, hasNext, onNext, onRetry, onExit }: Props) {
+export function StageClearModal({ stats, stage, cashEarned, stars, starBonus, newStars, hasNext, onNext, onRetry, onExit }: Props) {
   return (
     <GameModal
       eyebrow={pt.stageClear.eyebrow}
@@ -46,6 +50,7 @@ export function StageClearModal({ stage, cashEarned, stars, starBonus, newStars,
       <StarRow stars={stars} size={48} arched animated />
       <AppText color={colors.textMuted}>{pt.stageClear.earned}</AppText>
       <CountUp amount={cashEarned} size={32} delay={CASH_DELAY} />
+<MatchSummary stats={stats} xp={stageXp(true, stars)} stage={newStars > 0 ? stage : undefined} />
       <DoubleCoinsButton coins={cashEarned} />
       {starBonus > 0 && (
         <Animated.View style={styles.bonus} entering={FadeInDown.delay(CASH_DELAY + 800)}>

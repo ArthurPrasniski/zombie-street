@@ -3,6 +3,7 @@ import { AD_DOUBLES_PER_DAY } from '@zombie-road/shared/catalog';
 import { showRewardedAd, useAdStore } from '@/services/ads';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
+import { adsRemoved } from '@/services/membership';
 
 // "Assista uma propaganda e dobre suas moedas" (GDD seção 19.4): só quando o jogador escolhe, até
 // AD_DOUBLES_PER_DAY vezes por dia (no fuso do aparelho). As moedas são do aparelho, então a
@@ -19,7 +20,7 @@ export function doublesLeft(): number {
 }
 
 /** O botão aparece: há moedas para dobrar, propaganda carregada e ainda há vezes hoje. */
-export const canDouble = (coins: number, adReady: boolean): boolean => coins > 0 && adReady && doublesLeft() > 0;
+export const canDouble = (coins: number, adReady: boolean): boolean => !adsRemoved() && coins > 0 && adReady && doublesLeft() > 0;
 
 /** Mostra a propaganda; se assistiu até o fim, soma de novo as moedas da partida. */
 export async function doubleCoins(coins: number): Promise<boolean> {

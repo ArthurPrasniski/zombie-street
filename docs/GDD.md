@@ -267,8 +267,10 @@ Tudo gerado por código.
 
 ### Deck
 
-- Topo: os 8 espaços do deck (4 x 2), com o contador "n/8". Abaixo: a coleção
-  (cartas fora do deck e bloqueadas, estas com a fase que as libera).
+- Topo: os 8 espaços do deck (4 x 2), com o contador "n/8" e um resumo das melhorias disponíveis.
+  A grade usa molduras discretas, sem repetir o nível 1 ou setas em todas as cartas.
+  Abaixo ficam a coleção utilizável e a próxima carta a desbloquear. As bloqueadas ficam em
+  uma seção recolhida por padrão, com cadeado pequeno; a fase de desbloqueio aparece ao tocar.
 - Tocar numa carta a abre no lugar, como no Clash Royale: ela cresce e mostra
   um balão com as ações logo abaixo. Cartas do deck: "Remover" e "Melhorar".
   Cartas da coleção: "Adicionar" e "Melhorar" (com o deck cheio, Adicionar
@@ -611,7 +613,12 @@ pass.ts (os mesmos no app e no servidor).
 
 - Só premiadas e só quando o jogador escolhe: no fim de cada partida (vitória, derrota
   ou Sobrevivência), "Assistir e dobrar (+N)" soma de novo as moedas da partida. Até 10
-  vezes por dia. Nenhuma propaganda forçada.
+  vezes por dia.
+- Campanha e Fronteira: a primeira tentativa de cada fase é livre. Depois de vencer ou perder,
+  cada nova tentativa exige assistir a um anúncio premiado até o fim, inclusive entrando pela
+  Home ou pela lista de fases. Fechar antes, falhar ou não ter anúncio disponível não libera a
+  tentativa. O histórico de derrotas é salvo no aparelho e na nuvem. Esta regra não se aplica à
+  Sobrevivência e não usa o limite diário de anúncios para dobrar moedas.
 - Antes da primeira, o pedido de consentimento (LGPD/GDPR e o aviso de rastreamento do
   iOS), pelo SDK do AdMob.
 
@@ -620,6 +627,16 @@ pass.ts (os mesmos no app e no servidor).
 - Todo aparelho começa como convidado (sem pedir nada). "Entrar com Google" (e "Entrar
   com Apple" no iOS, exigência da Apple) salva na nuvem e leva o progresso para outros
   aparelhos. Ajustes: entrar, sair, excluir conta e quando foi o último save na nuvem.
+
+### 19.6 Clube da Estrada
+
+O **Clube da Estrada** (`zr_membership_monthly`) é uma assinatura com renovação automática
+mensal, separada do Passe de Batalha, com preço-base de R$ 19,90/mês. Enquanto estiver ativa,
+dispensa os anúncios para repetir fases e oculta o botão de dobrar moedas. Entrega 500 gemas e
+10.000 moedas na contratação e em cada renovação paga confirmada pelo RevenueCat, uma vez por
+transação. Cancelar a renovação mantém o acesso até o fim do período pago; expirar ou receber
+reembolso encerra o benefício. As moedas têm recibos no save para evitar entregas duplicadas.
+Na loja, o jogador pode recuperar compras e gerenciar a assinatura pela plataforma.
 
 
 ## 20. Notificações (C35)
@@ -673,3 +690,32 @@ as gemas.
   ajustes do celular quando o sistema já recusou); com permissão, as chaves Progresso, Passe de
   Batalha, Compras e Novidades.
 - Android: canal "Avisos do rádio" e ícone branco do zumbi (scripts/art/brand.mjs).
+
+## Evolução implementada em outubro/2026
+
+- Três decks nomeáveis; seleção, cópia, ordenação e troca direta. Filtros de coleção e ficha
+  com DPS teórico, intervalo, alvos e evolução; edição/análise recolhidas para priorizar as cartas.
+- Preparação da missão com contatos conhecidos, chefe, cenário e deck. Treino usa cartas
+  liberadas e não concede moedas, XP, estrelas, abates ou maestria.
+- Rádio de tutorial acompanha ações reais da primeira fase e primeira melhoria; pode ser
+  pulado ou repetido em Ajustes. Preferência de velocidade 1×/2× persiste.
+- Resultados mostram duração, onda, dano efetivo, dano à base, cartas e XP solicitado.
+  Derrota oferece Deck/Oficina; replay de campanha mantém a regra de anúncio já definida.
+- Transmissões diárias: vencer 1 fase (100 moedas/20 XP), matar 40 zumbis (150/20), usar
+  12 cartas (100/20). Dia UTC do servidor, sem objetivos de anúncio; XP respeita teto do passe.
+- Fases 10, 30 e 60 têm cadência de entrada própria. Desafio semanal possui cartas e níveis
+  iguais, semente fixa e medalhas conferidas por reprodução no servidor. Sem ranking público.
+- Maestria: 25, 100 e 500 usos de uma carta liberam título/moldura; nenhum bônus de poder.
+  Pinturas: original; estrada após fase 10; gelo após 100 usos; temporada após nível 30 Premium.
+  Melhorias de lataria/arma/tanque recebem detalhes de render; pinturas só mudam aparência.
+- Ajustes incluem idioma automático/PT/EN/ES, redução de movimento/tremor, efeitos reduzidos,
+  texto maior e volume dos sons. Não há música no app, portanto não existe controle fictício.
+  Diário destaca mensagens ouvidas desde a última visita.
+- Expedição: libera após fase 20, usa a estrutura da Sobrevivência e guarda recorde separado.
+  Após cada chefe, pausa para uma de três ofertas. Sangue +15%, dano de tropas +10%, reparo
+  de 25% da vida máxima ou vida máxima +10%; cada vantagem pode acumular até três vezes.
+  Modificadores vivem no World e somem ao encerrar/recomeçar. Moedas equivalem a 75% da
+  Sobrevivência, com arredondamento; XP mantém fórmula/teto existentes. Sem nova monetização.
+
+Esses números são a versão inicial de balanceamento. Testes automáticos verificam isolamento,
+idempotência e determinismo; calibração de dificuldade requer sessões de jogo reais.

@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
-import { canClaim, PASS_TIERS, passReward, type PassTrack, XP_PER_TIER } from '@zombie-road/shared/pass';
+import { canClaim, PASS_DAILY_XP, PASS_TIERS, passReward, type PassTrack, XP_PER_TIER } from '@zombie-road/shared/pass';
 
 import { t as pt } from '@/i18n';
 import { formatDate, formatDateTime } from '@/utils/format';
 import { useProductPrices } from '@/hooks/useProductPrices';
 import { useProductPurchase } from '@/hooks/useProductPurchase';
-import { claimPass, refreshEconomy } from '@/services/economy';
+import { resultsText } from '@/i18n/results';
+import { claimAllPass, claimPass, refreshEconomy } from '@/services/economy';
 import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
@@ -31,6 +32,8 @@ const dateBR = formatDate;
 
 /** Passe de Batalha: compra única por temporada de 90 dias e 30 níveis nas duas trilhas. */
 export default function PassScreen() {
+  const listRef = useRef<FlatList<number>>(null);
+  const scrolled = useRef(false);
   const pass = useAccountStore((s) => s.pass);
   const stage = useProgressStore((s) => s.highestCleared) + 1;
   const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(PASS_PRODUCT_IDS);
@@ -81,6 +84,7 @@ export default function PassScreen() {
     return canClaim(pass.xp, tier, track, claimed, pass.premium) ? 'claim' : 'locked';
   };
 
+  const claimable = TIERS.some((tier) => cell(tier, 'free') === 'claim' || cell(tier, 'premium') === 'claim');
   const header = (
     <Chunky face="#3a2456" edge="#1e1030" radius={radius.l} depth={6} gloss={0.08} faceStyle={styles.head}>
       <View style={styles.headRow}>
@@ -99,6 +103,9 @@ export default function PassScreen() {
       <AppText variant="small" color={colors.textMuted}>
         {`${pt.pass.xp(inTier, XP_PER_TIER)} · ${pt.pass.howXp}`}
       </AppText>
+      <AppText variant="small">{resultsText.daily}: {pass.xpToday}/{PASS_DAILY_XP} · {resultsText.reset}: {pass.resetsAt ? formatDateTime(pass.resetsAt) : '00:00 UTC'}</AppText>
+      <AppText variant="small">{pass.tier >= PASS_TIERS ? resultsText.complete : `${resultsText.next}: ${pass.tier + 1}`}</AppText>
+      <Button label={resultsText.all} size="s" disabled={busy || !claimable} onPress={() => act(claimAllPass)} />
       {pass.premium && pass.premiumUntil ? (
         <AppText variant="label" color={colors.accent}>
           {pt.pass.active(dateBR(pass.premiumUntil))}
@@ -138,6 +145,10 @@ export default function PassScreen() {
         <ScreenHeader title={pt.pass.open} right={<GemPill />} />
         <FlatList
           data={TIERS}
+          ref={listRef}
+          initialNumToRender={PASS_TIERS}
+          onContentSizeChange={() => { if (!scrolled.current) { scrolled.current = true; listRef.current?.scrollToIndex({ index: Math.max(0, pass.tier - 1), animated: false }); } }}
+          onScrollToIndexFailed={(info) => { listRef.current?.scrollToOffset({ offset: info.averageItemLength * info.index, animated: false }); }}
           keyExtractor={(tier) => `${tier}`}
           ListHeaderComponent={header}
           contentContainerStyle={styles.list}

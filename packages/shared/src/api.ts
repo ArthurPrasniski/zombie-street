@@ -37,6 +37,19 @@ export interface PutSave { baseRevision: number; version: number; data: unknown 
 
 export interface Wallet { gems: number }
 
+export interface PurchaseRecord { transactionId: string; productId: string; deliveredAt: string; refunded: boolean }
+export interface PurchaseHistory { records: PurchaseRecord[] }
+
+export interface MembershipGrant { id: string; coins: number; refunded: boolean }
+export interface MembershipState {
+  active: boolean;
+  expiresAt: string | null;
+  autoRenew: boolean;
+  /** Identifica a conta, inclusive ao recuperar benefícios offline. */
+  userId: string;
+  grants: MembershipGrant[];
+}
+
 /** Comprar moedas com gemas. `requestId` deixa o pedido repetível sem cobrar duas vezes. */
 export interface BuyCoins { pack: CoinPackId; stage: number; requestId: string }
 export interface BuyCoinsResult { requestId: string; gems: number; coins: number }
@@ -52,8 +65,11 @@ export interface PassState {
   claimedFree: number[];
   claimedPremium: number[];
   xpToday: number;
+  resetsAt?: string;
+  cosmeticGrants?: string[];
+  coinGrants?: { ref: string; coins: number }[];
 }
-export interface AddXp { amount: number }
+export interface AddXp { amount: number; requestId?: string }
 export interface ClaimPass { tier: number; track: PassTrack; stage: number }
 /** As gemas do prêmio já entram na carteira; as moedas o app soma no progresso. */
 export interface ClaimResult { reward: PassReward; pass: PassState; gems: number }

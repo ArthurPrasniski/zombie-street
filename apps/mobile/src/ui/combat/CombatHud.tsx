@@ -1,3 +1,5 @@
+import { useSettingsStore } from '@/state/settingsStore';
+import { Button } from '@/ui/kit/Button';
 import { StyleSheet, View } from 'react-native';
 
 import { SURVIVAL_BOSS_EVERY } from '@/game/data/survival';
@@ -11,12 +13,14 @@ import { IconButton } from '@/ui/kit/Pill';
 import { colors } from '@/ui/theme';
 
 interface Props {
+  onSpeed?: (speed: 1 | 2) => void;
   onBack: () => void;
   onTogglePause: () => void;
 }
 
 /** Topo do combate: voltar, pausa e "Fase s · Onda n/5" (ou a onda da Sobrevivência) com segmentos. A vida da base fica no campo. */
-export function CombatHud({ onBack, onTogglePause }: Props) {
+export function CombatHud({ onBack, onTogglePause, onSpeed }: Props) {
+  const speed = useSettingsStore((s) => s.speed);
   const { mode, stage, wave, totalWaves, killed, total, paused, fps } = useSessionStore();
   const progress = total > 0 ? Math.min(1, killed / total) : 0;
   // Sobrevivência: os segmentos mostram o bloco de 5 ondas, com o chefe no último
@@ -27,6 +31,7 @@ export function CombatHud({ onBack, onTogglePause }: Props) {
     <View style={styles.row} pointerEvents="box-none">
       <IconButton icon={ICONS.back} label={pt.common.back} onPress={onBack} size={42} />
       <IconButton icon={paused ? ICONS.play : ICONS.pause} label={paused ? pt.combat.resume : pt.combat.paused} onPress={onTogglePause} size={42} />
+      <Button label={`${speed}×`} size="s" variant="dark" onPress={() => { const next = speed === 1 ? 2 : 1; useSettingsStore.getState().setSpeed(next); onSpeed?.(next); }} />
       <Chunky face="#2a2632" edge="#17141b" radius={16} depth={4} gloss={0.08} style={styles.waveBox} faceStyle={styles.wave}>
         <AppText variant="label" style={styles.text}>
           {survival ? pt.survival.hud(wave) : pt.combat.stageWave(stageLabel(stage), wave, totalWaves)}

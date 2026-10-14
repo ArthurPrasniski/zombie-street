@@ -44,6 +44,7 @@ export function playCard(world: World, slot: number, x: number, y: number): bool
   const next = world.queue.shift();
   if (next) world.hand[slot] = next;
   world.queue.push(id);
+  world.stats.cards[id] = (world.stats.cards[id] ?? 0) + 1;
   world.events.push({ type: 'cardPlayed', card: id });
   return true;
 }

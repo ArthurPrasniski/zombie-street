@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -42,12 +43,12 @@ export default function BestiaryScreen() {
             {BESTIARY_ORDER.map((id) => {
               const seen = progress.seen.includes(id);
               return (
-                <Pressable key={id} disabled={!seen} onPress={() => setOpen(id)} accessibilityRole="button" accessibilityLabel={seen ? ZOMBIES[id].name : pt.bestiary.locked}>
+                <Pressable key={id} disabled={!seen} onPress={() => setOpen(id)} accessibilityRole="button" accessibilityLabel={seen ? localizedName(ZOMBIES[id].name) : pt.bestiary.locked}>
                   {({ pressed }) => (
                     <Chunky face={seen ? colors.surfaceHigh : colors.surface} edge="#16131a" radius={radius.m} depth={4} pressed={pressed} gloss={0.05} style={{ width: tileW }} faceStyle={styles.tile}>
                       <Image source={ZOMBIE_ART[id]} style={[styles.art, !seen && styles.silhouette]} />
                       <AppText variant="label" numberOfLines={1} adjustsFontSizeToFit style={styles.name} color={seen ? colors.white : colors.textMuted}>
-                        {seen ? ZOMBIES[id].name : pt.bestiary.locked}
+                        {seen ? localizedName(ZOMBIES[id].name) : pt.bestiary.locked}
                       </AppText>
                       <AppText variant="small" color={ZOMBIES[id].isBoss ? colors.danger : colors.accent}>
                         {seen ? `× ${formatInt(zombieKills(progress, id))}` : ' '}

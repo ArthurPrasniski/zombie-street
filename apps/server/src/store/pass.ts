@@ -38,27 +38,38 @@ function toState(season: string, row: Row, until: Date | null, now: Date): PassS
     premiumUntil: until?.toISOString() ?? null,
     claimedFree: row.claimed_free,
     claimedPremium: row.claimed_premium,
+    resetsAt: new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)).toISOString(),
     xpToday: row.xp_day === today ? row.xp_today : 0,
   };
 }
 
 export async function passState(q: Queryable, userId: string, now: Date): Promise<PassState> {
   const season = seasonOf(now);
-  return toState(season, await loadRow(q, userId, season), await premiumUntil(q, userId, now), now);
+  const state = toState(season, await loadRow(q, userId, season), await premiumUntil(q, userId, now), now);
+  const rows = await q.query<{ ref: string; result: PassReward }>("SELECT ref,result FROM ledger WHERE user_id=$1 AND reason='pass'", [userId]);
+  const cosmeticGrants = rows.filter((r) => r.ref.endsWith(':premium:30')).map((r) => r.ref.split(':')[0]);
+  return { ...state, cosmeticGrants, coinGrants: rows.filter((r) => r.result.kind === 'coins').map((r) => ({ ref: r.ref, coins: r.result.amount })) };
 }
 
 /** Soma XP da temporada respeitando o teto do dia (UTC). */
-export async function addXp(db: Db, userId: string, amount: number, now: Date): Promise<PassState> {
+export async function addXp(db: Db, userId: string, amount: number, now: Date, requestId?: string): Promise<PassState> {
   if (!Number.isFinite(amount) || amount < 0) throw new HttpError(400, 'xp inválido');
+  return db.tx(async (q) => {
+    if (requestId) { const inserted = await q.query('INSERT INTO xp_requests(user_id,id) VALUES($1,$2) ON CONFLICT DO NOTHING RETURNING id', [userId,requestId]); if (!inserted.length) return passState(q,userId,now); }
+    return addXpInTx(q,userId,amount,now);
+  });
+}
+
+export async function addXpInTx(q: Queryable, userId: string, amount: number, now: Date): Promise<PassState> {
   const season = seasonOf(now);
   const today = dayOf(now);
-  return db.tx(async (q) => {
+  {
     const row = await loadRow(q, userId, season, true);
     const used = row.xp_day === today ? row.xp_today : 0;
     const accepted = acceptXp(amount, used);
     await q.query('update pass_progress set xp = xp + $3, xp_day = $4, xp_today = $5 where user_id = $1 and season = $2', [userId, season, accepted, today, used + accepted]);
     return toState(season, { ...row, xp: row.xp + accepted, xp_day: today, xp_today: used + accepted }, await premiumUntil(q, userId, now), now);
-  });
+  }
 }
 
 /** Resgata o prêmio do nível: gemas entram na carteira; moedas voltam para o app somar. */

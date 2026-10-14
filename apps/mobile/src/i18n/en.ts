@@ -123,6 +123,10 @@ export const en = {
     },
   },
   deck: {
+    upgrades: (n: number) => `${n} deck cards can be upgraded. Tap to view.`,
+    tapHint: 'Tap a card to edit.',
+    nextUnlock: 'Next card to unlock',
+    lockedCount: (n: number) => `Locked cards (${n})`,
     title: 'Deck',
     deck: "Your deck",
     count: (n: number, total: number) => `${n}/${total}`,

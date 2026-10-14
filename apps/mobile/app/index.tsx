@@ -1,11 +1,17 @@
+import { localizedName } from '@/i18n/names';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Image, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { DECK_SIZE } from '@/game/data/cards';
+import { expeditionText } from '@/i18n/expedition';
+import { weeklyText } from '@/i18n/weekly';
+import { Button } from '@/ui/kit/Button';
+import { missionsText } from '@/i18n/missions';
+import { claimableCount } from '@/state/achievements';
+import { CARD_IDS, CARD_UNLOCKS, CARDS , DECK_SIZE } from '@/game/data/cards';
 import { STAGE_COUNT } from '@/game/data/stages';
-import { globalStage, stageLabel, STAGES_PER_WORLD, WORLDS, worldOf } from '@/game/data/worlds';
+import { globalStage, stageLabel, STAGES_PER_WORLD, worldOf } from '@/game/data/worlds';
 import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
 import { CashPill } from '@/ui/CashLabel';
@@ -17,7 +23,7 @@ import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { IconButton, Pill } from '@/ui/kit/Pill';
 import { PushPrompt } from '@/ui/push/PushPrompt';
-import { colors, radius } from '@/ui/theme';
+import { colors } from '@/ui/theme';
 import { worldName } from '@/ui/worldInfo';
 
 const LOBBY = require('@/assets/images/lobby.png');
@@ -38,6 +44,9 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const highestCleared = useProgressStore((s) => s.highestCleared);
+  const progress = useProgressStore();
+  const claims = claimableCount(progress);
+  const nextCard = CARD_IDS.filter((c) => (CARD_UNLOCKS[c] ?? 0) > highestCleared).sort((a,b) => (CARD_UNLOCKS[a] ?? 0) - (CARD_UNLOCKS[b] ?? 0))[0];
   const deck = useProgressStore((s) => s.deck);
   const next = highestCleared + 1;
   const world = worldOf(next);
@@ -51,7 +60,7 @@ export default function HomeScreen() {
       return;
     }
     useProgressStore.getState().selectStage(next);
-    router.push('/combat');
+    router.push('/prepare');
   };
 
   return (
@@ -98,6 +107,10 @@ export default function HomeScreen() {
             onPress={play}
           />
 
+          <AppText variant="small">{missionsText.next}: {claims ? `${claims} · ${pt.achievements.title}` : nextCard ? `${localizedName(CARDS[nextCard].name)} · ${stageLabel(CARD_UNLOCKS[nextCard] ?? 1)}` : missionsText.title}</AppText>
+          <Button label={missionsText.title} size="s" variant="dark" onPress={() => router.push('/missions')} />
+          <Button label={weeklyText.title} size="s" variant="dark" onPress={() => router.push('/weekly')} />
+          <Button label={expeditionText.title} size="s" variant="dark" onPress={() => router.push('/expedition')} />
           <HomeShortcuts />
         </View>
       </ScrollView>

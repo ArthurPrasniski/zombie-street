@@ -21,11 +21,12 @@ export function createLoop(step: (world: World, dt: number) => void = stepWorld)
       if (world.paused) return 0;
       accumulator += Math.min(frameDt, MAX_FRAME_DT) * world.speed;
       let steps = 0;
-      while (accumulator >= FIXED_STEP - EPSILON) {
+      while (accumulator >= FIXED_STEP - EPSILON && !world.paused) {
         step(world, FIXED_STEP);
         accumulator -= FIXED_STEP;
         steps++;
       }
+      if (world.paused) accumulator = 0;
       return steps;
     },
     reset() {

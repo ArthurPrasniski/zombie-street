@@ -9,34 +9,49 @@ export interface Settings {
   sound: boolean;
   haptics: boolean;
   damageNumbers: boolean;
+  reducedMotion: boolean;
+  visualEffects: boolean;
+  largeText: boolean;
 }
 
 export type SettingKey = keyof Settings;
 
-export const DEFAULT_SETTINGS: Settings = { sound: true, haptics: true, damageNumbers: true };
+export const DEFAULT_SETTINGS: Settings = { sound: true, haptics: true, damageNumbers: true, reducedMotion: false, visualEffects: true, largeText: false };
 
 interface SavedSettings extends Settings {
   /** Categorias de notificação ligadas (GDD seção 20). */
+  language: 'auto' | 'pt' | 'en' | 'es';
+  soundVolume: number;
+  speed: 1 | 2;
   push: PushPrefs;
   /** O app já perguntou se o jogador quer avisos (a pergunta aparece uma vez só). */
   pushAsked: boolean;
 }
 
 interface SettingsStore extends SavedSettings {
+  setLanguage(language: SavedSettings['language']): void;
+  setVolume(value: number): void;
+  setSpeed(speed: 1 | 2): void;
   setSetting(key: SettingKey, value: boolean): void;
   setPush(category: PushCategory, value: boolean): void;
   markPushAsked(): void;
 }
 
 function pick(state: SavedSettings): SavedSettings {
-  const { sound, haptics, damageNumbers, push, pushAsked } = state;
-  return { sound, haptics, damageNumbers, push, pushAsked };
+  const { sound, haptics, damageNumbers, reducedMotion, visualEffects, largeText, language, soundVolume, speed, push, pushAsked } = state;
+  return { sound, haptics, damageNumbers, reducedMotion, visualEffects, largeText, language, soundVolume, speed, push, pushAsked };
 }
 
 export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set): SettingsStore => ({
       ...DEFAULT_SETTINGS,
+      language: 'auto',
+      soundVolume: 1,
+      setLanguage: (language) => set({ language }),
+      setVolume: (value) => set({ soundVolume: Math.min(1, Math.max(0, value)) }),
+      speed: 1,
+      setSpeed: (speed) => set({ speed }),
       push: DEFAULT_PUSH_PREFS,
       pushAsked: false,
       setSetting: (key: SettingKey, value: boolean) => set({ [key]: value }),

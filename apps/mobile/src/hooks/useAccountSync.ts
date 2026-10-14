@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { refreshMissions } from '@/services/missions';
+import { flushTelemetry } from '@/services/telemetry';
 import { initAds } from '@/services/ads';
 import { pullSave, pushSave } from '@/services/cloudSave';
 import { flushXp, refreshEconomy } from '@/services/economy';
@@ -17,8 +19,8 @@ const PUSH_DELAY_MS = 4000;
 export function useAccountSync(ready: boolean): void {
   useEffect(() => {
     if (!ready) return;
-    startSession();
-    initAds().catch(() => null);
+    void startSession().then(() => initAds()).catch(() => null);
+    const metricsTimer = setInterval(() => { void flushTelemetry(); void refreshMissions(); }, 30000);
     let timer: ReturnType<typeof setTimeout> | null = null;
     const unsubscribe = useProgressStore.subscribe(() => {
       if (timer) clearTimeout(timer);
@@ -26,14 +28,16 @@ export function useAccountSync(ready: boolean): void {
     });
     const appState = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        pullSave();
-        refreshEconomy();
+        void pullSave().then(() => refreshEconomy());
         flushXp();
+        void refreshMissions();
+        void flushTelemetry();
       } else {
         pushSave();
       }
     });
     return () => {
+      clearInterval(metricsTimer);
       unsubscribe();
       appState.remove();
       if (timer) clearTimeout(timer);

@@ -1,5 +1,7 @@
+import { offerBoons } from '@/game/engine/expedition';
+import { EXPEDITION_REWARD_FACTOR } from '@/game/data/expedition';
+import { SURVIVAL_BOSS_EVERY , survivalBonus, survivalWave } from '@/game/data/survival';
 import { starsFor, victoryBonus } from '@/game/data/balance';
-import { survivalBonus, survivalWave } from '@/game/data/survival';
 import { INTERMISSION_DURATION } from '@/game/data/constants';
 import type { World } from '@/game/types';
 
@@ -31,7 +33,7 @@ function startFighting(world: World): void {
 function finishWave(world: World): void {
   // Sobrevivência: paga a onda e cria a próxima (GDD seção 17.9)
   if (world.mode === 'survival') {
-    const bonus = survivalBonus(world.waveIndex + 1);
+    const bonus = Math.round(survivalBonus(world.waveIndex + 1) * (world.expedition ? EXPEDITION_REWARD_FACTOR : 1));
     world.pendingCash += bonus;
     world.stageCash += bonus;
     world.stage.waves.push(survivalWave(world.waveIndex + 2));
@@ -45,11 +47,13 @@ function finishWave(world: World): void {
     return;
   }
   // As tropas continuam em campo de uma onda para a outra.
+  const choice = world.expedition && (world.waveIndex + 1) % SURVIVAL_BOSS_EVERY === 0;
   world.waveIndex++;
   world.phase = 'intermission';
   world.phaseTimer = INTERMISSION_DURATION;
   world.killedThisWave = 0;
   world.totalThisWave = world.stage.waves[world.waveIndex].spawns.length;
+  if (choice) offerBoons(world);
 }
 
 /** Base caiu: a partida acaba. O dinheiro já ganho fica. Na Sobrevivência, conta as ondas vencidas. */

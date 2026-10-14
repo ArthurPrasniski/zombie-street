@@ -1,3 +1,4 @@
+import { EXPEDITION_BALANCE } from '@/game/data/expedition';
 import { BLOOD } from '@/game/data/constants';
 import { isBossWave } from '@/game/data/stages';
 import { isActive } from '@/game/engine/queries';
@@ -8,6 +9,6 @@ import type { World } from '@/game/types';
 export function blood(world: World, dt: number): void {
   if (!isActive(world)) return;
   const bossWave = isBossWave(world.stage.waves[world.waveIndex]);
-  const rate = BLOOD.perSecond * (bossWave ? BLOOD.bossWaveMultiplier : 1) * weatherBlood(world);
+  const rate = BLOOD.perSecond * (bossWave ? BLOOD.bossWaveMultiplier : 1) * weatherBlood(world) * (1 + (world.expedition?.picked.filter((id) => id === 'blood').length ?? 0) * EXPEDITION_BALANCE.blood);
   world.blood = Math.min(BLOOD.max, world.blood + rate * dt);
 }

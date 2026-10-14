@@ -65,6 +65,8 @@ function HandCard({ slot, card, width, affordable, dragging, handlers }: HandCar
   useEffect(() => {
     latest.current = { slot, affordable, handlers };
   });
+  // PanResponder invokes these closures only during gestures; creation never reads the ref.
+  // eslint-disable-next-line react-hooks/refs
   const [responder] = useState(() =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => latest.current.affordable,

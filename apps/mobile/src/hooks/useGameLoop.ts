@@ -2,7 +2,11 @@ import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { type SharedValue, useSharedValue } from 'react-native-reanimated';
 
-import { DECK_SIZE } from '@/game/data/cards';
+import { WEEKLY_DECK, WEEKLY_LEVEL, type ReplayCard } from '@zombie-road/shared/weekly';
+import { useWeeklyStore, submitWeekly } from '@/services/weekly';
+import { CARD_IDS , DECK_SIZE } from '@/game/data/cards';
+import { useSettingsStore } from '@/state/settingsStore';
+import { track } from '@/services/telemetry';
 import { BLOOD, STORE_SYNC_INTERVAL } from '@/game/data/constants';
 import type { ScenarioEventId } from '@/game/data/events';
 import { getStage } from '@/game/data/stages';
@@ -44,7 +48,7 @@ const CAST_Y = 320;
 const STRESS_MAX_Y = 400;
 
 /** Que partida jogar: uma fase ou a Sobrevivência. */
-export type MatchKind = { mode: 'stage'; stage: number } | { mode: 'survival' };
+export type MatchKind = { mode: 'stage'; stage: number } | { mode: 'training' } | { mode: 'weekly' } | { mode: 'survival' } | { mode: 'expedition' };
 
 export interface GameLoop {
   snapshot: SharedValue<RenderSnapshot>;
@@ -66,7 +70,12 @@ const sessionKey = (w: World) =>
  * Mudar `runId` recomeça a mesma fase. Ir para segundo plano pausa.
  */
 export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: GameEvent) => void, dev: DevOptions = {}): GameLoop {
-  const stage = match.mode === 'stage' ? match.stage : 0;
+  const expedition = match.mode === 'expedition';
+  const weekly = match.mode === 'weekly';
+  const challenge = useWeeklyStore.getState().attempt;
+  const challengeSeed = challenge?.seed;
+  const training = match.mode === 'training' || weekly;
+  const stage = match.mode === 'stage' ? match.stage : weekly ? challenge?.stage ?? 1 : training ? 1 : 0;
   const autoplay = dev.autoplay ?? false;
   const stress = dev.stress ?? false;
   const fast = dev.fast ?? false;
@@ -83,14 +92,18 @@ export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: Ga
 
   useEffect(() => {
     const saved = useProgressStore.getState();
-    const { cardLevels, truck } = saved;
-    const deck = devDeck ? matchDeck(devDeck.split(',') as CardId[], saved.deck) : saved.deck;
+    const cardLevels = weekly ? Object.fromEntries(CARD_IDS.map((c) => [c, WEEKLY_LEVEL])) as typeof saved.cardLevels : saved.cardLevels;
+    const truck = weekly ? undefined : saved.truck;
+    const deck = weekly ? [...WEEKLY_DECK] : devDeck ? matchDeck(devDeck.split(',') as CardId[], saved.deck) : saved.deck;
     const survival = stage === 0;
     const def = survival ? survivalStage() : getStage(stage);
-    const world = createWorld(def, { deck, cardLevels, truck }, Date.now(), survival ? 'survival' : 'stage');
+    const world = createWorld(def, { deck, cardLevels, truck, expedition }, weekly ? challengeSeed! : Date.now(), survival ? 'survival' : 'stage');
     worldRef.current = world;
+    if (stage) track('stage_started', { stage, deck });
+    let finished = false;
+    const replay: ReplayCard[] = [];
     const loop = createLoop();
-    if (fast) world.speed = 2;
+    world.speed = fast ? 2 : useSettingsStore.getState().speed;
     const extra: ZombieId[] = [...(stress ? Array<ZombieId>(STRESS_ZOMBIES).fill('walker') : []), ...((spawnList ? spawnList.split(',') : []) as ZombieId[])];
     for (const id of extra) {
       const zombie = createZombie(world, id);
@@ -108,6 +121,7 @@ export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: Ga
     });
 
     const flushCash = () => {
+      if (training) { world.pendingCash = 0; return; }
       if (world.pendingCash <= 0) return;
       useProgressStore.getState().addCash(world.pendingCash);
       world.pendingCash = 0;
@@ -135,6 +149,7 @@ export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: Ga
         }
       }
       if (autoplay && !world.paused) simpleBot(world);
+      if (weekly && !finished) for (const command of world.commands) if (command.type === 'playCard') replay.push({ tick: Math.round(world.time * 60), slot: command.slot, x: command.x, y: command.y });
       loop.tick(world, dt);
       sinceSync += dt;
       if (sinceSync >= STORE_SYNC_INTERVAL) {
@@ -146,7 +161,16 @@ export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: Ga
         lastKey = key;
         useSessionStore.setState(sessionFromWorld(world));
       }
-      for (const event of world.events) onEventRef.current(event);
+      for (const event of world.events) {
+        if (event.type === 'stageCleared' || event.type === 'stageFailed') {
+          finished = true;
+          if (weekly) void submitWeekly(Math.round(world.time * 60), replay);
+          track(event.type === 'stageCleared' ? 'stage_won' : 'stage_lost', { stage, duration: world.time, ...(event.type === 'stageCleared' ? { stars: event.stars } : {}) });
+        }
+        if (event.type === 'stageCleared' || event.type === 'stageFailed' || event.type === 'survivalOver') {
+          onEventRef.current({ ...event, stats: { ...world.stats, cards: { ...world.stats.cards }, duration: world.time, wave: world.waveIndex + 1 } });
+        } else onEventRef.current(event);
+      }
       world.events.length = 0;
       snapshot.set(createSnapshot(world));
       frame = requestAnimationFrame(onFrame);
@@ -154,12 +178,13 @@ export function useGameLoop(match: MatchKind, runId: number, onEvent: (event: Ga
 
     frame = requestAnimationFrame(onFrame);
     return () => {
+      if (stage && !finished) track('stage_abandoned', { stage, duration: world.time });
       cancelAnimationFrame(frame);
       appState.remove();
       flushCash();
       worldRef.current = null;
     };
-  }, [stage, runId, snapshot, autoplay, stress, fast, spawnList, devEvent, devDeck, devCast]);
+  }, [stage, training, weekly, challengeSeed, expedition, runId, snapshot, autoplay, stress, fast, spawnList, devEvent, devDeck, devCast]);
 
   const send = (command: GameCommand) => {
     worldRef.current?.commands.push(command);

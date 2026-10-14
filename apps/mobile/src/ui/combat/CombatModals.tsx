@@ -1,3 +1,5 @@
+import { WeeklyResult } from './WeeklyResult';
+import { tutorialText } from '@/i18n/tutorial';
 import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
@@ -14,6 +16,8 @@ import { colors } from '@/ui/theme';
 
 interface Props {
   result: CombatResult;
+  training?: boolean;
+  weekly?: boolean;
   /** Mensagem de rádio na frente de tudo (abertura do mundo ou fechamento depois do chefe). */
   radio: { id: string; place: string } | null;
   onRadioClose: () => void;
@@ -26,12 +30,15 @@ interface Props {
 }
 
 /** Modais do combate: rádio, pausa, confirmação de saída e o fim da partida. */
-export function CombatModals({ result, radio, onRadioClose, paused, confirmExit, onResume, onStay, onRetry, onNext }: Props) {
+export function CombatModals({ result, training, weekly, radio, onRadioClose, paused, confirmExit, onResume, onStay, onRetry, onNext }: Props) {
   const back = () => router.back();
+  if (weekly && result) return <WeeklyResult />;
+  if (training && result) return <GameModal title={tutorialText.training} buttons={<><Button label={pt.stageFailed.exit} variant="dark" onPress={back} /><Button label={pt.stageFailed.retry} onPress={onRetry} /></>}><AppText>{tutorialText.noReward}</AppText></GameModal>;
   if (radio) return <RadioModal key={radio.id} id={radio.id} place={radio.place} onClose={onRadioClose} />;
   if (result?.kind === 'cleared') {
     return (
       <StageClearModal
+        stats={result.stats}
         stage={result.stage}
         cashEarned={result.cash}
         stars={result.stars}
@@ -44,9 +51,9 @@ export function CombatModals({ result, radio, onRadioClose, paused, confirmExit,
       />
     );
   }
-  if (result?.kind === 'failed') return <StageFailedModal cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
+  if (result?.kind === 'failed') return <StageFailedModal stats={result.stats} cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
   if (result?.kind === 'survival') {
-    return <SurvivalOverModal waves={result.waves} best={result.best} record={result.record} cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
+    return <SurvivalOverModal expedition={result.expedition} stats={result.stats} waves={result.waves} best={result.best} record={result.record} cashEarned={result.cash} onRetry={onRetry} onExit={back} />;
   }
   if (confirmExit) {
     return (

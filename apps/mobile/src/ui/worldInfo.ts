@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { worldDef } from '@/game/data/worlds';
 import { ZOMBIES } from '@/game/data/zombies';
 import { t as pt } from '@/i18n';
@@ -5,14 +6,14 @@ import { t as pt } from '@/i18n';
 /** Nome do mundo para a tela; na Fronteira, o planeta e o tema (ex.: "Planeta de Lava · Tóxico"). */
 export function worldName(w: number): string {
   const def = worldDef(w);
-  return 'theme' in def ? pt.frontier.name(def.name, pt.frontier.themes[def.theme]) : def.name;
+  return 'theme' in def ? pt.frontier.name(localizedName(def.name), pt.frontier.themes[def.theme]) : localizedName(def.name);
 }
 
 /** Na Fronteira, a ameaça e o chefe mutado (ex.: "Enxame · Chefe: General Gigante"); senão, null. */
 export function worldDetails(w: number): string | null {
   const def = worldDef(w);
   if (!('threat' in def)) return null;
-  return pt.frontier.details(pt.frontier.threats[def.threat], ZOMBIES[def.boss].name, pt.frontier.mutations[def.mutation]);
+  return pt.frontier.details(pt.frontier.threats[def.threat], localizedName(ZOMBIES[def.boss].name), pt.frontier.mutations[def.mutation]);
 }
 
 /** Tom de cor do planeta da Fronteira por cima do cenário (null nos mundos da campanha). */

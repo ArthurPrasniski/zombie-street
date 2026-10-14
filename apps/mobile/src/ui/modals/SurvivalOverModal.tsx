@@ -1,3 +1,7 @@
+import { expeditionText } from '@/i18n/expedition';
+import type { MatchStats } from '@/game/types';
+import { MatchSummary } from '@/ui/combat/MatchSummary';
+import { survivalXp } from '@zombie-road/shared/pass';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
@@ -15,6 +19,8 @@ import { colors } from '@/ui/theme';
 const STAMP_MS = 450;
 
 interface Props {
+  expedition?: boolean;
+  stats?: MatchStats;
   waves: number;
   best: number;
   record: boolean;
@@ -24,7 +30,7 @@ interface Props {
 }
 
 /** Fim da Sobrevivência: ondas vencidas, recorde e o dinheiro ganho (GDD seção 17.9). */
-export function SurvivalOverModal({ waves, best, record, cashEarned, onRetry, onExit }: Props) {
+export function SurvivalOverModal({ expedition, stats, waves, best, record, cashEarned, onRetry, onExit }: Props) {
   useEffect(() => {
     if (!record) return;
     const timer = setTimeout(() => rewardHaptic(true), STAMP_MS);
@@ -33,7 +39,7 @@ export function SurvivalOverModal({ waves, best, record, cashEarned, onRetry, on
   return (
     <GameModal
       eyebrow={pt.survival.overEyebrow}
-      title={pt.survival.overTitle}
+      title={expedition ? expeditionText.title : pt.survival.overTitle}
       accent={colors.featured}
       buttons={
         <>
@@ -55,6 +61,7 @@ export function SurvivalOverModal({ waves, best, record, cashEarned, onRetry, on
       )}
       <AppText color={colors.textMuted}>{pt.survival.earned}</AppText>
       <CountUp amount={cashEarned} size={32} delay={STAMP_MS + 300} />
+      <MatchSummary stats={stats} xp={survivalXp(waves)} />
       <DoubleCoinsButton coins={cashEarned} />
     </GameModal>
   );

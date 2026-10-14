@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { rewardHaptic } from '@/audio/sfx';
@@ -45,7 +46,7 @@ export function PartRow({ part, levels, cost, affordable, onUpgrade }: Props) {
       <Image source={PART_ICONS[part]} style={styles.icon} />
       <View style={styles.texts}>
         <View style={styles.title}>
-          <AppText variant="label">{def.name}</AppText>
+          <AppText variant="label">{localizedName(def.name)}</AppText>
           <Pop trigger={level}>
             <AppText variant="small" color={colors.accent}>
               {pt.garage.level(level, def.maxLevel)}

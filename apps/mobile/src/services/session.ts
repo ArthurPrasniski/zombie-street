@@ -10,6 +10,10 @@ import { API_URL } from '@/services/env';
 import { identifyPurchaser } from '@/services/purchases';
 import { syncPushToken } from '@/services/push/remote';
 import { appleToken, googleSignOut, googleToken } from '@/services/signIn';
+import { useMissionStore } from '@/services/missions';
+import { useTelemetryStore } from '@/services/telemetry';
+import { useProgressStore } from '@/state/progressStore';
+import { usePurchaseStore } from '@/state/purchaseStore';
 import { INITIAL_ACCOUNT, useAccountStore } from '@/state/accountStore';
 
 // Sessão (docs/BACKEND.md): todo aparelho começa como convidado (conta no servidor ligada a um id
@@ -29,11 +33,25 @@ async function deviceId(): Promise<string> {
 
 /** Guarda a sessão e prepara o resto (compras, carteira, passe, save). */
 async function applySession(session: Session): Promise<void> {
+  const previous = useAccountStore.getState().user;
+  if (previous) {
+    const legacy = useAccountStore.getState().applied.filter((ref) => !ref.startsWith('user:')).map((ref) => `user:${previous.id}:${ref}`);
+    useProgressStore.setState((s) => ({ serverRewards: [...new Set([...s.serverRewards, ...legacy])] }));
+  }
+  if (previous && previous.id !== session.user.id && previous.providers.length === 0 && session.switched) {
+    useMissionStore.setState((s) => ({ queue: s.queue.map((e) => e.userId === previous.id ? { ...e,userId:session.user.id } : e) }));
+    useTelemetryStore.setState((s) => ({ queue: s.queue.map((e) => e.userId === previous.id ? { ...e,userId:session.user.id } : e) }));
+    usePurchaseStore.setState((s) => ({ attempts: s.attempts.map((a) => a.userId === previous.id ? { ...a, userId: session.user.id } : a) }));
+    useProgressStore.setState((s) => ({ serverRewards: s.serverRewards.map((ref) => ref.replace(`user:${previous.id}:`,`user:${session.user.id}:`)) }));
+  }
+  if (previous?.id !== session.user.id) useAccountStore.setState({ applied: [] });
   setApiToken(session.token);
   await SecureStore.setItemAsync(TOKEN_KEY, session.token);
+  if (useAccountStore.getState().user?.id !== session.user.id) useAccountStore.setState({ membership: null });
   useAccountStore.setState({ user: session.user, online: true });
   await identifyPurchaser(session.user.id).catch(() => null);
-  await Promise.all([refreshEconomy(), flushXp(), pullSave(session.switched === true)]);
+  await pullSave(session.switched === true);
+  await Promise.all([refreshEconomy(), flushXp()]);
   // O aparelho passa a receber os avisos desta conta
   await syncPushToken().catch(() => null);
 }
@@ -75,7 +93,7 @@ export async function signOut(): Promise<void> {
   await googleSignOut();
   await SecureStore.deleteItemAsync(TOKEN_KEY);
   setApiToken(null);
-  useAccountStore.setState({ ...INITIAL_ACCOUNT, applied: useAccountStore.getState().applied, ads: useAccountStore.getState().ads });
+  useAccountStore.setState({ ...INITIAL_ACCOUNT, applied: [], ads: useAccountStore.getState().ads });
   await startSession();
 }
 

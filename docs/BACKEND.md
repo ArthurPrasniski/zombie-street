@@ -91,6 +91,7 @@ Todas as rotas, menos login, health e webhook, pedem `Authorization: Bearer <ses
 | `POST /shop/coins {pack, stage, requestId}` | Gemas → moedas (repetível pelo `requestId`) |
 | `GET /pass` · `POST /pass/xp {amount}` · `POST /pass/claim {tier, track, stage}` | Passe |
 | `POST /webhooks/revenuecat` | Compras de gemas e passe (cabeçalho `Authorization` combinado) |
+| `GET /membership` | Validade da assinatura mensal e recibos de moedas por ciclo |
 | `POST /dev/purchase {productId}` | Só em dev: simula a compra para a conta logada |
 | `POST /push/token {token, platform, timeZone, prefs}` · `DELETE /push/token {token}` | Liga/desliga o aparelho dos avisos remotos |
 | `POST /admin/push {id, title, body, url?}` | Novidade para todos (cabeçalho `Authorization: Bearer ADMIN_TOKEN`; `id` evita repetir) |
@@ -193,6 +194,65 @@ transação da loja), `subscriptions` (passe ativo até `expires_at`), `pass_pro
   Eventos repetidos não estendem o passe. Reembolsos revogam apenas a transação correspondente.
 - A migração `003_season_pass.sql` cria as compras por temporada e conserva XP/resgates de
   outubro de 2026 na primeira temporada. Assinaturas antigas são conciliadas pelo produto
-  `zr_pass_monthly`, mas o app passa a vender exclusivamente o novo passe.
+  `zr_pass_monthly`, mas o passe vendido no app usa o novo produto por temporada.
 - Faça o deploy do servidor atualizado antes de testar o novo produto no app. As migrações
   rodam automaticamente na subida do servidor. A URL do webhook permanece a mesma.
+
+### Assinatura mensal: Clube da Estrada
+
+- Produto `zr_membership_monthly`: assinatura mensal com renovação automática, preço-base
+  de R$ 19,90. Cadastre com duração de **um mês** na Test Store, App Store Connect e Google
+  Play; no Google Play use o plano-base `monthly` (`zr_membership_monthly:monthly`). Importe
+  no RevenueCat. O app consulta como `SUBSCRIPTION` e exibe o preço localizado
+  devolvido pela loja. A assinatura não inclui o Passe de Batalha.
+- A cada `INITIAL_PURCHASE` ou `RENEWAL` pago, o servidor entrega 500 gemas e registra
+  10.000 moedas para o app aplicar uma vez. Os recibos de moedas acompanham o save na nuvem.
+  Webhooks repetidos não geram pacotes extras. Períodos gratuitos não entregam moedas/gemas.
+- `/membership` devolve a validade e os recibos. O app dispensa anúncios de repetição e
+  oculta o botão de dobrar moedas até a expiração confirmada, inclusive offline. Cancelar a
+  renovação conserva o período pago. Reembolsos revogam acesso e estornam as recompensas sem
+  deixar o saldo negativo. Eventos de ciclos antigos não encerram um ciclo mais novo.
+- Mantenha habilitados no webhook os eventos de compra, renovação, cancelamento, expiração,
+  reativação, extensão e problemas de cobrança. O endpoint e o secret continuam os mesmos.
+- A migração `006_membership.sql` cria as tabelas. Atualize o backend antes do app.
+  Expo Go usa `/dev/purchase` para simular 30 dias; builds nativos usam o calendário da loja.
+- Teste contratação, renovação, cancelamento, expiração, restauração na mesma conta do jogo
+  e reembolso no sandbox antes de habilitar a venda real.
+
+### Confiabilidade, objetivos e desafios (outubro/2026)
+
+- `GET /purchases`: recibos de gemas, passe e ciclos da assinatura, incluindo estornos.
+  O app confirma entrega pela transação, conserva tentativas locais e retoma consultas ao abrir.
+- `POST /pass/xp`: aceita `requestId` opcional. Clientes novos conservam ID/quantidade até
+  receber resposta; repetir o pedido não repete XP. `GET /pass` recupera recibos de moedas e
+  cosméticos do nível 30 Premium. Valores de XP solicitados continuam sujeitos ao teto diário.
+- `GET /missions`, `POST /missions/match`, `POST /missions/claim`: três objetivos UTC fixos,
+  partidas identificadas e resgates por dia/objetivo. Moedas têm recibos recuperáveis; XP entra
+  no passe na mesma transação e respeita o teto. Contagens de partidas vêm do app, como o
+  progresso existente: não são evidência para um ranking competitivo.
+- `GET /weekly`, `POST /weekly/start`, `POST /weekly/result`, `GET /weekly/medals`: regras
+  versionadas, semente e composição fixas. O servidor reproduz comandos de carta a 60 passos/s,
+  deriva a medalha do estado final e valida tempo, conta e limites. Resultados idempotentes.
+  Não há ranking público. Tentativas não retomam partida depois de encerrar o processo.
+- `POST /events` e `DELETE /events`: medição desligada por padrão; opt-in nos Ajustes.
+  Eventos restritos a nomes conhecidos e números/deck; sem texto livre, e-mail ou tokens.
+  Fila local limitada a 100 e lote a 50. Retenção de 30 dias, limpeza por hora e no recebimento.
+  Desligar elimina a fila e solicita exclusão no servidor, retomada após conexão se necessário.
+
+Migrações 007–010 acrescentam eventos, missões, tentativas semanais e recibos de XP.
+Os novos campos de progresso usam a versão 15; preferências e filas ficam em stores separadas.
+O motor usado no servidor continua TypeScript puro. A localização nativa é carregada apenas no
+app; nomes de conteúdo não alteram regras e não são mutados após congelamento pelos worklets.
+
+### Linha de base (consultas operacionais, antes de definir metas)
+
+Agrupar `gameplay_events` por nome e data UTC para contar início/conclusão de tutorial,
+vitórias, derrotas, abandonos observados e tentativas. `data.deck` permite analisar composição;
+`purchase_delivered.data.duration` mede espera observada pelo app até a entrega confirmada.
+Compras com app fechado só são observadas na reabertura, portanto esse tempo inclui ausência.
+Abandono por encerramento abrupto do processo não emite evento; comparar inícios e resultados
+como sinal agregado, sem classificá-los automaticamente como derrotas.
+
+Em `pass_progress`, medir por temporada quantos jogadores atingem 3.000 XP, distribuição de
+XP e dias no teto. As regras atuais (600 XP/dia, temporada de 90 dias) foram mantidas; ajustes
+numéricos exigem dados de uso reais. Estatísticas opt-in não representam toda a população.

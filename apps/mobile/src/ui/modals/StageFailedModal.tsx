@@ -1,3 +1,6 @@
+import type { MatchStats } from '@/game/types';
+import { MatchSummary } from '@/ui/combat/MatchSummary';
+import { stageXp } from '@zombie-road/shared/pass';
 import { t as pt } from '@/i18n';
 import { CashLabel } from '@/ui/CashLabel';
 import { AppText } from '@/ui/kit/AppText';
@@ -7,13 +10,14 @@ import { GameModal } from '@/ui/modals/GameModal';
 import { colors } from '@/ui/theme';
 
 interface Props {
+  stats?: MatchStats;
   cashEarned: number;
   onRetry: () => void;
   onExit: () => void;
 }
 
 /** Derrota: a base caiu. O dinheiro dos zumbis mortos fica (GDD seção 9). */
-export function StageFailedModal({ cashEarned, onRetry, onExit }: Props) {
+export function StageFailedModal({ stats, cashEarned, onRetry, onExit }: Props) {
   return (
     <GameModal
       eyebrow={pt.stageFailed.eyebrow}
@@ -27,6 +31,7 @@ export function StageFailedModal({ cashEarned, onRetry, onExit }: Props) {
       }>
       <AppText color={colors.textMuted}>{pt.stageFailed.earned}</AppText>
       <CashLabel amount={cashEarned} size={32} />
+<MatchSummary stats={stats} xp={stageXp(false, 0)} failed />
       <DoubleCoinsButton coins={cashEarned} />
     </GameModal>
   );

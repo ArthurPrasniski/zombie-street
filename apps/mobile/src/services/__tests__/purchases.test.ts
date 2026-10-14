@@ -7,7 +7,7 @@ jest.mock('@/services/api', () => ({ api: jest.fn() }));
 jest.mock('react-native-purchases', () => ({
   __esModule: true,
   default: { configure: mockConfigure, logIn: mockLogIn, getProducts: mockGetProducts },
-  PRODUCT_CATEGORY: { NON_SUBSCRIPTION: 'gems', SUBSCRIPTION: 'pass' },
+  PRODUCT_CATEGORY: { NON_SUBSCRIPTION: 'gems', SUBSCRIPTION: 'subscription' },
 }));
 
 beforeEach(() => {
@@ -37,7 +37,7 @@ test('preços aguardam a troca de conta no RevenueCat', async () => {
   expect(mockGetProducts).not.toHaveBeenCalled();
   finishLogin();
   await pending;
-  expect(mockGetProducts).toHaveBeenCalledTimes(2);
+  expect(mockGetProducts).toHaveBeenCalledTimes(3);
 });
 
 test('uma falha de identificação não impede a próxima tentativa', async () => {
@@ -63,4 +63,11 @@ test('não troca USD por BRL quando a loja retorna um preço em dólares', async
   const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
   mockGetProducts.mockResolvedValue([{ identifier: 'zr_pass_season', priceString: '$3.99' }]);
   await expect(productPrices('player')).resolves.toEqual({ zr_pass_season: '$3.99' });
+});
+
+test('consulta a assinatura na categoria própria e usa o preço localizado da loja', async () => {
+  const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
+  mockGetProducts.mockImplementation((ids: string[]) => Promise.resolve(ids.includes('zr_membership_monthly') ? [{ identifier: 'zr_membership_monthly', priceString: 'R$ 19,90' }] : []));
+  await expect(productPrices('player')).resolves.toEqual({ zr_membership_monthly: 'R$ 19,90' });
+  expect(mockGetProducts).toHaveBeenCalledWith(['zr_membership_monthly'], 'subscription');
 });

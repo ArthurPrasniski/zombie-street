@@ -1,3 +1,4 @@
+import { decksText } from '@/i18n/decks';
 import { cardPower } from '@/game/data/balance';
 import { CARDS, isTroop } from '@/game/data/cards';
 import { evolutionValue } from '@/game/data/evolutions';
@@ -23,7 +24,16 @@ export function cardStats(card: CardId, level: number): CardStat[] {
   const s = pt.cards;
   if (isTroop(def)) {
     const stats = [up(s.hp, def.hp)];
-    if (def.damage > 0) stats.push(up(s.damage, def.damage));
+    if (def.damage > 0) {
+      stats.push(up(s.damage, def.damage));
+      const evo = evolutionValue(card,level) ?? 0;
+      const interval = ['soldier','drone'].includes(card) ? def.attackInterval / (1 + evo) : def.attackInterval;
+      const burst = card === 'sheriff' && evo ? 1 + 1 / evo : 1;
+      stats.push(up(s.dps, def.damage / interval * burst));
+      stats.push(fixed(decksText.interval, Number(interval.toFixed(2)), ' s'));
+      const targets = (def.splash?.targets ?? def.pierce?.max ?? (def.chain ? def.chain.jumps + 1 : 1)) + (['sniper','shotgun','crossbow','laser','tesla'].includes(card) ? evo : 0);
+      stats.push(fixed(decksText.targets, targets));
+    }
     if (def.heal) stats.push(up(s.healPulse, def.heal));
     if (def.range > 0) stats.push(fixed(s.range, def.range));
     if (def.lifetime) stats.push(fixed(s.duration, def.lifetime, ' s'));

@@ -1,8 +1,10 @@
+import { track } from '@/services/telemetry';
 import type { CloudSave } from '@zombie-road/shared/api';
 
 import { api, ApiError, hasApiToken } from '@/services/api';
 import { useAccountStore } from '@/state/accountStore';
 import { pick, STORAGE_VERSION, useProgressStore } from '@/state/progressStore';
+import { syncMembershipCoins } from '@/services/membership';
 
 // Save na nuvem (docs/BACKEND.md): o progresso inteiro vai para o servidor com a revisão em que se
 // baseou. Se só um lado mudou, ele vence sozinho; se os dois mudaram, o jogador escolhe.
@@ -25,21 +27,41 @@ const isFresh = () => {
 function adopt(save: CloudSave): void {
   useProgressStore.getState().replace(save.data, save.version);
   markSynced(save);
+  syncMembershipCoins();
 }
 
 function markSynced(save: CloudSave): void {
-  useAccountStore.setState({ cloud: { revision: save.revision, syncedHash: progressHash(localData()), syncedAt: save.updatedAt }, conflict: null });
+  useAccountStore.setState({ cloud: { revision: save.revision, syncedHash: progressHash(save.data), syncedAt: save.updatedAt }, conflict: null, syncStatus: 'saved' });
 }
 
 /** Envia o progresso se mudou. Conflito: adota a nuvem se o aparelho não mudou; senão, pergunta. */
-export async function pushSave(): Promise<void> {
-  if (!hasApiToken() || !localChanged()) return;
+let saving: Promise<void> | null = null;
+export function pushSave(): Promise<void> {
+  if (saving) return saving;
+  const userId = useAccountStore.getState().user?.id;
+  saving = sendSave().finally(() => {
+    saving = null;
+    if (hasApiToken() && userId === useAccountStore.getState().user?.id && useAccountStore.getState().syncStatus === 'saved' && localChanged()) void pushSave();
+  });
+  return saving;
+}
+
+async function sendSave(): Promise<void> {
+  if (!hasApiToken() || useAccountStore.getState().conflict) return;
+  if (!localChanged()) { useAccountStore.setState({ syncStatus: 'saved' }); return; }
+  const data = localData();
+  const hash = progressHash(data);
+  const userId = useAccountStore.getState().user?.id;
+  useAccountStore.setState({ syncStatus: 'saving' });
   try {
-    const save = await api<CloudSave>('PUT', '/save', { baseRevision: useAccountStore.getState().cloud.revision, version: STORAGE_VERSION, data: localData() });
+    const save = await api<CloudSave>('PUT', '/save', { baseRevision: useAccountStore.getState().cloud.revision, version: STORAGE_VERSION, data });
+    if (userId !== useAccountStore.getState().user?.id) return;
     markSynced(save);
+    useAccountStore.setState({ cloud: { ...useAccountStore.getState().cloud, syncedHash: hash } });
   } catch (error) {
-    if (!(error instanceof ApiError) || error.status !== 409) return;
-    useAccountStore.setState({ conflict: (error.body as { current: CloudSave }).current });
+    if (userId !== useAccountStore.getState().user?.id) return;
+    if (!(error instanceof ApiError) || error.status !== 409) { useAccountStore.setState({ syncStatus: 'error' }); track('error'); return; }
+    useAccountStore.setState({ conflict: (error.body as { current: CloudSave }).current, syncStatus: 'conflict' });
   }
 }
 
@@ -49,19 +71,24 @@ export async function pushSave(): Promise<void> {
  */
 export async function pullSave(switched = false): Promise<void> {
   if (!hasApiToken()) return;
+  const userId = useAccountStore.getState().user?.id;
   try {
     const save = await api<CloudSave>('GET', '/save');
+    if (userId !== useAccountStore.getState().user?.id) return;
     const { cloud } = useAccountStore.getState();
     if (!switched && save.revision === cloud.revision) return pushSave();
     // Aparelho sem mudança (ou sem progresso nenhum, como uma instalação nova): a nuvem vence
     if ((!localChanged() && !switched) || isFresh()) return adopt(save);
     if (progressHash(save.data) === progressHash(localData())) return markSynced(save);
-    useAccountStore.setState({ conflict: save });
+    useAccountStore.setState({ conflict: save, syncStatus: 'conflict' });
   } catch (error) {
+    if (userId !== useAccountStore.getState().user?.id) return;
     // Conta sem save ainda: o progresso do aparelho vira o primeiro
     if (error instanceof ApiError && error.status === 404) {
       useAccountStore.setState({ cloud: { revision: 0, syncedHash: null, syncedAt: null } });
       await pushSave();
+    } else {
+      useAccountStore.setState({ syncStatus: 'error' });
     }
   }
 }

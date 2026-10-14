@@ -1,13 +1,14 @@
 // Webhook do RevenueCat: gemas e passe por temporada, com conciliação do produto mensal antigo. Cada evento é
 // processado uma vez (tabela webhook_events). O app_user_id é o id da nossa conta, porque o app
 // chama Purchases.logIn(userId) logo depois do login.
-import { gemPack, LEGACY_PASS_PRODUCT_ID, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
+import { gemPack, isMembershipProduct, LEGACY_PASS_PRODUCT_ID, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 import { seasonOf } from '@zombie-road/shared/pass';
 import type { Db, Queryable } from '../db';
 import type { Monitor } from '../discord/events';
 import { pushTexts } from '../push/texts';
 import { enqueue } from './push';
 import { moveGems } from './wallet';
+import { handleMembership } from './membership';
 
 /** Campos do evento que usamos (docs do RevenueCat: "Webhook events"). */
 export interface RevenueCatEvent {
@@ -25,6 +26,8 @@ export interface RevenueCatEvent {
   price_in_purchased_currency?: number | null;
   currency?: string | null;
   store?: string;
+  event_timestamp_ms?: number;
+  period_type?: string;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -40,13 +43,14 @@ async function ownerOf(q: Queryable, event: RevenueCatEvent): Promise<string | n
   return null;
 }
 
-export type WebhookOutcome = 'duplicate' | 'gems' | 'refund' | 'pass' | 'billing' | 'ignored' | 'unknown-user';
+export type WebhookOutcome = 'duplicate' | 'gems' | 'refund' | 'pass' | 'membership' | 'billing' | 'ignored' | 'unknown-user';
 
 export async function handleRevenueCat(db: Db, event: RevenueCatEvent, now: Date, monitor?: Monitor): Promise<WebhookOutcome> {
   return db.tx(async (q) => {
     const fresh = await q.query('insert into webhook_events (id) values ($1) on conflict do nothing returning id', [event.id]);
     if (fresh.length === 0) return 'duplicate';
     const userId = await ownerOf(q, event);
+    if (isMembershipProduct(event.product_id)) return handleMembership(q, event, userId, now);
     const pack = gemPack(event.product_id);
     if (pack && event.transaction_id) {
       if (event.type === 'NON_RENEWING_PURCHASE' || event.type === 'INITIAL_PURCHASE') {

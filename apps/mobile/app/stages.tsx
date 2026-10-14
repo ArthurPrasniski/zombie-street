@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { missionsText } from '@/i18n/missions';
+import { Button } from '@/ui/kit/Button';
+import { AppText } from '@/ui/kit/AppText';
 import { globalStage, stageLabel, STAGES_PER_WORLD, worldOf } from '@/game/data/worlds';
 import { t as pt } from '@/i18n';
 import { isDeckComplete, isStageUnlocked } from '@/state/progress';
@@ -36,7 +39,7 @@ export default function StagesScreen() {
       return;
     }
     progress.selectStage(stage);
-    router.push('/combat');
+    router.push('/prepare');
   };
 
   return (
@@ -44,6 +47,8 @@ export default function StagesScreen() {
       <SafeAreaView style={styles.content} edges={['top', 'left', 'right', 'bottom']}>
         <ScreenHeader title={pt.stages.title} />
         <View style={styles.body}>
+          <AppText variant="small">{missionsText.thresholds}</AppText>
+          <Button label={missionsText.stars} variant="dark" size="s" onPress={() => { const index = stars.findIndex((s, i) => i < highestCleared && s < 3); if (index >= 0) { setWorld(worldOf(index + 1)); } }} />
           <WorldBanner
             world={world}
             cleared={clearedHere}

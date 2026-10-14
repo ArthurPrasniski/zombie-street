@@ -6,6 +6,8 @@ import { useProductPurchase } from '../useProductPurchase';
 const mockBuy = jest.fn();
 const mockRefresh = jest.fn();
 const mockConfirmed = jest.fn();
+const mockStoreListeners = new Set<(state: unknown) => void>();
+let mockAttempts: unknown[] = [];
 const mockListeners = new Set<() => void>();
 jest.mock('@/services/economy', () => ({
   buyProduct: (...args: unknown[]) => mockBuy(...args),
@@ -13,9 +15,11 @@ jest.mock('@/services/economy', () => ({
   purchaseConfirmed: () => mockConfirmed(),
 }));
 jest.mock('@/state/accountStore', () => ({ useAccountStore: {
-  getState: () => ({}),
+  getState: () => ({ user: { id: 'player' } }),
   subscribe: (listener: () => void) => { mockListeners.add(listener); return () => mockListeners.delete(listener); },
 } }));
+
+jest.mock('@/state/purchaseStore', () => ({ usePurchaseStore: { getState: () => ({ attempts: mockAttempts }), subscribe: (listener: (state: unknown) => void) => { mockStoreListeners.add(listener); return () => mockStoreListeners.delete(listener); } } }));
 
 let hook: ReturnType<typeof useProductPurchase>;
 let tree: ReactTestRenderer;
@@ -26,7 +30,7 @@ function Harness() {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  jest.clearAllMocks(); mockAttempts = [];
   mockConfirmed.mockReturnValue(false);
   act(() => { tree = create(<Harness />); });
 });
@@ -69,7 +73,8 @@ test('compra pendente evita nova compra e aceita confirmação tardia do servido
   await act(async () => hook.buy('zr_pass_season'));
   expect(mockBuy).toHaveBeenCalledTimes(1);
   mockConfirmed.mockReturnValue(true);
-  act(() => { mockListeners.forEach((listener) => listener()); });
+  mockAttempts = [{ userId: 'player', productId: 'zr_pass_season', status: 'success' }];
+  act(() => { mockStoreListeners.forEach((listener) => listener({ attempts: mockAttempts })); });
   expect(hook.status).toBe('success');
 });
 
@@ -77,6 +82,7 @@ test('atualizar status consulta a entrega sem comprar novamente', async () => {
   mockBuy.mockResolvedValue('pending');
   await act(async () => hook.buy('zr_gems_80'));
   mockConfirmed.mockReturnValue(true);
+  mockAttempts = [{ userId: 'player', productId: 'zr_gems_80', status: 'success' }];
   await act(async () => hook.check());
   expect(mockRefresh).toHaveBeenCalledTimes(1);
   expect(mockBuy).toHaveBeenCalledTimes(1);

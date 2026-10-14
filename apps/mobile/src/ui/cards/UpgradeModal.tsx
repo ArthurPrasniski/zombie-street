@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
@@ -53,7 +54,7 @@ export function UpgradeModal({ card, onClose }: { card: CardId; onClose: () => v
   return (
     <GameModal
       eyebrow={pt.cards.upgradeTitle}
-      title={CARDS[card].name}
+      title={localizedName(CARDS[card].name)}
       accent={colors.yellow}
       buttons={
         <>
@@ -76,13 +77,14 @@ export function UpgradeModal({ card, onClose }: { card: CardId; onClose: () => v
       <View style={styles.table}>
         {before.map((stat, i) => {
           const next = after[i];
-          const gain = next.value - stat.value;
+          const gain = Number((next.value - stat.value).toFixed(2));
+          const changed = stat.grows || next.value !== stat.value;
           return (
             <View key={stat.label} style={[styles.row, i % 2 === 1 && styles.zebra]}>
               <AppText color={colors.textMuted} style={styles.label}>
                 {stat.label}
               </AppText>
-              {stat.grows ? (
+              {changed ? (
                 <>
                   <AppText variant="number" style={styles.value}>{`${stat.value}${stat.suffix ?? ''}`}</AppText>
                   <AppText variant="number" color={colors.textMuted} style={styles.value}>
@@ -90,7 +92,7 @@ export function UpgradeModal({ card, onClose }: { card: CardId; onClose: () => v
                   </AppText>
                   <AppText variant="number" color={colors.accent} style={styles.value}>{`${next.value}${next.suffix ?? ''}`}</AppText>
                   <View style={styles.gain}>
-                    <AppText variant="small" color={colors.ink}>{`+${gain}`}</AppText>
+                    <AppText variant="small" color={colors.ink}>{`${gain > 0 ? '+' : ''}${gain}`}</AppText>
                   </View>
                 </>
               ) : (

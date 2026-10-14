@@ -26,6 +26,10 @@ export const PASS_PRODUCT_ID = 'zr_pass_season';
 export const LEGACY_PASS_PRODUCT_ID = 'zr_pass_monthly';
 export const PASS_ENTITLEMENT = 'pass';
 
+/** Assinatura mensal, separada do Passe de Batalha. Valores por ciclo pago. */
+export const MEMBERSHIP = { productId: 'zr_membership_monthly', androidProductId: 'zr_membership_monthly:monthly', gems: 500, coins: 10000 } as const;
+export const isMembershipProduct = (id: string): boolean => id === MEMBERSHIP.productId || id === MEMBERSHIP.androidProductId;
+
 // ---------- Moedas compradas com gemas ----------
 
 export type CoinPackId = 'sack' | 'chest' | 'vault';

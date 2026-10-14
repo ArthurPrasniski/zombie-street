@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
 import { KEYS, NATIVE } from '@/services/env';
+import { adsRemoved } from '@/services/membership';
 
-// Propaganda premiada (AdMob): só quando o jogador escolhe ("Assista e dobre"). Antes, o pedido de
+// Propaganda premiada (AdMob): dobrar moedas ou liberar uma repetição de fase. Antes, o pedido de
 // consentimento (LGPD/GDPR e o aviso de rastreamento do iOS). No Expo Go, uma propaganda de teste
 // desenhada pelo próprio app (FakeAdOverlay) faz o mesmo papel.
 
@@ -23,6 +24,8 @@ const RETRY_MS = 30000;
 let ad: Rewarded | null = null;
 let earned = false;
 let finish: ((rewarded: boolean) => void) | null = null;
+let showing = false;
+let initialization: Promise<void> | null = null;
 
 function load(mod: AdsModule): void {
   const unit = KEYS.admobRewarded || mod.TestIds.REWARDED;
@@ -48,7 +51,12 @@ function load(mod: AdsModule): void {
 
 /** Pede o consentimento e começa a carregar a primeira propaganda. */
 export async function initAds(): Promise<void> {
-  if (!NATIVE) return;
+  if (!NATIVE || adsRemoved()) return;
+  initialization ??= initializeAds().catch((error) => { initialization = null; throw error; });
+  return initialization;
+}
+
+async function initializeAds(): Promise<void> {
   const mod = require('react-native-google-mobile-ads') as AdsModule;
   const consent = await mod.AdsConsent.gatherConsent().catch(() => null);
   if (consent && !consent.canRequestAds) return;
@@ -57,7 +65,17 @@ export async function initAds(): Promise<void> {
 }
 
 /** Mostra a propaganda. true = assistiu até o fim (ganha o prêmio). */
-export function showRewardedAd(): Promise<boolean> {
+export async function showRewardedAd(): Promise<boolean> {
+  if (showing || adsRemoved()) return false;
+  showing = true;
+  try {
+    return await displayRewardedAd();
+  } finally {
+    showing = false;
+  }
+}
+
+function displayRewardedAd(): Promise<boolean> {
   if (!NATIVE) return new Promise((resolve) => useAdStore.setState({ fake: { resolve, startedAt: Date.now() } }));
   if (!ad || !useAdStore.getState().ready) return Promise.resolve(false);
   earned = false;

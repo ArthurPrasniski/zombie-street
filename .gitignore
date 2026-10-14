@@ -28,6 +28,9 @@ yarn-error.*
 
 # macOS
 .DS_Store
+
+# Website independente, com repositório próprio no Sites.
+/sites/zombie-road/
 *.pem
 
 # local env files

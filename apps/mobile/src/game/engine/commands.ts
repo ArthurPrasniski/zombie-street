@@ -1,3 +1,4 @@
+import { chooseBoon } from './expedition';
 import { playCard } from '@/game/engine/cards';
 import type { GameCommand, World } from '@/game/types';
 
@@ -9,6 +10,7 @@ export function applyCommands(world: World): void {
 
 function applyCommand(world: World, command: GameCommand): void {
   switch (command.type) {
+    case 'chooseBoon': chooseBoon(world, command.boon); return;
     case 'playCard':
       playCard(world, command.slot, command.x, command.y);
       return;
@@ -16,6 +18,7 @@ function applyCommand(world: World, command: GameCommand): void {
       world.speed = command.speed;
       return;
     case 'setPaused':
+      if (!command.paused && world.expedition?.pending) return;
       world.paused = command.paused;
       return;
   }

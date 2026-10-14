@@ -1,4 +1,6 @@
-import { GEM_PACKS, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
+import { Linking, Platform } from 'react-native';
+
+import { GEM_PACKS, isMembershipProduct, MEMBERSHIP, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 
 import { api } from '@/services/api';
 import { KEYS, NATIVE } from '@/services/env';
@@ -14,8 +16,8 @@ type Product = import('react-native-purchases').PurchasesStoreProduct;
 
 // Preços de exemplo para a compra simulada (os de verdade vêm da loja)
 const DEMO_PRICES = {
-  BRL: { zr_gems_80: 4.9, zr_gems_500: 24.9, zr_gems_1200: 49.9, zr_gems_2600: 99.9, zr_gems_7000: 249.9, [PASS_PRODUCT_ID]: 19.9 },
-  USD: { zr_gems_80: 0.99, zr_gems_500: 4.99, zr_gems_1200: 9.99, zr_gems_2600: 19.99, zr_gems_7000: 49.99, [PASS_PRODUCT_ID]: 3.99 },
+  BRL: { zr_gems_80: 4.9, zr_gems_500: 24.9, zr_gems_1200: 49.9, zr_gems_2600: 99.9, zr_gems_7000: 249.9, [PASS_PRODUCT_ID]: 19.9, [MEMBERSHIP.productId]: 19.9 },
+  USD: { zr_gems_80: 0.99, zr_gems_500: 4.99, zr_gems_1200: 9.99, zr_gems_2600: 19.99, zr_gems_7000: 49.99, [PASS_PRODUCT_ID]: 3.99, [MEMBERSHIP.productId]: 3.99 },
 };
 
 let configuredFor: string | null = null;
@@ -50,24 +52,40 @@ export async function productPrices(userId?: string): Promise<Record<string, str
   else await identification;
   if (!configuredFor) return {};
   const { default: Purchases, PRODUCT_CATEGORY } = rc();
-  const [gems, pass] = await Promise.all([
+  const membershipId = Platform.OS === 'android' && !KEYS.revenueCat.startsWith('test_') ? MEMBERSHIP.androidProductId : MEMBERSHIP.productId;
+  const [gems, pass, membership] = await Promise.all([
     Purchases.getProducts(GEM_PACKS.map((p) => p.productId), PRODUCT_CATEGORY.NON_SUBSCRIPTION),
     Purchases.getProducts([PASS_PRODUCT_ID], PRODUCT_CATEGORY.NON_SUBSCRIPTION),
+    Purchases.getProducts([membershipId], PRODUCT_CATEGORY.SUBSCRIPTION),
   ]);
-  for (const product of [...gems, ...pass]) cache.set(product.identifier, product);
-  return Object.fromEntries([...gems, ...pass].map((p) => [p.identifier, p.priceString]));
+  const products = [...gems, ...pass, ...membership];
+  const idOf = (product: Product) => isMembershipProduct(product.identifier) ? MEMBERSHIP.productId : product.identifier;
+  for (const product of products) cache.set(idOf(product), product);
+  return Object.fromEntries(products.map((p) => [idOf(p), p.priceString]));
+}
+
+export async function restorePurchases(): Promise<void> {
+  if (NATIVE) await rc().default.restorePurchases();
+}
+
+export async function manageSubscriptions(): Promise<void> {
+  if (!NATIVE) return;
+  if (Platform.OS === 'android') await Linking.openURL('https://play.google.com/store/account/subscriptions');
+  else await rc().default.showManageSubscriptions();
 }
 
 /** Abre a compra. true = comprou; false = cancelou. As gemas chegam pelo servidor. */
-export async function purchase(productId: string): Promise<boolean> {
+export async function purchase(productId: string, onReceipt?: (transactionId: string) => void): Promise<boolean> {
   if (!NATIVE) {
-    await api('POST', '/dev/purchase', { productId });
+    const res = await api<{ transactionId: string }>('POST', '/dev/purchase', { productId });
+    onReceipt?.(res.transactionId);
     return true;
   }
   const product = cache.get(productId);
   if (!product) throw new Error('Produto indisponível na loja');
   try {
-    await rc().default.purchaseStoreProduct(product);
+    const result = await rc().default.purchaseStoreProduct(product);
+    onReceipt?.(result.transaction.transactionIdentifier);
     return true;
   } catch (error) {
     if ((error as { userCancelled?: boolean }).userCancelled) return false;

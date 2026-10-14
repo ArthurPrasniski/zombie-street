@@ -1,3 +1,4 @@
+import { useSettingsStore } from '@/state/settingsStore';
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { StrokeText } from '@/ui/kit/StrokeText';
@@ -19,10 +20,11 @@ const STROKED = new Set<Variant>(['display', 'title', 'heading', 'label', 'numbe
  * Clash). Corpo e textos pequenos: Rubik. eyebrow/display/label: caixa alta.
  */
 export function AppText({ variant = 'body', color, style, children, stroke, ...props }: Props) {
+  const large = useSettingsStore((s) => s.largeText);
   const upper = variant === 'display' || variant === 'eyebrow' || variant === 'label';
   const content = upper && typeof children === 'string' ? children.toUpperCase() : children;
-  const textStyle = [styles.base, styles[variant], color ? { color } : null, style];
-  if (stroke ?? STROKED.has(variant)) {
+  const textStyle = [styles.base, styles[variant], color ? { color } : null, style, large ? { fontSize: styles[variant].fontSize * 1.2, lineHeight: styles[variant].lineHeight * 1.2 } : null];
+  if (!large && (stroke ?? STROKED.has(variant))) {
     return (
       <StrokeText {...props} style={textStyle}>
         {content}

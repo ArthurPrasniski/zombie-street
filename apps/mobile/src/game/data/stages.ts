@@ -157,3 +157,10 @@ function toWave(order: ZombieId[]): WaveDef {
   const spawns: SpawnEntry[] = order.flatMap((zombie, i) => Array.from({ length: ZOMBIES[zombie].pack ?? 1 }, () => ({ zombie, delay: i * SPAWN_INTERVAL })));
   return { spawns };
 }
+
+// Handcrafted milestones: vary entry rhythm while preserving the world’s enemy roster.
+for (const index of [10, 30, 60]) {
+ const stage = generateStage(index);
+ stage.waves = stage.waves.map((wave, i) => ({ ...wave, spawns: wave.spawns.map((spawn, n) => ({ ...spawn, delay: i === 4 ? n === 0 ? 0 : 3 + n * 1.2 : Math.floor(n / 3) * 2.8 + (n % 3) * 0.25 })) }));
+ STAGE_OVERRIDES[index] = stage;
+}

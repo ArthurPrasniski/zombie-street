@@ -51,3 +51,15 @@ test('todos os idiomas têm as mesmas chaves de tradução', () => {
   expect(keys(dictionaries.en)).toEqual(keys(dictionaries.pt));
   expect(keys(dictionaries.es)).toEqual(keys(dictionaries.pt));
 });
+
+
+test('idioma manual atualiza textos sem mutar definições congeladas do jogo', () => {
+  const { CARDS } = jest.requireActual<typeof import('@/game/data/cards')>('@/game/data/cards');
+  Object.freeze(CARDS.sheriff);
+  const { applyAppLanguage } = jest.requireActual<typeof import('../appLanguage')>('../appLanguage');
+  const { t } = jest.requireActual<typeof import('../index')>('../index');
+  const { localizedName } = jest.requireActual<typeof import('../names')>('../names');
+  expect(() => applyAppLanguage('en')).not.toThrow(); expect(t.shop.title).toBe('Shop');
+  expect(localizedName(CARDS.sheriff.name)).toBe('Sheriff');
+  applyAppLanguage('es'); expect(t.shop.title).toBe('Tienda'); applyAppLanguage('auto');
+});

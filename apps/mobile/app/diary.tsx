@@ -1,3 +1,6 @@
+import { localizedName } from '@/i18n/names';
+import { useEffect, useState } from 'react';
+import { comfortText } from '@/i18n/comfort';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,6 +18,8 @@ const MOMENTS = ['intro', 'outro'] as const;
 /** Diário (GDD seção 18.1): as mensagens de rádio por ato, para reler; as não ouvidas ficam fechadas. */
 export default function DiaryScreen() {
   const heard = useProgressStore((s) => s.radioHeard);
+  const [unread] = useState(() => heard.filter((id) => !useProgressStore.getState().diaryRead.includes(id)));
+  useEffect(() => { useProgressStore.getState().readDiary(); }, []);
   // Os 3 atos e a chegada na Fronteira (só a abertura do primeiro planeta)
   const acts = [...ACTS, [FRONTIER_WORLD]];
   return (
@@ -31,9 +36,9 @@ export default function DiaryScreen() {
                 MOMENTS.map((moment) => {
                   const id = radioId(w, moment);
                   if (!id) return null;
-                  const place = w < WORLDS.length ? WORLDS[w].name : pt.diary.acts[3];
+                  const place = w < WORLDS.length ? localizedName(WORLDS[w].name) : pt.diary.acts[3];
                   const title = `${pt.radio.world(w + 1, place)} · ${moment === 'intro' ? pt.diary.intro : pt.diary.outro}`.toUpperCase();
-                  return <DiaryEntry key={id} id={id} title={title} heard={heard.includes(id)} />;
+                  return <DiaryEntry key={id} id={id} title={unread.includes(id) ? `${comfortText.new} · ${title}` : title} heard={heard.includes(id)} />;
                 }),
               )}
             </View>

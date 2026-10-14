@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { SPECIAL_ZOMBIES } from '@/game/data/stages';
 import { stageLabel, WORLDS } from '@/game/data/worlds';
 import { ZOMBIES } from '@/game/data/zombies';
@@ -58,9 +59,9 @@ export function zombieWhere(id: ZombieId): string {
   const b = pt.bestiary;
   if (id === 'walker' || id === 'runner') return b.everywhere;
   const w = WORLDS.findIndex((world) => world.zombie === id);
-  if (w >= 0) return b.worldZombie(w + 1, WORLDS[w].name);
+  if (w >= 0) return b.worldZombie(w + 1, localizedName(WORLDS[w].name));
   const boss = WORLDS.findIndex((world) => world.boss === id);
-  if (boss >= 0) return b.worldBoss(boss + 1, WORLDS[boss].name);
+  if (boss >= 0) return b.worldBoss(boss + 1, localizedName(WORLDS[boss].name));
   const special = SPECIAL_ZOMBIES.find((e) => e.zombie === id);
   return special ? b.fromStage(stageLabel(special.from)) : b.fromSplitter;
 }

@@ -1,3 +1,4 @@
+import { localizedName } from '@/i18n/names';
 import { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
@@ -45,7 +46,7 @@ export function AchievementRow({ def, value, reached, reward, goal, onClaim }: P
         ))}
       </Pop>
       <View style={styles.texts}>
-        <AppText variant="label">{def.name}</AppText>
+        <AppText variant="label">{localizedName(def.name)}</AppText>
         <AppText variant="small" color={colors.textMuted}>
           {pt.achievements.goals[def.id](formatInt(goal))}
         </AppText>

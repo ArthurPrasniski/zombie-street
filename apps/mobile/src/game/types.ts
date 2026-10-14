@@ -164,11 +164,15 @@ export interface Weather { kind: 'fog' | 'blizzard' | 'blackout' | 'dust'; ttl: 
 
 export type GameCommand =
   | { type: 'playCard'; slot: number; x: number; y: number }
+  | { type: 'chooseBoon'; boon: import('@/game/data/expedition').ExpeditionBoon }
   | { type: 'setSpeed'; speed: 1 | 2 }
   | { type: 'setPaused'; paused: boolean };
 
+export interface MatchStats { duration: number; wave: number; damage: number; baseDamage: number; kills: number; cards: Partial<Record<CardId, number>> }
+
 export type GameEvent =
   | { type: 'waveStarted'; wave: number }
+  | { type: 'expeditionChoice'; choices: import('@/game/data/expedition').ExpeditionBoon[] }
   | { type: 'bossSpawned' }
   | { type: 'zombieKilled'; zombie: ZombieId; reward: number }
   | { type: 'zombieSpawned'; zombie: ZombieId }
@@ -177,10 +181,10 @@ export type GameEvent =
   | { type: 'explosion'; big: boolean }
   | { type: 'baseHit' }
   | { type: 'troopDown'; troop: TroopId }
-  | { type: 'stageCleared'; stage: number; cashEarned: number; stars: number }
-  | { type: 'stageFailed'; stage: number; cashEarned: number }
+  | { type: 'stageCleared'; stage: number; cashEarned: number; stars: number; stats?: MatchStats }
+  | { type: 'stageFailed'; stage: number; cashEarned: number; stats?: MatchStats }
   | { type: 'scenarioEvent'; kind: ScenarioEventId }
-  | { type: 'survivalOver'; waves: number; cashEarned: number };
+  | { type: 'survivalOver'; waves: number; cashEarned: number; stats?: MatchStats };
 
 export type MatchMode = 'stage' | 'survival';
 
@@ -194,6 +198,8 @@ export interface World {
   eventFired: boolean; weather: Weather | null;
   pendingCash: number; stageCash: number; killedThisWave: number; totalThisWave: number;
   commands: GameCommand[]; events: GameEvent[];
+  expedition: { picked: import('@/game/data/expedition').ExpeditionBoon[]; pending: boolean; choices: import('@/game/data/expedition').ExpeditionBoon[] } | null;
+  stats: MatchStats;
   rng: () => number; nextUid: number; time: number;
 }
 
