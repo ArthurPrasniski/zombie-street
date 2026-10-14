@@ -5,6 +5,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import { type Sessions, sessions as makeSessions, type VerifyIdToken } from './auth';
 import type { Config } from './config';
 import type { Db } from './db';
+import { createMonitor, type Monitor } from './discord/events';
 import { HttpError } from './errors';
 import { authRoutes } from './routes/auth';
 import { gameRoutes } from './routes/game';
@@ -18,11 +19,13 @@ export interface Deps {
   verifyIdToken: VerifyIdToken;
   now: () => Date;
   log: (message: string) => void;
+  monitor?: Monitor;
 }
 
 export function buildApp(input: Omit<Deps, 'sessions' | 'now' | 'log'> & Partial<Pick<Deps, 'now' | 'log'>>): FastifyInstance {
   const app = Fastify({ logger: input.config.production, bodyLimit: 512 * 1024 });
   const deps: Deps = { ...input, sessions: makeSessions(input.config.jwtSecret), now: input.now ?? (() => new Date()), log: input.log ?? ((m) => app.log.warn(m)) };
+  deps.monitor = createMonitor(input.config);
 
   app.setErrorHandler((error: Error & { statusCode?: number; validation?: unknown }, _req, reply) => {
     if (error instanceof HttpError) return reply.code(error.statusCode).send({ error: error.message });

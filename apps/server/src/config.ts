@@ -23,6 +23,8 @@ export interface Config {
   /** Senha da rota /admin/push (avisos para todos). Sem ela, a rota fica fechada. */
   adminToken: string | null;
   production: boolean;
+  discordWebhookUrl: string | null;
+  discordWorker: boolean;
 }
 
 const list = (value: string | undefined): string[] => (value ?? '').split(',').map((v) => v.trim()).filter(Boolean);
@@ -31,10 +33,23 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   const production = env.NODE_ENV === 'production';
   const jwtSecret = env.JWT_SECRET ?? (production ? '' : 'dev-secret-nao-use-em-producao');
   if (production && jwtSecret.length < 32) throw new Error('JWT_SECRET precisa ter pelo menos 32 caracteres em produção');
+  const databaseUrl = env.DATABASE_URL?.trim() || null;
+  if (production && !databaseUrl) throw new Error('DATABASE_URL é obrigatória em produção: configure a conexão interna do PostgreSQL no Dokploy');
   const devRoutes = !production && env.DEV_ROUTES !== '0';
+  const discordWebhookUrl = env.DISCORD_WEBHOOK_URL?.trim() || null;
+  if (discordWebhookUrl) {
+    let valid = false;
+    try {
+      const url = new URL(discordWebhookUrl);
+      valid = url.protocol === 'https:' && !url.username && !url.password && !url.port
+        && ['discord.com', 'discordapp.com', 'canary.discord.com', 'ptb.discord.com'].includes(url.hostname)
+        && /^\/api(?:\/v\d+)?\/webhooks\/\d+\/[\w.-]+$/.test(url.pathname);
+    } catch { /* Mensagem sem o valor secreto. */ }
+    if (!valid) throw new Error('DISCORD_WEBHOOK_URL precisa ser uma URL HTTPS válida de webhook do Discord');
+  }
   return {
     port: Number(env.PORT ?? 3000),
-    databaseUrl: env.DATABASE_URL ?? null,
+    databaseUrl,
     dataDir: env.DATA_DIR ?? '.data/pglite',
     jwtSecret,
     googleClientIds: list(env.GOOGLE_CLIENT_IDS),
@@ -46,5 +61,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     pushIntervalMs: Number(env.PUSH_INTERVAL_MS ?? 15000),
     adminToken: env.ADMIN_TOKEN || null,
     production,
+    discordWebhookUrl,
+    discordWorker: env.DISCORD_WORKER !== '0',
   };
 }

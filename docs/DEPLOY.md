@@ -4,6 +4,8 @@ Passo a passo para colocar `apps/server` no ar numa VPS com Dokploy, com Postgre
 deploy automático a cada push, e para ligar o app (Expo Go, development build e loja) a ele.
 Troque `api.seudominio.com` pelo seu domínio em todo o guia.
 
+Para separar o ambiente PRD do DEV existente usando Tailscale Funnel, veja [PRODUCTION.md](./PRODUCTION.md).
+
 ```
 Celular ──HTTPS──► api.seudominio.com ──► Traefik (Dokploy) ──► zombie-road-api :3000 ──► Postgres
                                                                     │   (rede interna)    zombie-road-db
@@ -120,7 +122,7 @@ EXPO_ACCESS_TOKEN=
 | -------- | ----------- | --------------------------- |
 | `NODE_ENV` | sim (o Dockerfile já põe) | Sem `production`, as rotas de teste (`/dev/*`, login "dev:") ficam ligadas |
 | `PORT` | não (3000) | Precisa ser igual ao **Container Port** do domínio |
-| `DATABASE_URL` | **sim** | Sem ela o servidor usa o PGlite dentro do container e **perde tudo a cada deploy** |
+| `DATABASE_URL` | **sim** | O servidor recusa iniciar em produção sem a conexão PostgreSQL, evitando criar um banco temporário no container |
 | `JWT_SECRET` | **sim** (32+ caracteres) | O servidor não sobe: "JWT_SECRET precisa ter pelo menos 32 caracteres em produção". Trocar depois desloga todo mundo |
 | `GOOGLE_CLIENT_IDS` | para login Google | Login Google responde 503 ("login google não configurado"); com o ID errado, 401 ("token google inválido") |
 | `APPLE_AUDIENCES` | para login Apple | Igual ao Google, para a Apple |
@@ -130,7 +132,8 @@ EXPO_ACCESS_TOKEN=
 | `PUSH_INTERVAL_MS` | não (15000) | Intervalo entre as rodadas de envio |
 | `EXPO_ACCESS_TOKEN` | não | Só se ligar "Enhanced Security for Push Notifications" no expo.dev |
 
-`DEV_ROUTES` e `DATA_DIR` não são usados em produção. O valor do webhook sem espaço (`zr-...`)
+As rotas de desenvolvimento ficam sempre desligadas em produção, mesmo com `DEV_ROUTES=1`.
+`DATA_DIR` é usado apenas no fallback PGlite fora de produção. O valor do webhook sem espaço (`zr-...`)
 evita dúvida de aspas: o RevenueCat manda exatamente o que você cadastrar.
 
 Mudou alguma variável depois? Clique em **Deploy** de novo para valer.

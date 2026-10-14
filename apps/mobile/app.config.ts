@@ -15,6 +15,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const env = process.env;
   const plugins: ExpoConfig['plugins'] = [
     ...(config.plugins ?? []),
+    // R8 nos builds Android release: otimização, ofuscação e remoção de recursos não usados.
+    ['expo-build-properties', { android: { enableMinifyInReleaseBuilds: true, enableShrinkResourcesInReleaseBuilds: true } }],
+    './plugins/withAndroidOptimization',
     ['expo-localization', { supportedLocales: { ios: ['pt-BR', 'en', 'es'], android: ['pt-BR', 'en', 'es'] } }],
     'expo-apple-authentication',
     // Push no iOS: ambiente "production" só no build da loja (perfil production do EAS)

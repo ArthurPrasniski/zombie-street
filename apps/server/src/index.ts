@@ -4,6 +4,7 @@ import { jwksVerifier, withDevTokens } from './auth';
 import { type Config, loadConfig } from './config';
 import { connectPg, connectPglite, type Db } from './db';
 import { migrate } from './migrate';
+import { discordSender, startDiscordWorker } from './discord/worker';
 import { expoSender } from './push/expo';
 import { startPushWorker } from './push/worker';
 
@@ -20,10 +21,14 @@ async function main(): Promise<void> {
   const app = buildApp({ db, config, verifyIdToken: config.devRoutes ? withDevTokens(verify) : verify });
   await app.listen({ port: config.port, host: '0.0.0.0' });
   const stopPush = config.pushWorker ? startPushWorker(db, expoSender(config.expoAccessToken), config.pushIntervalMs, (m) => app.log.warn(m)) : () => {};
+  const stopDiscord = config.production && config.discordWebhookUrl && config.discordWorker
+    ? startDiscordWorker(db, discordSender(config.discordWebhookUrl), (m) => app.log.warn(m))
+    : async () => {};
   // Redeploy (Docker manda SIGTERM): termina os pedidos em andamento e fecha o banco antes de sair
   const shutdown = async () => {
     stopPush();
     await app.close();
+    await stopDiscord();
     await db.close();
     process.exit(0);
   };

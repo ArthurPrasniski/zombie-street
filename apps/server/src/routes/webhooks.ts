@@ -9,13 +9,13 @@ import { HttpError } from '../errors';
 import { handleRevenueCat, type RevenueCatEvent } from '../store/revenuecat';
 
 export function webhookRoutes(app: FastifyInstance, deps: Deps): void {
-  const { db, config, sessions, now, log } = deps;
+  const { db, config, sessions, now, log, monitor } = deps;
 
   app.post<{ Body: { event?: RevenueCatEvent } }>('/webhooks/revenuecat', async (req) => {
     if (!config.revenueCatWebhookAuth || req.headers.authorization !== config.revenueCatWebhookAuth) throw new HttpError(401, 'webhook sem autorização');
     const event = req.body.event;
     if (!event?.id || !event.type) throw new HttpError(400, 'evento inválido');
-    const outcome = await handleRevenueCat(db, event, now());
+    const outcome = await handleRevenueCat(db, event, now(), monitor);
     // Compra de alguém que não conhecemos: guardada sem dono, para conciliar depois
     if (outcome === 'unknown-user') log(`RevenueCat: evento ${event.id} (${event.type}) sem conta conhecida: ${event.app_user_id}`);
     return { ok: true, outcome };

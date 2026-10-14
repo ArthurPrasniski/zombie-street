@@ -8,18 +8,18 @@ import { deleteUser, guestUser, loginWithProvider, userInfo } from '../store/use
 const str = (min = 1) => ({ type: 'string', minLength: min, maxLength: 8192 });
 
 export function authRoutes(app: FastifyInstance, deps: Deps): void {
-  const { db, sessions, verifyIdToken } = deps;
+  const { db, sessions, verifyIdToken, monitor } = deps;
   const session = async (userId: string, switched = false): Promise<Session> => ({ token: await sessions.sign(userId), user: await userInfo(db, userId), switched });
   /** Sessão atual, se o pedido trouxe uma (para vincular o login à conta do convidado). */
   const optionalUser = async (header: string | undefined) => (header ? sessions.verify(header).catch(() => null) : null);
 
   app.post<{ Body: GuestLogin }>('/auth/guest', { schema: { body: { type: 'object', required: ['deviceId'], properties: { deviceId: str(16) } } } }, async (req) =>
-    session(await guestUser(db, req.body.deviceId)),
+    session(await guestUser(db, req.body.deviceId, monitor)),
   );
 
   const providerLogin = async (provider: Provider, token: string, header: string | undefined, name?: string | null) => {
     const identity = await verifyIdToken(provider, token);
-    const result = await loginWithProvider(db, provider, { ...identity, name: identity.name ?? name ?? null }, await optionalUser(header));
+    const result = await loginWithProvider(db, provider, { ...identity, name: identity.name ?? name ?? null }, await optionalUser(header), monitor);
     return session(result.userId, result.switched);
   };
 

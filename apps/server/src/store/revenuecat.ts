@@ -4,6 +4,7 @@
 import { gemPack, LEGACY_PASS_PRODUCT_ID, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 import { seasonOf } from '@zombie-road/shared/pass';
 import type { Db, Queryable } from '../db';
+import type { Monitor } from '../discord/events';
 import { pushTexts } from '../push/texts';
 import { enqueue } from './push';
 import { moveGems } from './wallet';
@@ -20,6 +21,10 @@ export interface RevenueCatEvent {
   purchased_at_ms?: number | null;
   expiration_at_ms?: number | null;
   cancel_reason?: string | null;
+  environment?: string;
+  price_in_purchased_currency?: number | null;
+  currency?: string | null;
+  store?: string;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -37,7 +42,7 @@ async function ownerOf(q: Queryable, event: RevenueCatEvent): Promise<string | n
 
 export type WebhookOutcome = 'duplicate' | 'gems' | 'refund' | 'pass' | 'billing' | 'ignored' | 'unknown-user';
 
-export async function handleRevenueCat(db: Db, event: RevenueCatEvent, now: Date): Promise<WebhookOutcome> {
+export async function handleRevenueCat(db: Db, event: RevenueCatEvent, now: Date, monitor?: Monitor): Promise<WebhookOutcome> {
   return db.tx(async (q) => {
     const fresh = await q.query('insert into webhook_events (id) values ($1) on conflict do nothing returning id', [event.id]);
     if (fresh.length === 0) return 'duplicate';
@@ -46,6 +51,18 @@ export async function handleRevenueCat(db: Db, event: RevenueCatEvent, now: Date
     if (pack && event.transaction_id) {
       if (event.type === 'NON_RENEWING_PURCHASE' || event.type === 'INITIAL_PURCHASE') {
         await q.query('insert into purchases (transaction_id, user_id, product_id, gems) values ($1, $2, $3, $4) on conflict do nothing', [event.transaction_id, userId, pack.productId, pack.gems]);
+        if (monitor && event.environment === 'PRODUCTION' && event.store !== 'TEST_STORE') {
+          const providers = userId ? await q.query<{ provider: string }>('select provider from identities where user_id = $1 order by provider', [userId]) : [];
+          const price = event.price_in_purchased_currency;
+          const date = new Date(event.purchased_at_ms ?? now.getTime());
+          await monitor(q, {
+            kind: 'gems', userId, provider: providers.map((p) => p.provider).join(', ') || (userId ? 'Convidado' : 'Não identificado'),
+            productId: pack.productId, gems: pack.gems, transactionId: event.transaction_id,
+            amount: typeof price === 'number' && Number.isFinite(price) && price >= 0 ? price : null,
+            currency: typeof event.currency === 'string' && /^[A-Z]{3}$/.test(event.currency) ? event.currency : null,
+            store: event.store ?? 'Não informada', occurredAt: Number.isFinite(date.getTime()) ? date.toISOString() : now.toISOString(),
+          });
+        }
         if (!userId) return 'unknown-user';
         await moveGems(q, userId, pack.gems, 'purchase', event.transaction_id);
         // Aviso "compra confirmada": as gemas podem chegar depois de o jogador sair da loja

@@ -2,20 +2,22 @@
 import type { Provider, UserInfo } from '@zombie-road/shared/api';
 import type { Identity } from '../auth';
 import type { Db, Queryable } from '../db';
+import type { Monitor } from '../discord/events';
 import { HttpError } from '../errors';
 
-async function createUser(q: Queryable, fields: { deviceId?: string; email?: string | null; name?: string | null }): Promise<string> {
-  const [row] = await q.query<{ id: string }>('insert into users (device_id, email, name) values ($1, $2, $3) returning id', [fields.deviceId ?? null, fields.email ?? null, fields.name ?? null]);
+async function createUser(q: Queryable, fields: { deviceId?: string; email?: string | null; name?: string | null; provider?: Provider }, monitor?: Monitor): Promise<string> {
+  const [row] = await q.query<{ id: string; created_at: Date }>('insert into users (device_id, email, name) values ($1, $2, $3) returning id, created_at', [fields.deviceId ?? null, fields.email ?? null, fields.name ?? null]);
   await q.query('insert into wallets (user_id) values ($1)', [row.id]);
+  await monitor?.(q, { kind: 'signup', userId: row.id, provider: fields.provider ?? 'Convidado', occurredAt: new Date(row.created_at).toISOString() });
   return row.id;
 }
 
 /** Convidado: o mesmo aparelho volta para a mesma conta. */
-export async function guestUser(db: Db, deviceId: string): Promise<string> {
+export async function guestUser(db: Db, deviceId: string, monitor?: Monitor): Promise<string> {
   if (deviceId.length < 16) throw new HttpError(400, 'deviceId curto demais');
   return db.tx(async (q) => {
     const [found] = await q.query<{ id: string }>('select id from users where device_id = $1', [deviceId]);
-    return found ? found.id : createUser(q, { deviceId });
+    return found ? found.id : createUser(q, { deviceId }, monitor);
   });
 }
 
@@ -30,7 +32,7 @@ export interface LoginResult {
  * gemas dele passam para ela). Nova: vincula à conta atual (se ela ainda não tem esse provedor)
  * ou cria uma conta.
  */
-export async function loginWithProvider(db: Db, provider: Provider, id: Identity, currentUserId: string | null): Promise<LoginResult> {
+export async function loginWithProvider(db: Db, provider: Provider, id: Identity, currentUserId: string | null, monitor?: Monitor): Promise<LoginResult> {
   return db.tx(async (q) => {
     const [known] = await q.query<{ user_id: string }>('select user_id from identities where provider = $1 and subject = $2', [provider, id.subject]);
     if (known) {
@@ -43,7 +45,7 @@ export async function loginWithProvider(db: Db, provider: Provider, id: Identity
       const [same] = await q.query('select 1 from identities where user_id = $1 and provider = $2', [userId, provider]);
       if (same) userId = null;
     }
-    userId ??= await createUser(q, { email: id.email, name: id.name });
+    userId ??= await createUser(q, { email: id.email, name: id.name, provider }, monitor);
     await q.query('insert into identities (provider, subject, user_id, email) values ($1, $2, $3, $4)', [provider, id.subject, userId, id.email]);
     // A conta deixa de ser o convidado do aparelho: "Sair" depois cria um convidado novo
     await q.query('update users set device_id = null where id = $1', [userId]);
