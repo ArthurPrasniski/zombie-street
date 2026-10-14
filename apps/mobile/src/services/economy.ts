@@ -1,11 +1,11 @@
-import { COIN_PACKS, type CoinPackId } from '@zombie-road/shared/catalog';
+import { COIN_PACKS, gemPack, PASS_PRODUCT_ID, type CoinPackId } from '@zombie-road/shared/catalog';
 import type { BuyCoinsResult, ClaimResult, PassState, Wallet } from '@zombie-road/shared/api';
 import type { PassTrack } from '@zombie-road/shared/pass';
 import * as Crypto from 'expo-crypto';
 
 import { api, hasApiToken } from '@/services/api';
 import { purchase } from '@/services/purchases';
-import { MAX_APPLIED, useAccountStore } from '@/state/accountStore';
+import { type AccountState, MAX_APPLIED, useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 
 // Gemas, loja e Passe (GDD seção 19). O servidor manda nas gemas e no passe; as moedas que ele
@@ -33,20 +33,31 @@ export async function refreshEconomy(): Promise<void> {
 }
 
 // O webhook do RevenueCat pode levar alguns segundos: confere a carteira algumas vezes.
-const POLLS = 8;
-const POLL_MS = 1500;
+const CONFIRMATION_MS = 60000;
+const POLL_MS = 1000;
 
-/** Compra de gemas ou do passe na loja. Espera o servidor confirmar. false = cancelou. */
-export async function buyProduct(productId: string): Promise<boolean> {
+export function purchaseConfirmed(productId: string, before: AccountState, now: AccountState): boolean {
+  if (!before.user || now.user?.id !== before.user.id) return false;
+  if (productId === PASS_PRODUCT_ID) return now.pass?.premium === true;
+  const pack = gemPack(productId);
+  return !!pack && before.gems !== null && now.gems !== null && now.gems >= before.gems + pack.gems;
+}
+
+export type PurchaseResult = 'cancelled' | 'confirmed' | 'pending';
+
+/** A loja concluir não significa que o webhook já entregou o produto. */
+export async function buyProduct(productId: string, onPurchased?: () => void): Promise<PurchaseResult> {
   const before = useAccountStore.getState();
-  if (!(await purchase(productId))) return false;
-  for (let i = 0; i < POLLS; i++) {
+  if (!(await purchase(productId))) return 'cancelled';
+  onPurchased?.();
+  const deadline = Date.now() + CONFIRMATION_MS;
+  while (true) {
     await refreshEconomy();
     const now = useAccountStore.getState();
-    if ((now.gems ?? 0) !== (before.gems ?? 0) || now.pass?.premium !== before.pass?.premium) break;
-    await new Promise((r) => setTimeout(r, POLL_MS));
+    if (purchaseConfirmed(productId, before, now)) return 'confirmed';
+    if (now.user?.id !== before.user?.id || Date.now() >= deadline) return 'pending';
+    await new Promise((r) => setTimeout(r, Math.min(POLL_MS, deadline - Date.now())));
   }
-  return true;
 }
 
 /** Troca gemas por moedas. O mesmo `requestId` pode ser repetido sem cobrar duas vezes. */

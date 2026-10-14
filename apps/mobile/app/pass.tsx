@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
@@ -8,7 +8,8 @@ import { canClaim, PASS_TIERS, passReward, type PassTrack, XP_PER_TIER } from '@
 import { t as pt } from '@/i18n';
 import { formatDate, formatDateTime } from '@/utils/format';
 import { useProductPrices } from '@/hooks/useProductPrices';
-import { buyProduct, claimPass, refreshEconomy } from '@/services/economy';
+import { useProductPurchase } from '@/hooks/useProductPurchase';
+import { claimPass, refreshEconomy } from '@/services/economy';
 import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
@@ -34,7 +35,10 @@ export default function PassScreen() {
   const stage = useProgressStore((s) => s.highestCleared) + 1;
   const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(PASS_PRODUCT_IDS);
   const price = prices[PASS_PRODUCT_ID];
-  const [busy, setBusy] = useState(false);
+  const purchase = useProductPurchase();
+  const [acting, setActing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const busy = acting || purchase.busy;
   // Hora em que a tela abriu (para "termina em N dias")
   const [openedAt] = useState(() => Date.now());
 
@@ -43,9 +47,15 @@ export default function PassScreen() {
   }, []);
 
   const act = async (task: () => Promise<unknown>) => {
-    setBusy(true);
-    await task().catch(() => null);
-    setBusy(false);
+    setActing(true);
+    setError(null);
+    try {
+      await task();
+    } catch {
+      setError(pt.shop.failed);
+    } finally {
+      setActing(false);
+    }
   };
 
   if (!pass) {
@@ -96,7 +106,7 @@ export default function PassScreen() {
       ) : (
         <View style={{ gap: 8 }}>
           <AppText variant="small" color={colors.textMuted}>{pt.pass.validity(formatDateTime(pass.endsAt))}</AppText>
-          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || !price || !purchasesAvailable()} onPress={() => act(() => buyProduct(PASS_PRODUCT_ID))} />
+          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || purchase.pending || !price || !purchasesAvailable()} onPress={() => { setError(null); void purchase.buy(PASS_PRODUCT_ID); }} />
           {pricesError && (
             <>
               <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
@@ -105,6 +115,14 @@ export default function PassScreen() {
           )}
         </View>
       )}
+      {purchase.message && (
+        <View accessibilityLiveRegion="polite" style={{ gap: 8 }}>
+          {purchase.busy && <ActivityIndicator color={colors.yellow} />}
+          <AppText variant="label" color={purchase.status === 'error' ? colors.danger : purchase.status === 'success' ? colors.accent : colors.yellow}>{purchase.message}</AppText>
+          {purchase.pending && <Button label={pt.shop.checkPurchase} variant="dark" size="s" onPress={() => { void purchase.check(); }} />}
+        </View>
+      )}
+      {error && <AppText color={colors.danger}>{error}</AppText>}
       <View style={styles.tracks}>
         <AppText variant="eyebrow">{pt.pass.free}</AppText>
         <AppText variant="eyebrow" color="#c8a0ff">

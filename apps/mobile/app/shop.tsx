@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,8 +8,9 @@ import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, GEM_PACKS } 
 
 import { stageLabel } from '@/game/data/worlds';
 import { useProductPrices } from '@/hooks/useProductPrices';
+import { useProductPurchase } from '@/hooks/useProductPurchase';
 import { t as pt } from '@/i18n';
-import { buyCoins, buyProduct, refreshEconomy } from '@/services/economy';
+import { buyCoins, refreshEconomy } from '@/services/economy';
 import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
@@ -30,7 +31,9 @@ export default function ShopScreen() {
   const { user, online, gems } = useAccountStore();
   const stage = useProgressStore((s) => s.highestCleared) + 1;
   const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(GEM_PRODUCT_IDS);
-  const [busy, setBusy] = useState(false);
+  const [acting, setBusy] = useState(false);
+  const purchase = useProductPurchase();
+  const busy = acting || purchase.busy || purchase.pending;
   const [note, setNote] = useState<string | null>(null);
   const connected = user !== null && online;
 
@@ -49,7 +52,7 @@ export default function ShopScreen() {
       setBusy(false);
     }
   };
-  const buyGems = (productId: string) => run(async () => ((await buyProduct(productId)) ? pt.shop.gemsArrived : null));
+  const buyGems = (productId: string) => { setNote(null); void purchase.buy(productId); };
   const buyPack = (pack: CoinPackId) => run(async () => pt.shop.bought(formatCash(await buyCoins(pack))));
 
   return (
@@ -57,6 +60,13 @@ export default function ShopScreen() {
       <SafeAreaView style={styles.content} edges={['top', 'left', 'right', 'bottom']}>
         <ScreenHeader title={pt.shop.title} right={<GemPill />} />
         <ScrollView contentContainerStyle={styles.list}>
+          {purchase.message && (
+            <View style={styles.note} accessibilityLiveRegion="polite">
+              {purchase.busy && <ActivityIndicator color={colors.yellow} />}
+              <AppText variant="label" color={purchase.status === 'error' ? colors.danger : purchase.status === 'success' ? colors.accent : colors.yellow}>{purchase.message}</AppText>
+              {purchase.pending && <Button label={pt.shop.checkPurchase} variant="dark" size="s" onPress={() => { void purchase.check(); }} />}
+            </View>
+          )}
           {note && (
             <Animated.View entering={FadeInDown} style={styles.note}>
               <AppText variant="label" color={colors.yellow}>

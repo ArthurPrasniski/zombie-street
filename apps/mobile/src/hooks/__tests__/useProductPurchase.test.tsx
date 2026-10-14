@@ -1,0 +1,84 @@
+import { useEffect } from 'react';
+import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+
+import { useProductPurchase } from '../useProductPurchase';
+
+const mockBuy = jest.fn();
+const mockRefresh = jest.fn();
+const mockConfirmed = jest.fn();
+const mockListeners = new Set<() => void>();
+jest.mock('@/services/economy', () => ({
+  buyProduct: (...args: unknown[]) => mockBuy(...args),
+  refreshEconomy: () => mockRefresh(),
+  purchaseConfirmed: () => mockConfirmed(),
+}));
+jest.mock('@/state/accountStore', () => ({ useAccountStore: {
+  getState: () => ({}),
+  subscribe: (listener: () => void) => { mockListeners.add(listener); return () => mockListeners.delete(listener); },
+} }));
+
+let hook: ReturnType<typeof useProductPurchase>;
+let tree: ReactTestRenderer;
+function Harness() {
+  const value = useProductPurchase();
+  useEffect(() => { hook = value; });
+  return null;
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockConfirmed.mockReturnValue(false);
+  act(() => { tree = create(<Harness />); });
+});
+afterEach(() => act(() => tree.unmount()));
+
+test('mostra confirmação assim que a loja termina e sucesso só após a entrega', async () => {
+  let deliver!: (result: string) => void;
+  mockBuy.mockImplementation((_id, onPurchased) => { onPurchased(); return new Promise((resolve) => { deliver = resolve; }); });
+  let result!: Promise<void>;
+  act(() => { result = hook.buy('zr_pass_season'); });
+  expect(hook.status).toBe('confirming');
+  expect(hook.message).toContain('Confirmando');
+  expect(hook.busy).toBe(true);
+  await act(async () => { deliver('confirmed'); await result; });
+  expect(hook.status).toBe('success');
+  expect(hook.message).toContain('Passe Premium ativado');
+  expect(hook.busy).toBe(false);
+});
+
+test('exibe erro da loja e libera os controles', async () => {
+  mockBuy.mockRejectedValue(new Error('failed'));
+  await act(async () => hook.buy('zr_pass_season'));
+  expect(hook.status).toBe('error');
+  expect(hook.message).toContain('Não foi possível concluir');
+  expect(hook.busy).toBe(false);
+});
+
+test('cancelamento não mostra sucesso ou erro', async () => {
+  mockBuy.mockResolvedValue('cancelled');
+  await act(async () => hook.buy('zr_pass_season'));
+  expect(hook.message).toBeNull();
+  expect(hook.busy).toBe(false);
+});
+
+test('compra pendente evita nova compra e aceita confirmação tardia do servidor', async () => {
+  mockBuy.mockResolvedValue('pending');
+  await act(async () => hook.buy('zr_pass_season'));
+  expect(hook.pending).toBe(true);
+  expect(hook.message).toContain('Não compre novamente');
+  await act(async () => hook.buy('zr_pass_season'));
+  expect(mockBuy).toHaveBeenCalledTimes(1);
+  mockConfirmed.mockReturnValue(true);
+  act(() => { mockListeners.forEach((listener) => listener()); });
+  expect(hook.status).toBe('success');
+});
+
+test('atualizar status consulta a entrega sem comprar novamente', async () => {
+  mockBuy.mockResolvedValue('pending');
+  await act(async () => hook.buy('zr_gems_80'));
+  mockConfirmed.mockReturnValue(true);
+  await act(async () => hook.check());
+  expect(mockRefresh).toHaveBeenCalledTimes(1);
+  expect(mockBuy).toHaveBeenCalledTimes(1);
+  expect(hook.message).toBe('Gemas recebidas!');
+});

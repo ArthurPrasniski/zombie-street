@@ -2,6 +2,11 @@
 
 export const esShop = {
   shop: {
+    purchasing: 'Esperando a la tienda…',
+    confirming: 'Compra completada en la tienda. Confirmando la entrega…',
+    purchasePending: 'La tienda completó la compra, pero la entrega sigue pendiente. No compres de nuevo. Actualiza el estado en unos instantes.',
+    purchaseFailed: 'No se pudo completar la compra. Revisa el historial de la tienda antes de intentarlo de nuevo.',
+    checkPurchase: 'Actualizar estado de la compra',
     title: "Tienda",
     open: "Tienda",
     subtitle: "Gemas, monedas y el Pase",
@@ -26,6 +31,7 @@ export const esShop = {
     failed: "Algo salió mal. Inténtalo de nuevo.",
   },
   pass: {
+    activated: '¡Compra confirmada! Pase Premium activado.',
     title: "Pase de Batalla",
     open: "Pase",
     season: (period: string) => `Temporada · ${period}`,

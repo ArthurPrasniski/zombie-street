@@ -56,8 +56,10 @@ apps/mobile/       @zombie-road/mobile, o jogo; a parte de conta e loja fica em
 
 ## Rodando localmente
 
-1. Servidor: `npm install` e `npm run server` na raiz. Sem `DATABASE_URL`, usa o
-   PGlite em `apps/server/.data/` (não precisa de Docker). Com Postgres:
+1. Servidor: copie `apps/server/.env.example` para `apps/server/.env.local` e defina
+   `NODE_ENV=development` e um `JWT_SECRET` próprio (`openssl rand -hex 32`).
+   Rode `npm install` e `npm run server` na raiz; o comando carrega o `.env.local`
+   automaticamente. Sem `DATABASE_URL`, usa o PGlite em `apps/server/.data/` (não precisa de Docker). Com Postgres:
    `docker compose -f apps/server/docker-compose.yml up -d` e `DATABASE_URL=...`.
 2. App: crie `apps/mobile/.env.local` a partir de `apps/mobile/.env.example` com
    `EXPO_PUBLIC_API_URL=http://localhost:3000` (no celular, o IP do Mac na rede) e
