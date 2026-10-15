@@ -39,7 +39,7 @@ const names: Record<string, readonly [string, string]> = {
   'Estradeiro': ['Road Warrior', 'Caminante de la Carretera'], 'Mão rápida': ['Quick Hand', 'Mano Rápida'],
   'Treinador': ['Trainer', 'Entrenador'], 'Evolução': ['Evolution', 'Evolución'], 'Mecânico': ['Mechanic', 'Mecánico'],
   'Sobrevivente': ['Survivor', 'Superviviente'], 'Lataria': ['Hull', 'Carrocería'],
-  'Tanque de sangue': ['Blood tank', 'Tanque de sangre'],
+  'Reserva de sangue': ['Blood reserve', 'Reserva de sangre'],
 };
 
 /** Localiza nomes de conteúdo sem alterar ids, regras ou dados salvos. */

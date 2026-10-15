@@ -4,12 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import type { Provider } from '@zombie-road/shared/api';
 
 import { reliabilityText } from '@/i18n/reliability';
-import { pullSave } from '@/services/cloudSave';
+import { retryAccountSync } from '@/services/accountSync';
 import { t as pt } from '@/i18n';
 import { formatSyncTime } from '@/utils/syncTime';
 import { ApiError } from '@/services/api';
 import { usePurchaseStore } from '@/state/purchaseStore';
-import { refreshEconomy } from '@/services/economy';
 import { IS_EXPO_GO } from '@/services/env';
 import { deleteAccount, signIn, signOut } from '@/services/session';
 import { appleAvailable } from '@/services/signIn';
@@ -71,7 +70,7 @@ export function AccountPanel() {
         </AppText>
       )}
       <AppText variant="small">{syncStatus === 'error' ? reliabilityText.failed : reliabilityText[syncStatus]}</AppText>
-      <Button label={reliabilityText.retry} variant="dark" size="s" disabled={syncStatus === 'saving'} onPress={() => run(async () => { await pullSave(); await refreshEconomy(); })} />
+      <Button label={reliabilityText.retry} variant="dark" size="s" disabled={busy || purchasing || syncStatus === 'saving'} onPress={() => run(retryAccountSync)} />
       {error && <AppText color={colors.danger}>{error}</AppText>}
       {online && (
         <ProviderLoginButtons

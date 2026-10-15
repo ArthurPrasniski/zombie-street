@@ -14,7 +14,7 @@ import { Pop } from '@/ui/fx/Pop';
 import { colors, radius } from '@/ui/theme';
 import { formatCash, formatDecimal, formatInt } from '@/utils/format';
 
-const PART_ICONS: Record<TruckPart, number> = { hull: ICONS.shield, gun: ICONS.bullet, tank: ICONS.blood };
+const PART_ICONS: Record<TruckPart, number> = { hull: ICONS.shield, gun: ICONS.bullet, tank: ICONS.bloodBag };
 
 /** Valor que a peça mexe, como texto (dano com uma casa decimal). */
 export function statText(part: TruckPart, levels: TruckLevels): string {
@@ -46,7 +46,7 @@ export function PartRow({ part, levels, cost, affordable, onUpgrade }: Props) {
       <Image source={PART_ICONS[part]} style={styles.icon} />
       <View style={styles.texts}>
         <View style={styles.title}>
-          <AppText variant="label">{localizedName(def.name)}</AppText>
+          <AppText variant="label" style={styles.titleText}>{localizedName(def.name)}</AppText>
           <Pop trigger={level}>
             <AppText variant="small" color={colors.accent}>
               {pt.garage.level(level, def.maxLevel)}
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 14 },
   icon: { width: 46, height: 46 },
   texts: { flex: 1, gap: 4 },
-  title: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 },
+  title: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 },
+  titleText: { flexShrink: 1, maxWidth: '100%' },
   coin: { width: 18, height: 18 },
 });

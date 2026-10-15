@@ -138,6 +138,19 @@ somente na API PRD, conforme [DISCORD.md](./DISCORD.md).
   testar restauração em um banco separado antes do lançamento.
 - Antes de migrar os jogadores, confirmar URL PRD, webhook, credenciais e versão do app.
 
+### API online, mas o aplicativo indica falta de conexão
+
+`/health` confirma que o processo responde; não confirma que o backend atende à versão
+instalada do aplicativo. A inicialização atual consulta `/wallet`, `/pass`, `/membership`
+e `/purchases`. Sem token, as quatro rotas devem responder **401**, e não **404**.
+Se `/membership` ou `/purchases` devolver `Route GET:… not found`, atualizar a aplicação
+API PRD no Dokploy com o código atual de `apps/server` e `packages/shared`, mantendo
+Build Path `/` e o mapeamento do Funnel para o serviço PRD correto.
+
+Após o deploy, conferir essas rotas e reabrir o aplicativo. A correção de reconexão do
+cliente também permite tentar abrir uma sessão novamente pelos Ajustes ou ao retornar
+ao app; essa alteração do cliente só chega aos aparelhos em um novo build.
+
 Referências: [deploy Dokploy](./DEPLOY.md),
 [Funnel](https://tailscale.com/docs/features/tailscale-funnel),
 [EAS environments](https://docs.expo.dev/eas/environment-variables/usage/),

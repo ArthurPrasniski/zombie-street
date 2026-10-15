@@ -17,7 +17,7 @@ export interface TruckPartDef {
 export const TRUCK_PARTS: Record<TruckPart, TruckPartDef> = {
   hull: { id: 'hull', name: localizedName('Lataria'), maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
   gun: { id: 'gun', name: localizedName('Metralhadora'), maxLevel: 20, baseCost: 60, costGrowth: 1.25 },
-  tank: { id: 'tank', name: localizedName('Tanque de sangue'), maxLevel: 5, baseCost: 400, costGrowth: 2 },
+  tank: { id: 'tank', name: localizedName('Reserva de sangue'), maxLevel: 5, baseCost: 400, costGrowth: 2 },
 };
 
 export const TRUCK_PART_IDS = Object.keys(TRUCK_PARTS) as TruckPart[];
@@ -27,7 +27,7 @@ export const STOCK_TRUCK: TruckLevels = { hull: 0, gun: 0, tank: 0 };
 export const HULL_HP_PER_LEVEL = 0.15;
 /** Dano da metralhadora x 1,12 por nível. */
 export const GUN_DAMAGE_GROWTH = 1.12;
-/** Sangue inicial +1 por nível do Tanque. */
+/** Sangue inicial +1 por nível da Reserva. */
 export const TANK_BLOOD_PER_LEVEL = 1;
 
 export interface BaseStats {
