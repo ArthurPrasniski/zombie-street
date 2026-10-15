@@ -89,6 +89,11 @@ Regra de ouro: `EXPO_PUBLIC_*` vai **dentro** do app (qualquer um consegue ler).
      ```
      apps/server/**
      packages/shared/**
+     apps/mobile/src/game/data/**
+     apps/mobile/src/game/engine/**
+     apps/mobile/src/game/types.ts
+     apps/mobile/src/i18n/names.ts
+     .dockerignore
      package.json
      package-lock.json
      ```

@@ -52,6 +52,12 @@ Deploy usa o código enviado ao Git remoto, não as alterações locais do Mac.
 Confirmar que o volume do PostgreSQL PRD está configurado antes de iniciar a API.
 Manter a porta externa do banco vazia; para administração, usar acesso SSH controlado.
 
+A imagem também inclui o motor puro em `apps/mobile/src/game/{data,engine}`, seus
+tipos e `i18n/names.ts`, usados pelo desafio semanal. O alias de locale aponta para
+a implementação sem Expo em `apps/server/src/game/locale.ts`. A importação da API é
+verificada durante o build para impedir uma imagem com dependências ausentes.
+Incluir esses arquivos e `.dockerignore` nos Watch Paths (ver [DEPLOY.md](./DEPLOY.md)).
+
 ## 3. Endereço público com Funnel
 
 Na VPS, consultar antes de alterar:

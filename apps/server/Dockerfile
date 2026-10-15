@@ -13,8 +13,16 @@ COPY packages/shared/package.json ./packages/shared/
 RUN npm ci -w @zombie-road/server --omit=dev
 COPY packages/shared ./packages/shared
 COPY apps/server ./apps/server
+# O desafio semanal reproduz o mesmo motor puro do app. O tsconfig do servidor
+# resolve @/* nesses arquivos e substitui i18n/locale por sua versão sem Expo.
+COPY apps/mobile/src/game/data ./apps/mobile/src/game/data
+COPY apps/mobile/src/game/engine ./apps/mobile/src/game/engine
+COPY apps/mobile/src/game/types.ts ./apps/mobile/src/game/types.ts
+COPY apps/mobile/src/i18n/names.ts ./apps/mobile/src/i18n/names.ts
 WORKDIR /repo/apps/server
 ENV NODE_ENV=production
+# Valida os imports reais da imagem antes do deploy, sem conectar ao banco.
+RUN node --import tsx --input-type=module -e "await import('./src/app.ts')"
 EXPOSE 3000
 # Saudável = /health responde (o Docker Swarm do Dokploy só troca a versão quando a nova responde)
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \

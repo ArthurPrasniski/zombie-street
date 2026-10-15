@@ -7,6 +7,17 @@
 .expo
 docs
 *.pdf
-# Do app, a imagem só precisa do package.json (o lockfile é do monorepo inteiro)
+# Manifesto e motor TypeScript compartilhado com a reprodução de partidas no servidor.
 apps/mobile/*
 !apps/mobile/package.json
+!apps/mobile/src
+apps/mobile/src/*
+!apps/mobile/src/game
+apps/mobile/src/game/*
+!apps/mobile/src/game/data
+!apps/mobile/src/game/engine
+!apps/mobile/src/game/types.ts
+!apps/mobile/src/i18n
+apps/mobile/src/i18n/*
+!apps/mobile/src/i18n/names.ts
+**/__tests__

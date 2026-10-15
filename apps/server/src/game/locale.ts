@@ -1,2 +1,2 @@
 // Simulation uses fixed labels; localized names never change game rules.
-export const language = 'en';
+export const language: string = 'en';

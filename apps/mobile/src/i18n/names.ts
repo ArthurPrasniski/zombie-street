@@ -1,4 +1,4 @@
-import { language } from './locale';
+import { language } from '@/i18n/locale';
 
 const names: Record<string, readonly [string, string]> = {
   'Fazenda': ['Farm', 'Granja'],
