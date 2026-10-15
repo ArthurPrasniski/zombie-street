@@ -3,6 +3,7 @@ export const ICONS = {
   coin: require('@/assets/pixel16-detailed/ui/coin.png'),
   lock: require('@/assets/pixel16-detailed/ui/lock.png'),
   check: require('@/assets/pixel16-detailed/ui/check.png'),
+  bloodBag: require('@/assets/pixel16-detailed/ui/bloodBag.png'),
   blood: require('@/assets/pixel16-detailed/ui/blood.png'),
   back: require('@/assets/pixel16-detailed/ui/back.png'),
   next: require('@/assets/pixel16-detailed/ui/next.png'),

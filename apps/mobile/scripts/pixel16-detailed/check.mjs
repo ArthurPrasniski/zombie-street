@@ -11,7 +11,7 @@ const registration=spawnSync(process.execPath,['--test',join(mobile,'scripts/pix
 assert.equal(registration.status,0,registration.stdout+registration.stderr);
 const source=join(mobile,'assets/pixel16-detailed');
 const hash=data=>createHash('sha256').update(data).digest('hex');
-const names=['farm.png','farm-base.png','sniper.png','walker.png','ui-icons.png','spell-items.png','home.png','ui-materials.png','ui-misc.png','app-icon.png','armored-base.png','space-base.png',...(await readdir(join(source,'worlds'))).filter(f=>f.endsWith('.png')).sort().map(f=>'worlds/'+f),...(await readdir(join(source,'units'))).filter(f=>f.endsWith('.png')).sort().map(f=>'units/'+f)];
+const names=['farm.png','farm-base.png','sniper.png','walker.png','ui-icons.png','spell-items.png','home.png','ui-materials.png','ui-misc.png','app-icon.png','armored-base.png','space-base.png','blood-bag.png',...(await readdir(join(source,'worlds'))).filter(f=>f.endsWith('.png')).sort().map(f=>'worlds/'+f),...(await readdir(join(source,'units'))).filter(f=>f.endsWith('.png')).sort().map(f=>'units/'+f)];
 const before=await Promise.all(names.map(async n=>hash(await readFile(join(source,n)))));
 const temp=await mkdtemp(join(tmpdir(),'zr-detailed-check-'));
 try{
@@ -20,7 +20,7 @@ try{
  assert.equal(hash(await readFile(join(temp,'a/modules.ts'))),hash(await readFile(join(temp,'b/modules.ts'))));
  assert.equal(hash(await readFile(join(temp,'a/preview/catalog.html'))),hash(await readFile(join(temp,'b/preview/catalog.html'))));
  const m=JSON.parse(a);
- for(const id of UI_NAMES)assert.equal(hash(await readFile(join(temp,'a/ui',id+'.png'))),hash(await readFile(join(temp,'b/ui',id+'.png'))),'Non-deterministic UI icon');
+ for(const id of [...UI_NAMES,'bloodBag'])assert.equal(hash(await readFile(join(temp,'a/ui',id+'.png'))),hash(await readFile(join(temp,'b/ui',id+'.png'))),'Non-deterministic UI icon');
  for(const id of SPELL_NAMES)assert.equal(hash(await readFile(join(temp,'a/portraits',id+'.png'))),hash(await readFile(join(temp,'b/portraits',id+'.png'))),'Non-deterministic item portrait');
  for(const [folder,ids] of [['materials',MATERIAL_NAMES],['extras',EXTRA_NAMES],['radio',['sniper','sheriff']],['brand',['icon','favicon','android-foreground','android-monochrome','splash','notification']]])for(const id of ids)assert.equal(hash(await readFile(join(temp,'a',folder,id+'.png'))),hash(await readFile(join(temp,'b',folder,id+'.png'))),'Non-deterministic interface asset');
  assert.equal(Object.keys(m.layouts).length,46,'Missing production unit');

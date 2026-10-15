@@ -140,6 +140,8 @@ export const pt = {
     full: 'Deck cheio: remova uma carta antes.',
   },
   combat: {
+    pause: "Pausar",
+    speed: "Velocidade do jogo",
     stageWave: (label: string, wave: number, total: number) => `Fase ${label} · Onda ${wave}/${total}`,
     waveBanner: (wave: number, total: number) => `Onda ${wave}/${total}`,
     bossWave: 'Chefe chegando!',

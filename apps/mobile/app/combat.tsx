@@ -26,7 +26,7 @@ import type { UnitId } from '@/game/render/sprites';
 import type { CardId, ZombieId } from '@/game/types';
 import { useCardDrag } from '@/hooks/useCardDrag';
 import { useCombatEvents } from '@/hooks/useCombatEvents';
-import { useCombatLayout } from '@/hooks/useCombatLayout';
+import { TRAY_TOP, TRAY_BOTTOM, TRAY_GAP, useCombatLayout } from '@/hooks/useCombatLayout';
 import { type DevOptions, type MatchKind, matchDeck, useGameLoop } from '@/hooks/useGameLoop';
 import { t as pt } from '@/i18n';
 import { useProgressStore } from '@/state/progressStore';
@@ -155,10 +155,7 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
         <GameCanvas snapshot={snapshot} drag={drag} width={sceneW} height={sceneH} world={visualWorld} units={units} />
         {!survival && worldTint(worldIndex) && <View style={[styles.tint, { backgroundColor: worldTint(worldIndex) ?? undefined }]} pointerEvents="none" />}
         <View style={[StyleSheet.absoluteFill, { top: insets.top, left: insets.left, right: insets.right }]} pointerEvents="box-none">
-          <View style={styles.hud} pointerEvents="box-none">
-            <CombatHud onSpeed={(speed) => send({ type: 'setSpeed', speed })} onBack={askExit} onTogglePause={togglePause} />
-          </View>
-          <TutorialRadio active={!weekly && stage === 1 && !survival && !intro && !result} />
+          <TutorialRadio active={!weekly && stage === 1 && !survival && !intro && !result && !scenario} />
           {scenario && !result && <EventBanner kind={scenario} />}
         </View>
         {training && <View style={{ position: 'absolute', bottom: 12, left: 12, right: 12 }}><AppText variant="small">{tutorialText.noReward}</AppText></View>}
@@ -171,7 +168,8 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
           </View>
         )}
       </View>
-      <View style={[styles.strip, { height: stripH, paddingBottom: insets.bottom }]}>
+      <View style={[styles.strip, { height: stripH, paddingBottom: insets.bottom + TRAY_BOTTOM }]}>
+        <CombatHud onSpeed={(speed) => send({ type: 'setSpeed', speed })} onBack={askExit} onTogglePause={togglePause} />
         <CardHand hand={session.hand} next={session.next} blood={session.blood} troopsFull={session.troopsFull} cardWidth={cardWidth} draggingSlot={draggingSlot} {...handlers} />
         <BloodBar snapshot={snapshot} blood={session.blood} width={cardWidth * 4 + 24} />
       </View>
@@ -201,8 +199,7 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background, alignItems: 'center' },
   scene: { overflow: 'hidden' },
-  hud: { position: 'absolute', top: 0, left: 0, right: 0 },
-  strip: { alignSelf: 'stretch', paddingHorizontal: 12, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.line, alignItems: 'center', justifyContent: 'center', gap: 10 },
+  strip: { alignSelf: 'stretch', paddingHorizontal: 12, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.line, alignItems: 'center', justifyContent: 'flex-start', paddingTop: TRAY_TOP, gap: TRAY_GAP },
   ghost: { position: 'absolute', left: 0, top: 0 },
   tint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
   full: { position: 'absolute', bottom: 8, alignSelf: 'center', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 2, backgroundColor: 'rgba(216, 38, 58, 0.85)', borderWidth: 2, borderColor: colors.outline },

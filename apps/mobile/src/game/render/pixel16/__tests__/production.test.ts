@@ -5,6 +5,7 @@ import {ZOMBIES} from '@/game/data/zombies';
 import {WORLDS} from '@/game/data/worlds';
 import {DETAILED_CARD_ART,DETAILED_ZOMBIE_ART} from '@/ui/pixel16/productionPortraits';
 import {WORLD_MODULES} from '@/assets/pixel16-detailed/modules';
+import {detailedMuzzle} from '../drawDetailed';
 import {drawFrame,drawBaseFrame} from '@/game/render/sprites';
 import {DETAIL_LAYOUTS,FARM_BASE_LAYOUT,combatViewportHeight,detailedBaseFor} from '../production';
 import type {SkCanvas,SkImage,SkPaint} from '@shopify/react-native-skia';
@@ -80,4 +81,17 @@ test('armored and orbital campaign bases preserve all four damage states and the
    const rect=draws.at(-1)![2];expect(rect.y+rect.height).toBeLessThanOrEqual(900.001);
   }
  }
+});
+
+
+test('fitting the whole map keeps character aspect and registered feet intact',()=>{
+ const original=DETAIL_LAYOUTS.sniper!,horizontal=.67,vertical=.5;
+ const sheet={...original,renderScaleY:horizontal/vertical};
+ const c=canvas();drawFrame(c as unknown as SkCanvas,image,0,0,300,600,1,paint,false,sheet);
+ const [,source,destination]=c.drawImageRectOptions.mock.calls[0];
+ expect(destination.width*horizontal/(destination.height*vertical)).toBeCloseTo(source.width/source.height);
+ const pose=sheet.frames[0],footY=destination.y+pose.foot[1]/source.height*destination.height;
+ expect(footY).toBeCloseTo(600);
+ const muzzle=detailedMuzzle(sheet,0,false),normal=detailedMuzzle(original,0,false);
+ expect(muzzle[1]*vertical).toBeCloseTo(normal[1]*horizontal);
 });

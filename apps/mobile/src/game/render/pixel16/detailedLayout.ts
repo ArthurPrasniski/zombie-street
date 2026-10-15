@@ -1,6 +1,6 @@
 /** Metadata measured from immutable source PNGs; these functions never touch world coordinates. */
 export interface DetailedSheet {
- kind:string;scale:number;columns:number;rows:number;height?:number;
+ kind:string;scale:number;columns:number;rows:number;height?:number;renderScaleY?:number;
  frames:{source:number[];foot:number[];bounds:number[]}[];
  muzzle:number[][];
 }

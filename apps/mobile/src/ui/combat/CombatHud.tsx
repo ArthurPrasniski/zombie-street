@@ -1,11 +1,10 @@
-import { useSettingsStore } from '@/state/settingsStore';
-import { Button } from '@/ui/kit/Button';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { SURVIVAL_BOSS_EVERY } from '@/game/data/survival';
 import { stageLabel } from '@/game/data/worlds';
 import { t as pt } from '@/i18n';
 import { useSessionStore } from '@/state/sessionStore';
+import { useSettingsStore } from '@/state/settingsStore';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
@@ -18,51 +17,49 @@ interface Props {
   onTogglePause: () => void;
 }
 
-/** Topo do combate: voltar, pausa e "Fase s · Onda n/5" (ou a onda da Sobrevivência) com segmentos. A vida da base fica no campo. */
+/** Compact toolbar in the card tray: no controls cover the combat field. */
 export function CombatHud({ onBack, onTogglePause, onSpeed }: Props) {
   const speed = useSettingsStore((s) => s.speed);
-  const { mode, stage, wave, totalWaves, killed, total, paused, fps } = useSessionStore();
+  const { mode, stage, wave, totalWaves, killed, total, paused } = useSessionStore();
   const progress = total > 0 ? Math.min(1, killed / total) : 0;
-  // Sobrevivência: os segmentos mostram o bloco de 5 ondas, com o chefe no último
   const survival = mode === 'survival';
   const segments = survival ? SURVIVAL_BOSS_EVERY : totalWaves;
   const current = survival ? ((wave - 1) % SURVIVAL_BOSS_EVERY) + 1 : wave;
+  const label = survival ? pt.survival.hud(wave) : pt.combat.stageWave(stageLabel(stage), wave, totalWaves);
+  const changeSpeed = () => {
+    const next = speed === 1 ? 2 : 1;
+    useSettingsStore.getState().setSpeed(next);
+    onSpeed?.(next);
+  };
   return (
-    <View style={styles.row} pointerEvents="box-none">
-      <IconButton icon={ICONS.back} label={pt.common.back} onPress={onBack} size={42} />
-      <IconButton icon={paused ? ICONS.play : ICONS.pause} label={paused ? pt.combat.resume : pt.combat.paused} onPress={onTogglePause} size={42} />
-      <Button label={`${speed}×`} size="s" variant="dark" onPress={() => { const next = speed === 1 ? 2 : 1; useSettingsStore.getState().setSpeed(next); onSpeed?.(next); }} />
-      <Chunky face="#252b32" edge="#17141b" radius={16} depth={4} gloss={0.08} style={styles.waveBox} faceStyle={styles.wave}>
-        <AppText variant="label" style={styles.text}>
-          {survival ? pt.survival.hud(wave) : pt.combat.stageWave(stageLabel(stage), wave, totalWaves)}
-        </AppText>
+    <View style={styles.row}>
+      <IconButton icon={ICONS.back} label={pt.common.back} onPress={onBack} size={44} />
+      <View style={styles.status} accessible accessibilityRole="progressbar" accessibilityLabel={label} accessibilityValue={{ min: 0, max: 100, now: Math.round((current - 1 + progress) / Math.max(1, segments) * 100) }}>
+        <AppText variant="small" numberOfLines={2} style={styles.text}>{label}</AppText>
         <View style={styles.segments}>
           {Array.from({ length: segments }, (_, i) => {
             const fill = i < current - 1 ? 1 : i === current - 1 ? progress : 0;
-            return (
-              <View key={i} style={[styles.segment, i === segments - 1 && styles.boss]}>
-                <View style={[styles.fill, { width: `${fill * 100}%` }]} />
-              </View>
-            );
+            return <View key={i} style={[styles.segment, i === segments - 1 && styles.boss]}><View style={[styles.fill, { width: `${fill * 100}%` }]} /></View>;
           })}
         </View>
-      </Chunky>
-      {__DEV__ && fps > 0 && (
-        <AppText variant="small" color={colors.textMuted}>
-          {`${fps}`}
-        </AppText>
-      )}
+      </View>
+      <Pressable onPress={changeSpeed} accessibilityRole="button" accessibilityLabel={pt.combat.speed} accessibilityValue={{ text: `${speed}×` }}>
+        {({ pressed }) => <Chunky face={colors.surfaceHigh} edge={colors.background} depth={4} pressed={pressed} gloss={0.12}>
+          <View style={styles.speed}><AppText variant="label">{`${speed}×`}</AppText></View>
+        </Chunky>}
+      </Pressable>
+      <IconButton icon={paused ? ICONS.play : ICONS.pause} label={paused ? pt.combat.resume : pt.combat.pause} onPress={onTogglePause} size={44} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 10 },
-  waveBox: { flex: 1 },
-  wave: { gap: 5, paddingVertical: 6, paddingHorizontal: 12 },
-  text: { fontSize: 14, lineHeight: 17 },
-  segments: { flexDirection: 'row', gap: 4 },
-  segment: { flex: 1, height: 9, borderRadius: 1, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1.5, borderColor: colors.outline, overflow: 'hidden' },
+  row: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 },
+  status: { flex: 1, minWidth: 0, gap: 4, paddingHorizontal: 2 },
+  text: { fontSize: 11, lineHeight: 14, color: colors.textMuted },
+  speed: { width: 38, height: 34, alignItems: 'center', justifyContent: 'center' },
+  segments: { flexDirection: 'row', gap: 3 },
+  segment: { flex: 1, height: 4, backgroundColor: 'rgba(0, 0, 0, 0.35)', overflow: 'hidden' },
   boss: { backgroundColor: 'rgba(255, 79, 79, 0.45)' },
   fill: { height: '100%', backgroundColor: colors.accent },
 });

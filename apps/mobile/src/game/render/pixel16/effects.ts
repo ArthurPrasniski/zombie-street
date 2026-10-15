@@ -19,7 +19,7 @@ export function attachedEffects(snap: RenderSnapshot, sprites: SpriteSet) {
    const troop=snap.troops.find(t=>t.kind==='tesla'&&t.x===effect.points[0]&&Math.abs(t.y-58-effect.points[1])<.01);
    const sheet=troop&&sprites.detailedUnits?.tesla;
    if(!troop||!sheet)return effect;
-   const points=[...effect.points];points[0]=troop.x;points[1]=troop.y-(sheet.height??64)+6;
+   const points=[...effect.points];points[0]=troop.x;points[1]=troop.y-(sheet.height??64)*(sheet.renderScaleY??1)+6;
    return {...effect,points};
   }
   return effect;

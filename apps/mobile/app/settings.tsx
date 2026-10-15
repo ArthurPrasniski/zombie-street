@@ -1,5 +1,4 @@
 import { goBack } from '@/ui/navigation';
-import { pixel16Text } from '@/i18n/pixel16';
 import { reliabilityText } from '@/i18n/reliability';
 import { useTelemetryStore, consentTelemetry } from '@/services/telemetry';
 import { tutorialText } from '@/i18n/tutorial';
@@ -59,7 +58,6 @@ export default function SettingsScreen() {
           <AppText variant="small">{comfortText.volume}: {Math.round(settings.soundVolume * 100)}%</AppText>
           <View style={{ flexDirection: 'row', gap: 8 }}><Button label="−" size="s" onPress={() => settings.setVolume(settings.soundVolume - 0.1)} /><Button label="+" size="s" onPress={() => settings.setVolume(settings.soundVolume + 0.1)} /></View>
           <Button label={tutorialText.training} variant="dark" onPress={() => router.push('/combat?mode=training')} />
-          {__DEV__ && <Button label={pixel16Text.open} variant="dark" onPress={() => router.push('/pixel-pilot')} />}
           <Button label={tutorialText.replay} variant="dark" onPress={() => { useProgressStore.getState().setTutorial(0); router.push('/combat?mode=training'); }} />
           {TOGGLES.map(({ key, label, hint }) => (
             <Row key={key} label={label} hint={hint}>

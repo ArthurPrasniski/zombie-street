@@ -22,18 +22,16 @@ export function StageTile({ stage, onPress }: { stage: number; onPress: () => vo
 
   return (
     <View style={styles.wrap} accessibilityLabel={`${pt.stages.stage(stageLabel(stage))}, ${label}`}>
-      <Card color={color} border={current ? colors.accent : undefined} watermark={`${localStage(stage)}`} onPress={locked ? undefined : onPress} containerStyle={styles.wrap} style={styles.tile} padding={16}>
+      <Card color={color} border={current ? colors.accent : undefined} watermark={`${localStage(stage)}`} onPress={locked ? undefined : onPress} containerStyle={styles.wrap} style={styles.tile} padding={14}>
         <AppText variant="eyebrow" color={locked ? colors.textMuted : cleared ? colors.accent : 'rgba(255, 255, 255, 0.8)'}>
           {pt.stages.tileLabel}
         </AppText>
-        <AppText variant="display" color={locked ? colors.textMuted : colors.white} style={styles.number}>
-          {`${localStage(stage)}`}
-        </AppText>
-        {cleared && (
-          <View style={styles.stars}>
-            <StarRow stars={stars} size={20} />
-          </View>
-        )}
+        <View style={styles.details}>
+          <AppText variant="display" color={locked ? colors.textMuted : colors.white} style={styles.number}>
+            {`${localStage(stage)}`}
+          </AppText>
+          {cleared && <StarRow stars={stars} size={18} />}
+        </View>
         <View style={styles.status}>
           {(cleared || locked) && <Image source={cleared ? ICONS.check : ICONS.lock} style={styles.icon} />}
           {localStage(stage) === STAGES_PER_WORLD && !cleared && !locked && <Image source={ICONS.skull} style={styles.icon} />}
@@ -48,10 +46,10 @@ export function StageTile({ stage, onPress }: { stage: number; onPress: () => vo
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  tile: { flex: 1, minHeight: 90, borderRadius: 2 },
-  number: { fontSize: 38, lineHeight: 42, marginTop: 2 },
-  status: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 'auto' },
+  tile: { flex: 1, minHeight: 148, borderRadius: 2 },
+  details: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginTop: 6 },
+  number: { fontSize: 38, lineHeight: 42 },
+  status: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12 },
   icon: { width: 18, height: 18 },
-  stars: { position: 'absolute', top: 14, right: 14 },
-  caps: { letterSpacing: 1.5 },
+  caps: { letterSpacing: 1, flexShrink: 1 },
 });

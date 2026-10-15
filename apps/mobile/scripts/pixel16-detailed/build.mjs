@@ -23,7 +23,7 @@ for(const protectedPath of ['apps/mobile/assets/images','apps/mobile/assets/pixe
 await mkdir(output,{recursive:true});
 const extra=(await readdir(join(source,'units'))).filter(f=>f.endsWith('.png')).sort().map(f=>'units/'+f);
 const worlds=(await readdir(join(source,'worlds'))).filter(f=>f.endsWith('.png')).sort().map(f=>'worlds/'+f);
-const optional=(await readdir(source)).filter(f=>['ui-materials.png','ui-misc.png','app-icon.png','armored-base.png','space-base.png'].includes(f));
+const optional=(await readdir(source)).filter(f=>['ui-materials.png','ui-misc.png','app-icon.png','armored-base.png','space-base.png','blood-bag.png'].includes(f));
 const files=['farm.png','farm-base.png','sniper.png','walker.png','ui-icons.png','spell-items.png','home.png',...optional,...worlds,...extra];const assets=[];const runtimeAssets=[];const layouts={};const bases={};const images={};
 for(const file of files){
  const buffer=await readFile(join(source,file));images[file]='data:image/png;base64,'+buffer.toString('base64');const image=CK.MakeImageFromEncoded(buffer);assert(image,`Invalid PNG: ${file}`);
@@ -32,6 +32,7 @@ for(const file of files){
  if(file==='farm.png')assert(Math.abs(width/height-600/1050)<.03,'Farm must fit the arena plus lower decorative area');
  if(file==='farm-base.png')layouts.base=baseLayout(pixels,width,height);
  if(file==='armored-base.png'||file==='space-base.png')bases[file.replace('-base.png','')]=baseLayout(pixels,width,height);
+ if(file==='blood-bag.png')await icons(image,pixels,width,height,output,{names:['bloodBag'],columns:1,rows:1,folder:'ui',size:128});
  if(file==='ui-icons.png')await icons(image,pixels,width,height,output);
  if(file==='spell-items.png')await icons(image,pixels,width,height,output,{names:SPELL_NAMES,columns:3,rows:3,folder:'portraits',size:192});
  if(file==='ui-materials.png')await icons(image,pixels,width,height,output,{names:MATERIAL_NAMES,columns:2,rows:2,folder:'materials',size:128,trim:false});

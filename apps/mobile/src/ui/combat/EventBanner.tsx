@@ -24,6 +24,6 @@ export function EventBanner({ kind }: { kind: ScenarioEventId }) {
 }
 
 const styles = StyleSheet.create({
-  wrap: { position: 'absolute', top: 76, left: 0, right: 0, alignItems: 'center' },
+  wrap: { position: 'absolute', top: 12, left: 12, right: 12, alignItems: 'center' },
   face: { alignItems: 'center', paddingVertical: 8, paddingHorizontal: 18, gap: 2 },
 });

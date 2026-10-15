@@ -4,9 +4,9 @@ import {detailedFrame,type DetailedSheet,type DetailedBase} from './detailedLayo
 /** Continuous world positions with nearest sampling; registration belongs to the atlas. */
 export function drawDetailedFrame(canvas:SkCanvas,image:SkImage,index:number,row:number,x:number,y:number,scale:number,paint:SkPaint,flip:boolean,sheet:DetailedSheet){
  'worklet';
- const pose=detailedFrame(sheet,index,row),[sx,sy,sw,sh]=pose.source,factor=sheet.scale*scale;
+ const pose=detailedFrame(sheet,index,row),[sx,sy,sw,sh]=pose.source,factor=sheet.scale*scale,vertical=sheet.renderScaleY??1;
  if(flip){canvas.save();canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
- canvas.drawImageRectOptions(image,Skia.XYWHRect(sx,sy,sw,sh),Skia.XYWHRect(x-pose.foot[0]*factor,y-pose.foot[1]*factor,sw*factor,sh*factor),FilterMode.Nearest,MipmapMode.None,paint);
+ canvas.drawImageRectOptions(image,Skia.XYWHRect(sx,sy,sw,sh),Skia.XYWHRect(x-pose.foot[0]*factor,y-pose.foot[1]*factor*vertical,sw*factor,sh*factor*vertical),FilterMode.Nearest,MipmapMode.None,paint);
  if(flip)canvas.restore();
 }
 
@@ -21,5 +21,5 @@ export function drawDetailedBase(canvas:SkCanvas,image:SkImage,index:number,pain
 export function detailedMuzzle(sheet:DetailedSheet,row:number,flip:boolean,scale=1){
  'worklet';
  const pose=sheet.frames[row*sheet.columns+5],point=sheet.muzzle[row];
- return [(point[0]*pose.source[2]-pose.foot[0])*sheet.scale*scale*(flip?-1:1),(point[1]*pose.source[3]-pose.foot[1])*sheet.scale*scale];
+ return [(point[0]*pose.source[2]-pose.foot[0])*sheet.scale*scale*(flip?-1:1),(point[1]*pose.source[3]-pose.foot[1])*sheet.scale*scale*(sheet.renderScaleY??1)];
 }

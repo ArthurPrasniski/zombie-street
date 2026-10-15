@@ -38,14 +38,14 @@ export function CardArt({ card, size }: { card: CardId; size: number }) {
 
 /**
  * Carta estilo Clash: moldura dourada em relevo (verde-limão se escolhida), fundo azul (tropa)
- * ou laranja (arma especial) com luz atrás do retrato, gota de custo saindo do canto, nível e
+ * ou laranja (arma especial) com luz atrás do retrato, bolsa de sangue com o custo no canto, nível e
  * faixa com o nome.
  */
 export function CardView({ card, width, level, dimmed, selected, locked, hideName, upgradable, quiet = false }: Props) {
   const mastery = useProgressStore((s) => masteryTier(s.mastery[card] ?? 0));
   const def = CARDS[card];
   const height = Math.round(width * (hideName ? 1.12 : 1.32));
-  const drop = Math.max(22, Math.round(width * (quiet ? 0.31 : 0.42)));
+  const badgeSize = Math.max(26, Math.round(width * (quiet ? 0.31 : 0.42)));
   const pad = Math.max(3, Math.round(width * 0.045));
   // Moldura pela evolução: dourada, azul (nível 10) ou roxa (nível 20)
   const tier = level === undefined ? 0 : evolutionTier(level);
@@ -71,9 +71,9 @@ export function CardView({ card, width, level, dimmed, selected, locked, hideNam
           </View>
         )}
       </View>
-      {!(quiet && locked) && <View style={[styles.cost, { width: drop, height: drop, left: -drop * 0.28, top: -drop * 0.28 }]}>
-        <Image source={ICONS.blood} style={{ width: drop, height: drop }} />
-        <AppText variant="number" style={[styles.costText, { fontSize: drop * 0.46, lineHeight: drop * 0.56, top: drop * 0.3 }]}>
+      {!(quiet && locked) && <View style={[styles.cost, { width: badgeSize, height: badgeSize, left: -badgeSize * 0.28, top: -badgeSize * 0.28 }]}>
+        <Image source={ICONS.bloodBag} style={{ width: badgeSize, height: badgeSize }} />
+        <AppText variant="number" numberOfLines={1} adjustsFontSizeToFit style={[styles.costText, { fontSize: badgeSize * 0.42, lineHeight: badgeSize * 0.5, top: badgeSize * 0.4 }]}>
           {`${def.cost}`}
         </AppText>
       </View>}
@@ -81,7 +81,7 @@ export function CardView({ card, width, level, dimmed, selected, locked, hideNam
         <Image
           source={ICONS.up}
           accessibilityLabel={pt.cards.canUpgrade}
-          style={[styles.up, { width: drop * 0.62, height: drop * 0.62, right: -drop * 0.3, bottom: -drop * 0.26 }]}
+          style={[styles.up, { width: badgeSize * 0.62, height: badgeSize * 0.62, right: -badgeSize * 0.3, bottom: -badgeSize * 0.26 }]}
         />
       )}
       {level !== undefined && (!quiet || (level > 1 && !locked)) && (
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   ribbon: { position: 'absolute', bottom: 3, left: -3, right: -3, paddingVertical: 1, paddingHorizontal: 6, alignItems: 'center', backgroundColor: 'rgba(23, 20, 27, 0.72)' },
   name: { textAlign: 'center' },
   cost: { position: 'absolute', alignItems: 'center' },
-  costText: { position: 'absolute', left: 0, right: 0, textAlign: 'center' },
+  costText: { position: 'absolute', left: 0, right: 0, textAlign: 'center', textShadowColor: '#32090c', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 1 },
   level: { position: 'absolute', right: 6, top: 4 },
   up: { position: 'absolute' },
   dim: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(22, 20, 26, 0.6)' },

@@ -1,4 +1,8 @@
 > Atualização: o piloto foi expandido e parte das artes já entra no aplicativo.
+
+Registro histórico: a tela de teste visual e o acesso pelos Ajustes foram removidos
+em 15/10/2026. Os links do piloto abaixo pertencem à validação anterior.
+
 > A cobertura atual está em [PRODUCAO.md](../PRODUCAO.md); os números abaixo
 > descrevem o lote original do piloto.
 

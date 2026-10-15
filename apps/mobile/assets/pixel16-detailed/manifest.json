@@ -21024,6 +21024,13 @@
       "sha256": "3d384d197c39ee7875e606f47539da2c0d565dc5de69baf5dcfa9fd1dbd33f47"
     },
     {
+      "path": "blood-bag.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 593047,
+      "sha256": "4429fab0b9f4d9dfb7f44de6e9781376f57ac45ebeaf611a9121688d8b6a92b9"
+    },
+    {
       "path": "space-base.png",
       "width": 1254,
       "height": 1254,

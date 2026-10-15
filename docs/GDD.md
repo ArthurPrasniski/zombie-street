@@ -292,13 +292,15 @@ Detalhes e validação: `docs/pixel16/PRODUCAO.md`.
 
 ### Combate
 
-- A cena mostra o campo inteiro (600 x 900) na largura da tela; em telas
-  baixas, encolhe para a faixa de baixo caber.
-- HUD sobre o topo da cena: "< Voltar" e pausa à esquerda; "Fase s · Onda
-  n/5" com barra de progresso ao lado. A vida da base é uma barra no pátio,
-  embaixo da caminhonete.
-- Faixa de baixo: as 4 cartas da mão (arte, custo e nome), a "próxima" menor
-  ao lado e a barra de sangue.
+- A cena preenche toda a largura e o topo da tela; em telas baixas, a escala
+  vertical acomoda também a decoração inferior e a casa inteira. Sprites mantêm
+  suas proporções e o mundo lógico continua 600 × 900.
+- HUD na faixa inferior, acima das cartas: Voltar à esquerda, indicador compacto
+  de fase/onda e progresso no meio, velocidade 1×/2× e pausa à direita. Os controles
+  têm 44 pontos de toque e ficam fora da arena. A vida da base permanece no pátio.
+- Abaixo do HUD: as 4 cartas da mão (arte, custo e nome), a "próxima" menor
+  ao lado e a barra de sangue, com bolsa e contador `n/10`. A faixa tem margens
+  acima dos controles e entre grupos, além da área segura inferior.
 - Carta sem sangue suficiente fica escurecida e não pode ser arrastada.
 - Ao arrastar: tropas mostram uma prévia translúcida e a zona de mobilização
   acende; armas especiais mostram o raio. Soltar fora da zona cancela.

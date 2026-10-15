@@ -62,3 +62,34 @@ altos, corta-se somente parte da decoração abaixo da arena; em telas compactas
 a escala vertical mantém os 900 pontos lógicos e a base visíveis. O arrasto usa a
 mesma escala vertical do render. Verificados cinco tamanhos de tela por teste e
 conferido o resultado no simulador; captura `native/combat-full-bleed.png`.
+
+## Controles fora da arena — 15/10/2026
+
+Voltar, pausa/continuar, velocidade e fase/onda ficam em uma barra de 44 pontos
+acima da mão de cartas. A faixa inferior reserva a altura dos controles, cartas,
+sangue e área segura; a cena continua preenchendo a largura, com a base visível.
+Tutorial e avisos usam o topo seguro; um evento tem prioridade sobre o tutorial.
+Teste funcional cobre os callbacks e a alternância 1×/2×; o progresso mantém os
+formatos de campanha e Sobrevivência. Cinco tamanhos verificam a geometria da
+faixa. Conferido no simulador, captura `native/combat-controls-tray.png`.
+Verificação desta alteração: 390 testes passaram (306 mobile, 74 servidor, 10 shared);
+tipagem dos três pacotes e lint sem erros, com os seis avisos nativos existentes.
+
+## Casa completa, respiro e sangue cheio — 15/10/2026
+
+A altura do cenário agora acomoda os 1.150 pontos do viewport completo: casa e
+decoração inferior não são recortadas. A largura continua preenchendo a tela;
+a altura das imagens dos personagens e dos seus pontos de tiro é compensada
+para manter as proporções, sem mudar posições/regras do motor. O arrasto usa a
+mesma escala vertical. A faixa inferior calcula a altura das cartas e reserva
+14 pontos acima dos controles, 12 entre grupos e 10 antes da área segura inferior.
+
+A barra usa largura em pixels com clamp entre 0 e 10, substituindo o percentual
+animado; o estado cheio fica em toda a largura interna. A bolsa de sangue tem
+fonte PNG e prompt rastreáveis, recorte de 128 px gerado pelo pipeline e contador
+separado `n/10`. Testes cobrem 0, 3,5, 5, 10 e excesso de capacidade, além do
+viewport inteiro e da proporção/âncora/ponto de disparo dos sprites.
+Conferido no simulador em treino iniciado com 10: barra completamente preenchida,
+casa inteira e espaçamento visível. Captura `native/combat-house-blood-bag-full.png`.
+Validação final: 396 testes passaram (312 mobile, 74 servidor, 10 shared), tipos e
+lint sem erros; checker de arte passou incluindo a nova bolsa de sangue.

@@ -15,7 +15,7 @@ continuam separadas, sem presumir compras/anúncios reais validados no simulador
 | Retratos do Bestiário | 30/30 |
 | Cenários da campanha | 12/12 |
 | Variantes de base | 3/3, com 4 danos cada |
-| Ícones compartilhados | 25/25 |
+| Ícones compartilhados | 26/26 |
 | Retratos do rádio | 4/4 |
 | Materiais de interface | aço, madeira, latão e pedra |
 | Identidade de instalação | ícone, splash, Android adaptativo/monocromático e notificação |
@@ -48,7 +48,7 @@ Não foi introduzida fonte externa ou filtro sobre a arte cartoon antiga.
   e o brilho antigo; Voltar funciona também em links sem histórico; o Bestiário ganhou uma lista completa, sem duplicar Cosmonauta
   nem omitir Larva. Fonte ampliada considera os tamanhos específicos de cada texto.
 - Preservados IDs, saves, regras de anúncios/assinatura, balanceamento e servidor.
-  O modo cartoon continua disponível apenas como comparação de desenvolvimento.
+  A infraestrutura de comparação permanece nos testes automatizados.
 
 ## Fontes, reprodução e memória
 
@@ -66,7 +66,7 @@ npm test
 npm run lint
 ```
 
-São 66 fontes PNG, 165.775.546 bytes. As 45 folhas originais equivalem a cerca de
+São 67 fontes PNG, 166.368.593 bytes. As 45 folhas originais equivalem a cerca de
 270 MiB RGBA; as versões de runtime, com células de aproximadamente 128 px, a
 67,5 MiB: redução de 75%. O runtime carrega somente cenário/base e unidades da
 partida. Esses números descrevem texturas; não são medição de memória total do app.
@@ -106,4 +106,7 @@ Abrir o development build com Metro e navegar normalmente. Para inspecionar arte
 sem recompensas: `zombieroad://combat?mode=training&autoplay=1&artworld=moon`.
 `artworld` é exclusivo de desenvolvimento e não altera a fase lógica. Acrescentar
 `spawn=cosmonaut,commander` ou outros IDs permite inspecionar inimigos específicos.
-O comparativo legado permanece em `zombieroad://pixel-pilot?autoplay=1`.
+A opção dos Ajustes e a rota de teste visual foram removidas em 15/10/2026.
+O enquadramento atual mantém toda a decoração inferior visível, com compensação
+da altura dos sprites para preservar proporções. A bolsa de sangue substitui a
+gota na barra, com preenchimento em pixels e contador separado.

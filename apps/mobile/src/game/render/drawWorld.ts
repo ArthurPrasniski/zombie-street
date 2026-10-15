@@ -110,7 +110,7 @@ function drawTroop(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPa
   } else {
     rect(canvas, paint, t.x - 14, t.y - 56, 28, 56, '#4da3ff');
   }
-  bar(canvas, paint, t.x, t.y - (sheet?.height?sheet.height+6:TROOP_BAR_Y) * (UNIT_SCALE[t.kind] ?? 1), BAR_W, t.hpRatio, COLORS.troopBar);
+  bar(canvas, paint, t.x, t.y - (sheet?.height?sheet.height*(sheet.renderScaleY??1)+6:TROOP_BAR_Y) * (UNIT_SCALE[t.kind] ?? 1), BAR_W, t.hpRatio, COLORS.troopBar);
 }
 
 function drawZombie(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPaint, z: ZombieSnap, image: SkImage | null, time: number,sheet?:DetailedSheet): void {
@@ -129,7 +129,7 @@ function drawZombie(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkP
   } else {
     rect(canvas, paint, z.x - 14, z.y - 32 * z.scale, 28 * z.scale, 32 * z.scale, '#5fbf4a');
   }
-  const barY=sheet?.height?sheet.height+6:ZOMBIE_BAR_Y;
+  const barY=sheet?.height?sheet.height*(sheet.renderScaleY??1)+6:ZOMBIE_BAR_Y;
   bar(canvas, paint, z.x, z.y - barY * z.scale, BAR_W * z.scale, z.hpRatio, COLORS.zombieBar);
   // Traje do Astronauta: barra azul em cima da vida, até trincar
   if (z.suitRatio > 0) bar(canvas, paint, z.x, z.y - barY * z.scale - BAR_H - 5, BAR_W * z.scale, z.suitRatio, COLORS.suit);

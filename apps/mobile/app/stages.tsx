@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { missionsText } from '@/i18n/missions';
@@ -46,7 +46,7 @@ export default function StagesScreen() {
     <View style={styles.screen}>
       <SafeAreaView style={styles.content} edges={['top', 'left', 'right', 'bottom']}>
         <ScreenHeader title={pt.stages.title} />
-        <View style={styles.body}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.body}>
           <AppText variant="small">{missionsText.thresholds}</AppText>
           <Button label={missionsText.stars} variant="dark" size="s" onPress={() => { const index = stars.findIndex((s, i) => i < highestCleared && s < 3); if (index >= 0) { setWorld(worldOf(index + 1)); } }} />
           <WorldBanner
@@ -67,7 +67,7 @@ export default function StagesScreen() {
               </View>
             ))}
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -76,7 +76,8 @@ export default function StagesScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   content: { flex: 1 },
-  body: { flex: 1, gap: 12, paddingHorizontal: 16, paddingBottom: 12 },
-  grid: { flex: 1, gap: 10 },
-  row: { flex: 1, flexDirection: 'row', gap: 10 },
+  scroll: { flex: 1 },
+  body: { gap: 16, paddingHorizontal: 16, paddingTop: 4, paddingBottom: 24 },
+  grid: { gap: 16 },
+  row: { flexDirection: 'row', gap: 14, alignItems: 'stretch' },
 });

@@ -140,6 +140,8 @@ export const es = {
     full: "Mazo lleno: quita una carta primero.",
   },
   combat: {
+    pause: "Pausar",
+    speed: "Velocidad del juego",
     stageWave: (label: string, wave: number, total: number) => `Fase ${label} · Oleada ${wave}/${total}`,
     waveBanner: (wave: number, total: number) => `Oleada ${wave}/${total}`,
     bossWave: "¡Se acerca el jefe!",

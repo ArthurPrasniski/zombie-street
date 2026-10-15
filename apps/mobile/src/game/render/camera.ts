@@ -12,5 +12,5 @@ export interface DragPreview {
 
 export const NO_DRAG: DragPreview = { active: false, card: null, x: 0, y: 0, valid: false };
 
-/** Fill the width; compact screens compress height enough to retain the whole arena. */
-export const combatScaleY = (width: number, height: number) => Math.min(width / WORLD_WIDTH, height / WORLD_HEIGHT);
+/** Fill the width; fit the requested map viewport, including the lower scenery. */
+export const combatScaleY = (width: number, height: number, viewportHeight = WORLD_HEIGHT) => Math.min(width / WORLD_WIDTH, height / viewportHeight);

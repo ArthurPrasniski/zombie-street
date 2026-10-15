@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Canvas, createPicture, Picture, Skia, useFont } from '@shopify/react-native-skia';
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated';
 
@@ -30,8 +31,10 @@ interface Props {
 export function GameCanvas({ snapshot, drag, width, height: sceneHeight, world, units,classic=false }: Props) {
   const height = sceneHeight ?? (width * (classic?WORLD_HEIGHT:combatViewportHeight(world))) / WORLD_WIDTH;
   const scale = width / WORLD_WIDTH;
-  const scaleY = combatScaleY(width, height);
-  const sprites = useSprites(world, units,classic);
+  const scaleY = combatScaleY(width, height, classic ? WORLD_HEIGHT : combatViewportHeight(world));
+  const sourceSprites = useSprites(world, units,classic);
+  // Compensate sprite height only: world positions fit the map while characters keep their aspect.
+  const sprites = useMemo(() => ({ ...sourceSprites, detailedUnits: sourceSprites.detailedUnits && Object.fromEntries(Object.entries(sourceSprites.detailedUnits).map(([id, sheet]) => [id, { ...sheet, renderScaleY: scale / scaleY }])) }), [sourceSprites, scale, scaleY]);
   const loadedFont = useFont(require('@/assets/fonts/Rubik-Black.ttf'), DAMAGE_FONT_SIZE);
   // Sem fonte, o render pula os números de dano (Ajustes)
   const damageNumbers = useSettingsStore((s) => s.damageNumbers);

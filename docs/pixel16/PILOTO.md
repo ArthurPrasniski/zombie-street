@@ -1,5 +1,9 @@
 # Histórico do piloto simplificado — 14/10/2026
 
+Registro histórico: a tela de teste visual e o acesso pelos Ajustes foram removidos
+em 15/10/2026. Os links do piloto abaixo pertencem à validação anterior.
+
+
 O piloto agora carrega o primeiro lote detalhado. Estado vigente e comandos em
 [detailed/ENTREGA.md](detailed/ENTREGA.md). Os números abaixo são do protótipo anterior.
 

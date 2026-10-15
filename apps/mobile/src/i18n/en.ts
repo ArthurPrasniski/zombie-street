@@ -140,6 +140,8 @@ export const en = {
     full: "Deck full: remove a card first.",
   },
   combat: {
+    pause: "Pause",
+    speed: "Game speed",
     stageWave: (label: string, wave: number, total: number) => `Stage ${label} · Wave ${wave}/${total}`,
     waveBanner: (wave: number, total: number) => `Wave ${wave}/${total}`,
     bossWave: "Boss incoming!",

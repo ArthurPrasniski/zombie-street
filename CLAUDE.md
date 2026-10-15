@@ -108,8 +108,7 @@ pacotes), `npm run lint`, `npm run art`, `npm run art:brand` e `npm run sfx`.
   Metadados e módulos em `src/game/render/pixel16/production.ts`. Mundo lógico não muda;
   viewport decorativo não altera colisões nem zona de arrasto. Nearest para as imagens,
   posições contínuas para evitar trepidação. Paths novos usam Skia.PathBuilder.
-- `scripts/art`/`assets/images` preservam a geração cartoon anterior para comparação
-  de desenvolvimento. `npm run art` e `art:brand` são comandos legados; não substituem
+- `scripts/art`/`assets/images` preservam a geração cartoon anterior para testes automatizados de comparação. A tela de teste visual foi removida. `npm run art` e `art:brand` são comandos legados; não substituem
   a arte de produção. Os sons continuam em `scripts/audio` (`npm run sfx`).
   Sem sprite carregada, render mantém fallback geométrico. Cobertura/QA em
   `docs/pixel16/PRODUCAO.md`. Homologação física não é inferida de testes de simulador.

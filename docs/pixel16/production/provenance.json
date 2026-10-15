@@ -435,6 +435,13 @@
       "prompt": "space-base.prompt.md",
       "asset": "../../../apps/mobile/assets/pixel16-detailed/space-base.png",
       "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-c5105721-aa81-4fb6-8592-e9576d5029b5.png"
+    },
+    {
+      "id": "blood-bag",
+      "tool": "image_gen.imagegen",
+      "prompt": "blood-bag.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/blood-bag.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-be031640-877b-4a69-b595-6e041d407327.png"
     }
   ]
 }
