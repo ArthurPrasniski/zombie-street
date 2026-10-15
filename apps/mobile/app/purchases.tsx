@@ -3,6 +3,7 @@ import { Linking, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { reliabilityText as text } from '@/i18n/reliability';
 import { refreshEconomy } from '@/services/economy';
+import { releaseUnchargedAttempt } from '@/services/purchaseRecovery';
 import { useAccountStore } from '@/state/accountStore';
 import { usePurchaseStore } from '@/state/purchaseStore';
 import { AppText } from '@/ui/kit/AppText';
@@ -27,6 +28,10 @@ export default function PurchasesScreen() {
       {attempts.filter((a) => a.status !== 'success').map((a) => <View key={a.id} style={{ gap: 4 }}>
         <AppText variant="label">{a.productId}</AppText><AppText>{text[a.status]}</AppText>
         <AppText variant="small" selectable>{a.transactionId ?? a.id}</AppText>
+        {a.status === 'pending' && !a.transactionId && <>
+          <AppText variant="small" color={colors.textMuted}>{text.releaseHint}</AppText>
+          <Button label={text.release} variant="dark" size="s" disabled={busy} onPress={() => releaseUnchargedAttempt(a.id)} />
+        </>}
       </View>)}
       {purchases.map((r) => <View key={r.transactionId} style={{ gap: 4 }}>
         <AppText variant="label">{r.productId} · {r.refunded ? text.refunded : text.success}</AppText>

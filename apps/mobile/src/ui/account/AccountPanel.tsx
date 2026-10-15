@@ -5,6 +5,7 @@ import type { Provider } from '@zombie-road/shared/api';
 
 import { reliabilityText } from '@/i18n/reliability';
 import { retryAccountSync } from '@/services/accountSync';
+import { accountErrorMessage } from '@/services/accountErrors';
 import { t as pt } from '@/i18n';
 import { formatSyncTime } from '@/utils/syncTime';
 import { ApiError } from '@/services/api';
@@ -50,7 +51,7 @@ export function AccountPanel() {
           reason: cause instanceof ApiError && ['token google inválido', 'token apple inválido', 'sessão inválida', 'sem sessão'].includes(cause.message) ? cause.message : null,
         });
       }
-      setError(pt.account.failed);
+      setError(accountErrorMessage(cause));
     } finally {
       setBusy(false);
     }

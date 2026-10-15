@@ -91,7 +91,7 @@ export default function ShopScreen() {
             </View>
           </Card>
 
-          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
+          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} loading={loading} onRetry={retryPrices} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
 
           <AppText variant="eyebrow" style={styles.section}>
             {pt.shop.gems}
@@ -102,7 +102,7 @@ export default function ShopScreen() {
           {pricesError && (
             <View style={{ gap: 8 }}>
               <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
-              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={busy || loading} onPress={retryPrices} />
+              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={loading} onPress={retryPrices} />
             </View>
           )}
           <View style={styles.grid}>

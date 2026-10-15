@@ -4,7 +4,7 @@ export const enShop = {
   shop: {
     purchasing: 'Waiting for the store…',
     confirming: 'Purchase completed in the store. Confirming delivery…',
-    purchasePending: 'The store completed your purchase, but delivery is still pending. Do not purchase again. Check the status shortly.',
+    purchasePending: 'The purchase or delivery could not be confirmed. Do not purchase again until you check your store history. Check the status shortly.',
     purchaseFailed: 'Could not complete the purchase. Check your store purchase history before trying again.',
     checkPurchase: 'Check purchase status',
     title: "Shop",

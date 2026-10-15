@@ -1,5 +1,7 @@
 import type { AccountState } from '@/state/accountStore';
 import type { PurchaseAttempt } from '@/state/purchaseStore';
+import { PurchaseNotStartedError } from '@/services/purchaseErrors';
+import { releaseUnchargedAttempt } from '@/services/purchaseRecovery';
 jest.mock('@/services/telemetry', () => ({ track: jest.fn() }));
 const mockPurchase = jest.fn();
 const mockApi = jest.fn();
@@ -50,4 +52,36 @@ test('recibo estornado ou de outra conta não confirma', () => {
 test('falha ambígua da loja conserva tentativa para recuperação', async () => {
   mockPurchase.mockRejectedValue(new Error('store unavailable'));
   await expect(buyProduct('zr_pass_season')).rejects.toThrow('store unavailable'); expect(mockAttempts[0].status).toBe('pending');
+});
+
+test('rejeição anterior à cobrança libera uma nova tentativa', async () => {
+  mockPurchase.mockRejectedValue(new PurchaseNotStartedError('PRODUCT_UNAVAILABLE'));
+  await expect(buyProduct('zr_pass_season')).rejects.toThrow('Compra não iniciada');
+  expect(mockAttempts[0].status).toBe('error');
+  await expect(buyProduct('zr_pass_season')).rejects.toThrow('Compra não iniciada');
+  expect(mockPurchase).toHaveBeenCalledTimes(2);
+});
+
+test('um recibo recebido mantém a proteção mesmo se ocorrer erro depois', async () => {
+  mockPurchase.mockImplementation(async (_id, receipt) => { receipt('tx-paid'); throw new PurchaseNotStartedError('5'); });
+  await expect(buyProduct('zr_pass_season')).rejects.toThrow();
+  expect(mockAttempts[0].status).toBe('pending');
+  releaseUnchargedAttempt(mockAttempts[0].id);
+  expect(mockAttempts[0].status).toBe('pending');
+});
+
+test('usuário pode liberar tentativa sem cobrança sem apagar o registro', async () => {
+  mockPurchase.mockRejectedValue(new Error('unknown'));
+  await expect(buyProduct('zr_pass_season')).rejects.toThrow();
+  releaseUnchargedAttempt(mockAttempts[0].id);
+  expect(mockAttempts).toHaveLength(1);
+  expect(mockAttempts[0].status).toBe('error');
+});
+
+test('não libera uma tentativa de outra conta', async () => {
+  mockPurchase.mockRejectedValue(new Error('unknown'));
+  await expect(buyProduct('zr_pass_season')).rejects.toThrow();
+  mockState = { ...mockState, user: { ...mockState.user!, id: 'other' } };
+  releaseUnchargedAttempt(mockAttempts[0].id);
+  expect(mockAttempts[0].status).toBe('pending');
 });

@@ -4,6 +4,13 @@ import type { PurchaseRecord } from '@zombie-road/shared/api';
 import { useAccountStore } from '@/state/accountStore';
 import { type PurchaseAttempt, usePurchaseStore } from '@/state/purchaseStore';
 
+/** User-reviewed attempts without a receipt may be released without changing balances. */
+export function releaseUnchargedAttempt(id: string): void {
+  const attempt = usePurchaseStore.getState().attempts.find((a) => a.id === id);
+  if (attempt?.userId !== useAccountStore.getState().user?.id || attempt?.status !== 'pending' || attempt.transactionId) return;
+  usePurchaseStore.getState().update(id, { status: 'error' });
+}
+
 export function matchingReceipt(attempt: Pick<PurchaseAttempt, 'transactionId' | 'productId' | 'previousReceipts'>, records: PurchaseRecord[]): PurchaseRecord | undefined {
   const id = isMembershipProduct(attempt.productId) ? MEMBERSHIP.productId : attempt.productId;
   return records.find((r) => !r.refunded && r.productId === id && (attempt.transactionId ? r.transactionId === attempt.transactionId : !attempt.previousReceipts.includes(r.transactionId)));

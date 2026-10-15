@@ -16,7 +16,7 @@ import { Card } from '@/ui/kit/Card';
 import { colors, radius } from '@/ui/theme';
 import { formatDate, formatInt } from '@/utils/format';
 
-export function MembershipCard({ price, disabled, onBuy }: { price: string | null; disabled: boolean; onBuy: () => void }) {
+export function MembershipCard({ price, disabled, onBuy, loading = false, onRetry }: { price: string | null; disabled: boolean; onBuy: () => void; loading?: boolean; onRetry?: () => void }) {
   const active = useMembershipActive();
   const membership = useAccountStore((s) => s.membership);
   const [busy, setBusy] = useState(false);
@@ -56,7 +56,11 @@ export function MembershipCard({ price, disabled, onBuy }: { price: string | nul
           <AppText variant="small">{membership.autoRenew ? t.membership.renewal : t.membership.cancelled}</AppText>
         </>
       ) : (
-        <Button label={price ? t.membership.buy(price) : t.shop.priceUnavailable} disabled={disabled || busy || !price} onPress={onBuy} />
+        <View style={{ gap: 8 }}>
+          <Button label={price ? t.membership.buy(price) : loading ? '…' : t.shop.priceUnavailable} disabled={disabled || busy || !price} onPress={onBuy} />
+          {!price && !loading && <AppText variant="small" color={colors.textMuted}>{t.shop.pricesFailed}</AppText>}
+          {!price && onRetry && <Button label={t.shop.retryPrices} variant="dark" size="s" disabled={loading} onPress={onRetry} />}
+        </View>
       )}
       <AppText variant="small" color={colors.textMuted}>{t.membership.terms}</AppText>
       {NATIVE && (

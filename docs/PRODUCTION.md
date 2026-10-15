@@ -161,3 +161,22 @@ Referências: [deploy Dokploy](./DEPLOY.md),
 [Funnel](https://tailscale.com/docs/features/tailscale-funnel),
 [EAS environments](https://docs.expo.dev/eas/environment-variables/usage/),
 [webhooks RevenueCat](https://www.revenuecat.com/docs/integrations/webhooks).
+
+## 7. Login e compras no Android distribuído pela Play
+
+- Login Google: cadastrar no OAuth Android o pacote `com.arthurprasniski.estradazumbi`
+  com o SHA-1 do **certificado de assinatura da Play**, além dos certificados usados
+  no EAS/desenvolvimento. O Web client ID do app deve constar em `GOOGLE_CLIENT_IDS`
+  da API PRD. O app distingue o código nativo 10 de erros HTTP na mensagem de falha.
+- Assinatura: ativar `zr_membership_monthly`, plano-base `monthly`, com preço e países
+  de venda na Play. Importar `zr_membership_monthly:monthly` no aplicativo Android da
+  RevenueCat. O cliente consulta produtos e também procura a assinatura nas Offerings,
+  preservando os preços de gemas/passe quando a assinatura não está disponível.
+- Tentativa que falhou antes da confirmação e **sem cobrança**: após atualizar o app,
+  abrir Ajustes → Compras e entregas → Liberar tentativa sem cobrança. A ação preserva
+  o registro como erro e não altera saldos; fica indisponível se há recibo conhecido.
+  Não usar para compras aprovadas ou cobradas: nesse caso, conferir evento/webhook e
+  a entrega ao mesmo UUID da conta no backend PRD.
+
+Referências de configuração: [certificados do Google Sign-In](https://react-native-google-signin.github.io/docs/setting-up/get-config-file)
+e [planos Google Play no RevenueCat](https://www.revenuecat.com/docs/getting-started/entitlements/android-products).

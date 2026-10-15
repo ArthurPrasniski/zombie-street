@@ -24,7 +24,7 @@ export const ptShop = {
     gemsArrived: 'Gemas recebidas!',
     purchasing: 'Aguardando a loja…',
     confirming: 'Compra concluída na loja. Confirmando a entrega…',
-    purchasePending: 'A loja concluiu a compra, mas a entrega ainda está pendente. Não compre novamente. Atualize o status em instantes.',
+    purchasePending: 'Não foi possível confirmar a compra ou a entrega. Não compre novamente até verificar o histórico da loja. Atualize o status em instantes.',
     purchaseFailed: 'Não foi possível concluir a compra. Confira o histórico da loja antes de tentar novamente.',
     checkPurchase: 'Atualizar status da compra',
     notEnough: 'Gemas insuficientes',

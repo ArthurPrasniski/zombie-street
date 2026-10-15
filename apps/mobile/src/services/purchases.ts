@@ -6,6 +6,7 @@ import { api } from '@/services/api';
 import { KEYS, NATIVE } from '@/services/env';
 import { localeTag, regionCode } from '@/i18n/locale';
 import { formatMoney } from '@/utils/format';
+import { PurchaseNotStartedError } from '@/services/purchaseErrors';
 
 // Compras pela App Store / Google Play com o RevenueCat. Quem credita as gemas e ativa o passe é
 // o servidor (webhook do RevenueCat); aqui só abrimos a compra. No Expo Go, a compra é simulada
@@ -53,12 +54,26 @@ export async function productPrices(userId?: string): Promise<Record<string, str
   if (!configuredFor) return {};
   const { default: Purchases, PRODUCT_CATEGORY } = rc();
   const membershipId = Platform.OS === 'android' && !KEYS.revenueCat.startsWith('test_') ? MEMBERSHIP.androidProductId : MEMBERSHIP.productId;
-  const [gems, pass, membership] = await Promise.all([
+  const results = await Promise.allSettled([
     Purchases.getProducts(GEM_PACKS.map((p) => p.productId), PRODUCT_CATEGORY.NON_SUBSCRIPTION),
     Purchases.getProducts([PASS_PRODUCT_ID], PRODUCT_CATEGORY.NON_SUBSCRIPTION),
     Purchases.getProducts([membershipId], PRODUCT_CATEGORY.SUBSCRIPTION),
   ]);
-  const products = [...gems, ...pass, ...membership];
+  const products = results.flatMap((result) => result.status === 'fulfilled' ? result.value : []);
+  if (!products.some((p) => isMembershipProduct(p.identifier))) {
+    // Offerings can expose the selected Google Play base plan as a package.
+    try {
+      const offerings = await Purchases.getOfferings();
+      for (const offering of Object.values(offerings.all)) {
+        for (const pack of offering.availablePackages) {
+          if (isMembershipProduct(pack.product.identifier)) products.push(pack.product);
+        }
+      }
+    } catch { /* Preserve prices from product queries when offerings are unavailable. */ }
+  }
+  if (!products.length && results.every((result) => result.status === 'rejected')) {
+    throw (results[0] as PromiseRejectedResult).reason;
+  }
   const idOf = (product: Product) => isMembershipProduct(product.identifier) ? MEMBERSHIP.productId : product.identifier;
   for (const product of products) cache.set(idOf(product), product);
   return Object.fromEntries(products.map((p) => [idOf(p), p.priceString]));
@@ -82,13 +97,18 @@ export async function purchase(productId: string, onReceipt?: (transactionId: st
     return true;
   }
   const product = cache.get(productId);
-  if (!product) throw new Error('Produto indisponível na loja');
+  if (!product) throw new PurchaseNotStartedError('PRODUCT_UNAVAILABLE');
   try {
     const result = await rc().default.purchaseStoreProduct(product);
     onReceipt?.(result.transaction.transactionIdentifier);
     return true;
   } catch (error) {
     if ((error as { userCancelled?: boolean }).userCancelled) return false;
+    const code = String((error as { code?: unknown }).code ?? '');
+    const C = rc().PURCHASES_ERROR_CODE;
+    if ([C.PURCHASE_NOT_ALLOWED_ERROR, C.PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR].some((value) => value !== undefined && String(value) === code)) {
+      throw new PurchaseNotStartedError(code);
+    }
     throw error;
   }
 }

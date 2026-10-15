@@ -4,7 +4,7 @@ export const esShop = {
   shop: {
     purchasing: 'Esperando a la tienda…',
     confirming: 'Compra completada en la tienda. Confirmando la entrega…',
-    purchasePending: 'La tienda completó la compra, pero la entrega sigue pendiente. No compres de nuevo. Actualiza el estado en unos instantes.',
+    purchasePending: 'No se pudo confirmar la compra o la entrega. No compres de nuevo hasta revisar el historial de la tienda. Actualiza el estado en unos instantes.',
     purchaseFailed: 'No se pudo completar la compra. Revisa el historial de la tienda antes de intentarlo de nuevo.',
     checkPurchase: 'Actualizar estado de la compra',
     title: "Tienda",

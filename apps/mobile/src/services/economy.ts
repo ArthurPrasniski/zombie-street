@@ -10,6 +10,7 @@ import { useProgressStore } from '@/state/progressStore';
 import { syncMembershipCoins } from '@/services/membership';
 import { matchingReceipt, reconcilePurchases } from '@/services/purchaseRecovery';
 import { usePurchaseStore } from '@/state/purchaseStore';
+import { PurchaseNotStartedError } from '@/services/purchaseErrors';
 
 // Gemas, loja e Passe (GDD seção 19). O servidor manda nas gemas e no passe; as moedas que ele
 // devolve o app soma no progresso uma vez só (lista `applied`).
@@ -72,7 +73,8 @@ export async function buyProduct(productId: string, onPurchased?: () => void): P
       return 'cancelled';
     }
   } catch (error) {
-    usePurchaseStore.getState().update(id, { status: 'pending' });
+    const hasReceipt = usePurchaseStore.getState().attempts.find((a) => a.id === id)?.transactionId;
+    usePurchaseStore.getState().update(id, { status: error instanceof PurchaseNotStartedError && !hasReceipt ? 'error' : 'pending' });
     throw error;
   }
   usePurchaseStore.getState().update(id, { status: 'confirming' });
