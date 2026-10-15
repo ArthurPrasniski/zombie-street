@@ -1,0 +1,3 @@
+Use case: precise-object-edit. Edit target: Lara crossbow atlas,8x3grid.
+Change ONLY the weapons in columns0,1,2,3 and7 in EVERY row: remove the straight rifle and draw the SAME wooden-and-steel CROSSBOW already visible in columns4,5,6. Idle and walking must show visibly curved transverse bow limbs and bowstring, with a short loaded bolt. The defeated sprite also has a crossbow, never a rifle. NO firearms anywhere in atlas.
+Keep all faces, hair, long auburn braid, green clothing, tan trousers, body poses, scale, cell placement, grid,2048x768dimensions and transparency unchanged. Keep columns4,5,6 unchanged. Preserve detailed16-bit RPG pixel art. Output complete corrected atlas only.

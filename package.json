@@ -18,7 +18,12 @@
     "lint": "npm run lint -w @zombie-road/mobile",
     "art": "npm run art -w @zombie-road/mobile --",
     "art:brand": "npm run art:brand -w @zombie-road/mobile --",
-    "sfx": "npm run sfx -w @zombie-road/mobile --"
+    "sfx": "npm run sfx -w @zombie-road/mobile --",
+    "art:pixel": "npm run art:pixel -w @zombie-road/mobile --",
+    "art:pixel:check": "npm run art:pixel:check -w @zombie-road/mobile",
+    "art:pixel:inventory": "npm run art:pixel:inventory -w @zombie-road/mobile",
+    "art:pixel:detailed": "npm run art:pixel:detailed -w @zombie-road/mobile --",
+    "art:pixel:detailed:check": "npm run art:pixel:detailed:check -w @zombie-road/mobile"
   },
   "allowScripts": {
     "@shopify/react-native-skia@2.6.2": true

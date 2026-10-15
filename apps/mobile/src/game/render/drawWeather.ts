@@ -1,7 +1,7 @@
 import { BlendMode, BlurStyle, PaintStyle, Skia, type SkCanvas, type SkPaint } from '@shopify/react-native-skia';
 
 import { WORLD_HEIGHT, WORLD_WIDTH } from '@/game/data/constants';
-import { noise } from '@/game/render/fxShapes';
+import { noise, pixelOval } from '@/game/render/fxShapes';
 import type { Weather } from '@/game/types';
 
 // Clima dos eventos de cenário (GDD seções 17.5 e 18): névoa, nevasca, apagão e poeira.
@@ -48,7 +48,7 @@ export function drawWeather(canvas: SkCanvas, paint: SkPaint, weather: Weather |
       const y = noise(i, 2, 0) * WORLD_HEIGHT;
       const x = ((noise(i, 1, 0) * WORLD_WIDTH + time * (260 + noise(i, 3, 0) * 160)) % (WORLD_WIDTH + 200)) - 100;
       paint.setAlphaf(0.4 * fade);
-      canvas.drawRRect(Skia.RRectXY(Skia.XYWHRect(x, y, 90, 4), 2, 2), paint);
+      canvas.drawRect(Skia.XYWHRect(x, y, 90, 4), paint);
     }
   } else if (weather.kind === 'fog') {
     paint.setColor(Skia.Color('#dfe6e2'));
@@ -58,7 +58,7 @@ export function drawWeather(canvas: SkCanvas, paint: SkPaint, weather: Weather |
       const x = ((noise(i, 1, 0) * WORLD_WIDTH + time * (12 + i * 3)) % (WORLD_WIDTH + 300)) - 150;
       const y = noise(i, 2, 0) * WORLD_HEIGHT;
       paint.setAlphaf(0.22 * fade);
-      canvas.drawOval(Skia.XYWHRect(x - 130, y - 50, 260, 100), paint);
+      pixelOval(canvas, paint, x - 130, y - 50, 260, 100);
     }
   } else {
     paint.setColor(Skia.Color('#bfe6ff'));
@@ -70,7 +70,8 @@ export function drawWeather(canvas: SkCanvas, paint: SkPaint, weather: Weather |
       const x = (noise(i, 1, 0) * WORLD_WIDTH + fall * 0.5) % WORLD_WIDTH;
       const y = (noise(i, 2, 0) * WORLD_HEIGHT + fall) % WORLD_HEIGHT;
       paint.setAlphaf(0.85 * fade);
-      canvas.drawCircle(x, y, 2 + noise(i, 4, 0) * 2.5, paint);
+      const size = 3 + Math.floor(noise(i, 4, 0) * 3);
+      canvas.drawRect(Skia.XYWHRect(x, y, size, size), paint);
     }
   }
   paint.setAlphaf(1);

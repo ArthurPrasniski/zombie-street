@@ -9,7 +9,7 @@ const ADMOB_TEST_ANDROID = 'ca-app-pub-3940256099942544~3347511713';
 const ADMOB_TEST_IOS = 'ca-app-pub-3940256099942544~1458506734';
 const BUNDLE_ID = 'com.arthurprasniski.estradazumbi';
 // Cor de destaque do app (verde-limão do tema) no ícone das notificações do Android
-const NOTIFICATION_COLOR = '#b8e835';
+const NOTIFICATION_COLOR = '#c3d875';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const env = process.env;
@@ -23,7 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ['expo-localization', { supportedLocales: { ios: ['pt-BR', 'en', 'es'], android: ['pt-BR', 'en', 'es'] } }],
     'expo-apple-authentication',
     // Push no iOS: ambiente "production" só no build da loja (perfil production do EAS)
-    ['expo-notifications', { icon: './assets/images/notification-icon.png', color: NOTIFICATION_COLOR, mode: env.EAS_BUILD_PROFILE === 'production' ? 'production' : 'development' }],
+    ['expo-notifications', { icon: './assets/pixel16-detailed/brand/notification.png', color: NOTIFICATION_COLOR, mode: env.EAS_BUILD_PROFILE === 'production' ? 'production' : 'development' }],
     [
       'react-native-google-mobile-ads',
       {

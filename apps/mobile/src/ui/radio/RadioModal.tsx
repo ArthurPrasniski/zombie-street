@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   wrap: { width: '100%', maxWidth: 460, alignSelf: 'center' },
   panel: { padding: 16, gap: 10 },
   row: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
-  screen: { width: 84, height: 84, borderRadius: 18, borderWidth: 3, backgroundColor: '#1d3a2e', overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
+  screen: { width: 84, height: 84, borderRadius: 2, borderWidth: 3, backgroundColor: '#1d3a2e', overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   portrait: { width: 84, height: 84 },
   texts: { flex: 1, gap: 4 },
   text: { fontSize: 16, lineHeight: 22 },

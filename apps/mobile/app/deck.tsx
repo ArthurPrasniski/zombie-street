@@ -167,6 +167,6 @@ const styles = StyleSheet.create({
   list: { flexGrow: 1, gap: 10 },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between' },
   section: { marginTop: 10 },
-  nextUnlock: { marginTop: 12, padding: 16, gap: 5, borderRadius: 14, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface },
+  nextUnlock: { marginTop: 12, padding: 16, gap: 5, borderRadius: 2, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface },
   lockedToggle: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 16, borderTopWidth: 1, borderTopColor: colors.line },
 });

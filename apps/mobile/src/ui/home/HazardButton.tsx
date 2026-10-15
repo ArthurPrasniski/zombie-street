@@ -22,10 +22,10 @@ export function HazardButton({ label, detail, onPress }: { label: string; detail
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${label} ${detail}`}>
       {({ pressed }) => (
-        <Chunky face={colors.yellow} edge={darkEdge(colors.yellow)} radius={radius.l} depth={7} pressed={pressed} gloss={0}>
+        <Chunky material="brass" face={colors.yellow} edge={darkEdge(colors.yellow)} radius={radius.l} depth={7} pressed={pressed} gloss={0}>
           <Stripes />
           <View style={styles.content}>
-            <AppText variant="display" style={styles.label}>
+            <AppText variant="display" color={colors.ink} style={styles.label}>
               {label}
             </AppText>
             <View style={styles.detail}>
@@ -33,7 +33,7 @@ export function HazardButton({ label, detail, onPress }: { label: string; detail
                 {detail}
               </AppText>
             </View>
-            <AppText variant="display" style={styles.chevron}>
+            <AppText variant="display" color={colors.ink} style={styles.chevron}>
               ›
             </AppText>
           </View>
@@ -47,9 +47,9 @@ export function HazardButton({ label, detail, onPress }: { label: string; detail
 const styles = StyleSheet.create({
   band: { height: 10, overflow: 'hidden', backgroundColor: colors.yellow },
   stripe: { position: 'absolute', top: -10, width: 10, height: 30, backgroundColor: colors.outline, transform: [{ rotate: '40deg' }] },
-  content: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, paddingVertical: 14 },
+  content: { flexDirection: 'row', flexWrap:'wrap', alignItems: 'center', justifyContent: 'center', gap: 12, paddingVertical: 14 },
   label: { fontSize: 34, lineHeight: 38 },
-  detail: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: colors.ink },
+  detail: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 2, backgroundColor: colors.ink },
   detailText: { fontSize: 13, lineHeight: 16 },
   chevron: { fontSize: 40, lineHeight: 40 },
 });

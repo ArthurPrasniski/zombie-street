@@ -3,7 +3,7 @@ import type { View } from 'react-native';
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 import { CARDS, isTroop } from '@/game/data/cards';
-import { DEPLOY_ZONE, SPELL_ZONE, WORLD_WIDTH } from '@/game/data/constants';
+import { DEPLOY_ZONE, SPELL_ZONE, WORLD_HEIGHT, WORLD_WIDTH } from '@/game/data/constants';
 import { isValidDrop } from '@/game/engine/cards';
 import { type DragPreview, NO_DRAG } from '@/game/render/camera';
 import type { CardId, GameCommand } from '@/game/types';
@@ -17,7 +17,7 @@ const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v
  * Arrastar cartas da mão para o campo: converte o dedo em coordenadas do mundo, mostra a
  * prévia no canvas (drag) ou a carta flutuando fora dele (ghost) e manda playCard ao soltar.
  */
-export function useCardDrag(hand: CardId[], send: (command: GameCommand) => void, cardWidth: number) {
+export function useCardDrag(hand: CardId[], send: (command: GameCommand) => void, cardWidth: number, scaleY?: number) {
   const [draggingSlot, setDraggingSlot] = useState<number | null>(null);
   const drag = useSharedValue<DragPreview>(NO_DRAG);
   const ghost = useSharedValue({ x: 0, y: 0, visible: false });
@@ -30,7 +30,10 @@ export function useCardDrag(hand: CardId[], send: (command: GameCommand) => void
     const r = canvasRect.current;
     if (!r || pageX < r.x || pageX > r.x + r.w || pageY < r.y || pageY > r.y + r.h) return null;
     const scale = r.w / WORLD_WIDTH;
-    return { x: (pageX - r.x) / scale, y: (pageY - r.y) / scale };
+    const y = (pageY - r.y) / (scaleY ?? scale);
+    // Extra scenery below the 900-unit arena cannot receive a card.
+    if (y > WORLD_HEIGHT) return null;
+    return { x: (pageX - r.x) / scale, y };
   };
 
   /** Ponto do campo onde a carta cairia (tropas: ajusta a altura para dentro da zona). */

@@ -1,0 +1,440 @@
+{
+  "date": "2026-10-14",
+  "scope": "Full production: detailed RPG pixel art. Pilot originals retained in ../detailed/provenance.json.",
+  "sources": [
+    {
+      "id": "sheriff",
+      "tool": "image_gen.imagegen",
+      "prompt": "sheriff-revolver.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/sheriff.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-ed4ae54d-b2ea-45fe-930b-5a375c610ad5.png"
+    },
+    {
+      "id": "chainsaw",
+      "tool": "image_gen.imagegen",
+      "prompt": "chainsaw.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/chainsaw.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-bc8e6e62-592b-406f-87f7-cbe1530783d6.png"
+    },
+    {
+      "id": "dog",
+      "tool": "image_gen.imagegen",
+      "prompt": "dog.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/dog.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-30170b8c-2e09-4b62-9546-e230716a1d41.png"
+    },
+    {
+      "id": "runner",
+      "tool": "image_gen.imagegen",
+      "prompt": "runner.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/runner.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-48c60f32-5532-48c8-a16d-c42273af0014.png"
+    },
+    {
+      "id": "brute",
+      "tool": "image_gen.imagegen",
+      "prompt": "brute.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/brute.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-8486c3e0-27e1-44a3-899f-b21c282966c5.png"
+    },
+    {
+      "id": "barricade",
+      "tool": "image_gen.imagegen",
+      "prompt": "barricade.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/barricade.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-16562f6a-c4c4-4923-a93a-1da26e65e3a8.png"
+    },
+    {
+      "id": "ui-icons",
+      "tool": "image_gen.imagegen",
+      "prompt": "ui-icons.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/ui-icons.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-cf40dd36-10a3-4a0c-9cd8-89048e051e15.png"
+    },
+    {
+      "id": "home",
+      "tool": "image_gen.imagegen",
+      "prompt": "home.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/home.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-c600d251-3c74-42fd-906d-dee6a7cf844e.png"
+    },
+    {
+      "id": "spell-items",
+      "tool": "image_gen.imagegen",
+      "prompt": "spell-items.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/spell-items.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-c130b845-22b2-47fc-9ebf-a68a90b86b8e.png"
+    },
+    {
+      "id": "city",
+      "tool": "image_gen.imagegen",
+      "prompt": "city.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/city.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-7e67e830-1a55-4eeb-b4b1-03d28a9c3103.png"
+    },
+    {
+      "id": "cop",
+      "tool": "image_gen.imagegen",
+      "prompt": "cop.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/cop.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-3cc12ba7-d1e4-4815-bff6-0d2676225d37.png"
+    },
+    {
+      "id": "riot",
+      "tool": "image_gen.imagegen",
+      "prompt": "riot.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/riot.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-8c090646-0c62-4033-b694-1cbb8a98500f.png"
+    },
+    {
+      "id": "shotgun",
+      "tool": "image_gen.imagegen",
+      "prompt": "shotgun.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/shotgun.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-e65c9660-ca6c-427c-ac38-f7cbb69f7546.png"
+    },
+    {
+      "id": "soldier",
+      "tool": "image_gen.imagegen",
+      "prompt": "soldier.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/soldier.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-e4d92aa7-3a61-4e7a-a580-2e608e2216e1.png"
+    },
+    {
+      "id": "firefighter",
+      "tool": "image_gen.imagegen",
+      "prompt": "firefighter.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/firefighter.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-02511569-51b8-446c-9061-3ee2847ad76c.png"
+    },
+    {
+      "id": "medic",
+      "tool": "image_gen.imagegen",
+      "prompt": "medic.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/medic.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-ffc8ffbe-4970-4960-8738-82a700074c00.png"
+    },
+    {
+      "id": "turret",
+      "tool": "image_gen.imagegen",
+      "prompt": "turret.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/turret.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-4a10610e-9b11-4bcf-bd26-2aa16e9f429a.png"
+    },
+    {
+      "id": "drone",
+      "tool": "image_gen.imagegen",
+      "prompt": "drone.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/drone.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-10d05575-b858-4b41-bfa7-6a964ceaeddd.png"
+    },
+    {
+      "id": "tesla",
+      "tool": "image_gen.imagegen",
+      "prompt": "tesla.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/tesla.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-e289b434-95ec-432f-be10-36ea964b9ea0.png"
+    },
+    {
+      "id": "laser",
+      "tool": "image_gen.imagegen",
+      "prompt": "laser.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/laser.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-51a7b889-6115-4dd7-8570-f61fa1bdb5de.png"
+    },
+    {
+      "id": "titan",
+      "tool": "image_gen.imagegen",
+      "prompt": "titan.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/titan.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-7e3874a6-9c42-4564-8b62-c97b51a48023.png"
+    },
+    {
+      "id": "crossbow",
+      "tool": "image_gen.imagegen",
+      "prompt": "crossbow-correction.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/crossbow.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-98fe264e-61ce-4004-988f-9e8c57a09bed.png"
+    },
+    {
+      "id": "bloater",
+      "tool": "image_gen.imagegen",
+      "prompt": "bloater.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/bloater.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-fa1284a6-6f58-40f3-9602-8cb8e95ae6f8.png"
+    },
+    {
+      "id": "hulk",
+      "tool": "image_gen.imagegen",
+      "prompt": "hulk.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/hulk.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-687b1b38-ee95-482d-92a6-9d7c79060e38.png"
+    },
+    {
+      "id": "grunt",
+      "tool": "image_gen.imagegen",
+      "prompt": "grunt.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/grunt.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-a6527a1c-536b-4326-95fa-e5ab7a032a66.png"
+    },
+    {
+      "id": "general",
+      "tool": "image_gen.imagegen",
+      "prompt": "general.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/general.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-68198041-7cc9-4588-abe4-68f6137485fd.png"
+    },
+    {
+      "id": "frost",
+      "tool": "image_gen.imagegen",
+      "prompt": "frost.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/frost.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-7f924bf2-cd7e-4a20-899c-e11baec41e61.png"
+    },
+    {
+      "id": "yeti",
+      "tool": "image_gen.imagegen",
+      "prompt": "yeti.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/yeti.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-3baeb667-49cb-4a67-aa87-10c28b25f1d2.png"
+    },
+    {
+      "id": "spitter",
+      "tool": "image_gen.imagegen",
+      "prompt": "spitter.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/spitter.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-e72906b6-2a9f-4a93-9d05-4581459c139d.png"
+    },
+    {
+      "id": "digger",
+      "tool": "image_gen.imagegen",
+      "prompt": "digger.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/digger.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-073a928c-e2cf-4eeb-b4cf-3a4232ab63c1.png"
+    },
+    {
+      "id": "splitter",
+      "tool": "image_gen.imagegen",
+      "prompt": "splitter.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/splitter.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-3a9568a2-3bdc-4677-a402-8267e2fb4524.png"
+    },
+    {
+      "id": "splitling",
+      "tool": "image_gen.imagegen",
+      "prompt": "splitling.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/splitling.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-eea8fe92-77cb-459b-bc28-46c9846b0bc6.png"
+    },
+    {
+      "id": "shielder",
+      "tool": "image_gen.imagegen",
+      "prompt": "shielder.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/shielder.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-a2058c20-a51a-4b44-af91-5132886d2e38.png"
+    },
+    {
+      "id": "android",
+      "tool": "image_gen.imagegen",
+      "prompt": "android.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/android.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-11874172-2efd-441e-99f5-860704ed171c.png"
+    },
+    {
+      "id": "mutant",
+      "tool": "image_gen.imagegen",
+      "prompt": "mutant.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/mutant.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-1492d7c5-27be-48f8-aa06-be8af31e11d9.png"
+    },
+    {
+      "id": "astronaut",
+      "tool": "image_gen.imagegen",
+      "prompt": "astronaut.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/astronaut.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-8b1baed0-eed6-4d8c-a3eb-b049b8039523.png"
+    },
+    {
+      "id": "colossus",
+      "tool": "image_gen.imagegen",
+      "prompt": "colossus.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/colossus.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-79d67d27-f7ed-49ab-9e9f-f4aec0e5729d.png"
+    },
+    {
+      "id": "director",
+      "tool": "image_gen.imagegen",
+      "prompt": "director.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/director.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-12b2766b-6e06-4170-843c-9ff63e1e8af5.png"
+    },
+    {
+      "id": "padChief",
+      "tool": "image_gen.imagegen",
+      "prompt": "padChief.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/padChief.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-57d091d5-f3f2-46e0-b755-19ec2d6ef399.png"
+    },
+    {
+      "id": "cosmonaut",
+      "tool": "image_gen.imagegen",
+      "prompt": "cosmonaut.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/cosmonaut.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-01668acf-bddc-4a4d-b05d-559991aaacf2.png"
+    },
+    {
+      "id": "xeno",
+      "tool": "image_gen.imagegen",
+      "prompt": "xeno.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/xeno.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-63f21f36-871a-4154-8dc6-c90ec72c20ca.png"
+    },
+    {
+      "id": "pod",
+      "tool": "image_gen.imagegen",
+      "prompt": "pod.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/pod.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-bc54baae-e1d1-40df-bdc9-92f8846ee166.png"
+    },
+    {
+      "id": "larva",
+      "tool": "image_gen.imagegen",
+      "prompt": "larva.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/larva.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-fc1b1291-77ed-48cd-8dbf-148be4b28cb8.png"
+    },
+    {
+      "id": "commander",
+      "tool": "image_gen.imagegen",
+      "prompt": "commander.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/commander.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-af4ce2a8-404f-4e1f-8f4b-da95c87782cd.png"
+    },
+    {
+      "id": "lunarWorm",
+      "tool": "image_gen.imagegen",
+      "prompt": "lunarWorm.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/lunarWorm.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-deb2d5a9-fb2c-4cbc-b6bb-83e1f502c338.png"
+    },
+    {
+      "id": "marsTitan",
+      "tool": "image_gen.imagegen",
+      "prompt": "marsTitan.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/marsTitan.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-60746530-5753-45dd-9565-c3d25a623447.png"
+    },
+    {
+      "id": "queen",
+      "tool": "image_gen.imagegen",
+      "prompt": "queen.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/units/queen.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-2d8a106c-3f8e-4320-af46-e4bd8e991b67.png"
+    },
+    {
+      "id": "swamp",
+      "tool": "image_gen.imagegen",
+      "prompt": "swamp.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/swamp.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-2c1626b1-e078-409d-bf63-8b8c83be3ba5.png"
+    },
+    {
+      "id": "desert",
+      "tool": "image_gen.imagegen",
+      "prompt": "desert.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/desert.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-4b017be4-9317-4ea9-8fde-b289ae1da217.png"
+    },
+    {
+      "id": "snow",
+      "tool": "image_gen.imagegen",
+      "prompt": "snow.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/snow.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-dd91cb31-ef5a-43b5-9b4c-26cc6694d892.png"
+    },
+    {
+      "id": "tech",
+      "tool": "image_gen.imagegen",
+      "prompt": "tech.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/tech.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-0a5a3057-8b97-40d2-8660-81f24ecda7df.png"
+    },
+    {
+      "id": "lab",
+      "tool": "image_gen.imagegen",
+      "prompt": "lab.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/lab.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-3dd95130-00a1-4d88-93a3-a7b852caf376.png"
+    },
+    {
+      "id": "launch",
+      "tool": "image_gen.imagegen",
+      "prompt": "launch.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/launch.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-d0cb2282-1335-4ba2-9971-fd64835d77e0.png"
+    },
+    {
+      "id": "station",
+      "tool": "image_gen.imagegen",
+      "prompt": "station.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/station.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-b6a17039-af0b-4bc7-8254-075676de615f.png"
+    },
+    {
+      "id": "moon",
+      "tool": "image_gen.imagegen",
+      "prompt": "moon.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/moon.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-abd0d3fb-5535-4b7e-9c51-af8be5c6e626.png"
+    },
+    {
+      "id": "mars",
+      "tool": "image_gen.imagegen",
+      "prompt": "mars.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/mars.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-5a581b22-0971-4a47-9976-9fd7a99102bb.png"
+    },
+    {
+      "id": "hive",
+      "tool": "image_gen.imagegen",
+      "prompt": "hive.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/worlds/hive.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-33a57b0f-6a74-4f44-a8c4-c63c8664283e.png"
+    },
+    {
+      "id": "ui-materials",
+      "tool": "image_gen.imagegen",
+      "prompt": "ui-materials.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/ui-materials.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-8ad27122-3e0a-41f6-b2ae-772344f99585.png"
+    },
+    {
+      "id": "ui-misc",
+      "tool": "image_gen.imagegen",
+      "prompt": "ui-misc.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/ui-misc.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-36d7dc01-551e-441b-953d-9f65ce7df846.png"
+    },
+    {
+      "id": "app-icon",
+      "tool": "image_gen.imagegen",
+      "prompt": "app-icon.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/app-icon.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-5b27cd9c-4e33-46cc-a418-6ed05c5ef56c.png"
+    },
+    {
+      "id": "armored-base",
+      "tool": "image_gen.imagegen",
+      "prompt": "armored-base.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/armored-base.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-a35cb8e0-63a8-442d-be21-834f1e3c2f67.png"
+    },
+    {
+      "id": "space-base",
+      "tool": "image_gen.imagegen",
+      "prompt": "space-base.prompt.md",
+      "asset": "../../../apps/mobile/assets/pixel16-detailed/space-base.png",
+      "generated": "/Users/arthurprasniski/.codex/generated_images/01a13b1e-0714-7672-9c29-8695596a15d4/exec-c5105721-aa81-4fb6-8592-e9576d5029b5.png"
+    }
+  ]
+}

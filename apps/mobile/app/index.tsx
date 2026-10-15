@@ -26,12 +26,9 @@ import { PushPrompt } from '@/ui/push/PushPrompt';
 import { colors } from '@/ui/theme';
 import { worldName } from '@/ui/worldInfo';
 
-const LOBBY = require('@/assets/images/lobby.png');
-const LOGO = require('@/assets/images/logo.png');
-const LOBBY_RATIO = 790 / 720;
-// Proporção lida da própria imagem (o logo é gerado com a largura do texto)
-const LOGO_SIZE = Image.resolveAssetSource(LOGO);
-const LOGO_RATIO = LOGO_SIZE.height / LOGO_SIZE.width;
+const LOBBY = require('@/assets/pixel16-detailed/home.png');
+const LOBBY_SIZE = Image.resolveAssetSource(LOBBY);
+const LOBBY_RATIO = LOBBY_SIZE.height / LOBBY_SIZE.width;
 const PADDING = 16;
 // A rota começa dentro do degradê do fim da cena.
 const FADE_OVERLAP = 44;
@@ -82,13 +79,9 @@ export default function HomeScreen() {
                 <CashPill />
               </View>
             </View>
-            <Image
-              source={LOGO}
-              style={[styles.logo, { width: width * 0.72, height: width * 0.72 * LOGO_RATIO }]}
-              resizeMode="contain"
-              accessibilityRole="header"
-              accessibilityLabel={pt.home.title}
-            />
+            <AppText variant="display" stroke color={colors.gold} accessibilityRole="header" accessibilityLabel={pt.home.title} style={[styles.logo,{fontSize:width*.095,lineHeight:width*.115}]}>
+              {pt.home.title}
+            </AppText>
           </View>
         </View>
 
@@ -124,8 +117,8 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1 },
   overlay: { ...StyleSheet.absoluteFill, alignItems: 'center', paddingHorizontal: PADDING },
   content: { paddingHorizontal: PADDING, gap: 16 },
-  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'stretch' },
-  topLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logo: { marginTop: 14 },
+  topBar: { flexDirection: 'row', flexWrap:'wrap', rowGap:8, columnGap:8, alignItems: 'center', justifyContent: 'space-between', alignSelf: 'stretch' },
+  topLeft: { flexDirection: 'row', flexWrap:'wrap', alignItems: 'center', gap: 8 },
+  logo: { marginTop: 14, textAlign: 'center', letterSpacing: 2 },
   route: { gap: 8, paddingHorizontal: 4 },
 });

@@ -1,6 +1,6 @@
+import { pixelOval, pixelCircle, OUTLINE } from '@/game/render/fxShapes';
 import { PaintStyle, Skia, type SkCanvas, type SkPaint } from '@shopify/react-native-skia';
 
-import { OUTLINE } from '@/game/render/fxShapes';
 import type { RenderSnapshot } from '@/game/types';
 
 // Zumbis especiais (GDD seção 17.4): o monte de terra do Escavador e o escudo do Porta-escudo.
@@ -17,14 +17,14 @@ export function drawMound(canvas: SkCanvas, paint: SkPaint, z: ZombieSnap): void
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color(OUTLINE));
   paint.setAlphaf(1);
-  canvas.drawOval(Skia.XYWHRect(z.x - 23, z.y - 15 + wobble * 0.3, 46, 22), paint);
+  pixelOval(canvas,paint,z.x - 23, z.y - 15 + wobble * 0.3, 46, 22);
   paint.setColor(Skia.Color('#7a5a3a'));
-  canvas.drawOval(Skia.XYWHRect(z.x - 20, z.y - 12 + wobble * 0.3, 40, 17), paint);
+  pixelOval(canvas,paint,z.x - 20, z.y - 12 + wobble * 0.3, 40, 17);
   paint.setColor(Skia.Color('#9a7650'));
-  canvas.drawOval(Skia.XYWHRect(z.x - 12, z.y - 11, 18, 7), paint);
+  pixelOval(canvas,paint,z.x - 12, z.y - 11, 18, 7);
   for (let i = 0; i < 3; i++) {
     paint.setColor(Skia.Color('#8d9bb0'));
-    canvas.drawCircle(z.x - 22 + i * 21 + wobble, z.y + 3 - (i % 2) * 4, 3, paint);
+    pixelCircle(canvas,paint,z.x - 22 + i * 21 + wobble, z.y + 3 - (i % 2) * 4, 3);
   }
 }
 
@@ -35,11 +35,11 @@ export function drawAura(canvas: SkCanvas, paint: SkPaint, z: ZombieSnap, time: 
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color(AURA));
   paint.setAlphaf(0.1 + 0.05 * pulse);
-  canvas.drawOval(Skia.XYWHRect(z.x - z.aura, z.y - z.aura * 0.55, z.aura * 2, z.aura * 1.1), paint);
+  pixelOval(canvas,paint,z.x - z.aura, z.y - z.aura * 0.55, z.aura * 2, z.aura * 1.1);
   paint.setStyle(PaintStyle.Stroke);
   paint.setStrokeWidth(3);
   paint.setAlphaf(0.45 + 0.25 * pulse);
-  canvas.drawOval(Skia.XYWHRect(z.x - z.aura, z.y - z.aura * 0.55, z.aura * 2, z.aura * 1.1), paint);
+  pixelOval(canvas,paint,z.x - z.aura, z.y - z.aura * 0.55, z.aura * 2, z.aura * 1.1);
   paint.setStyle(PaintStyle.Fill);
   paint.setAlphaf(1);
 }
@@ -53,10 +53,10 @@ export function drawEvoRing(canvas: SkCanvas, paint: SkPaint, x: number, y: numb
   paint.setStrokeWidth(4);
   paint.setColor(Skia.Color(EVO_COLORS[evo]));
   paint.setAlphaf(0.55 + 0.35 * pulse);
-  canvas.drawOval(Skia.XYWHRect(x - 26, y - 9, 52, 18), paint);
+  pixelOval(canvas,paint,x - 26, y - 9, 52, 18);
   paint.setStyle(PaintStyle.Fill);
   paint.setAlphaf(0.18);
-  canvas.drawOval(Skia.XYWHRect(x - 26, y - 9, 52, 18), paint);
+  pixelOval(canvas,paint,x - 26, y - 9, 52, 18);
   paint.setAlphaf(1);
 }
 
@@ -71,9 +71,9 @@ export function drawStunStars(canvas: SkCanvas, paint: SkPaint, z: ZombieSnap, t
     const y = cy + Math.sin(a) * 5;
     paint.setColor(Skia.Color(OUTLINE));
     paint.setAlphaf(1);
-    canvas.drawCircle(x, y, 5.5, paint);
+    pixelCircle(canvas,paint,x, y, 5.5);
     paint.setColor(Skia.Color('#ffe27a'));
-    canvas.drawCircle(x, y, 3.5, paint);
+    pixelCircle(canvas,paint,x, y, 3.5);
   }
 }
 
@@ -85,6 +85,6 @@ export function drawToxicAura(canvas: SkCanvas, paint: SkPaint, z: ZombieSnap, t
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color('#9be04a'));
   paint.setAlphaf(0.12 + 0.08 * pulse);
-  canvas.drawOval(Skia.XYWHRect(z.x - r, z.y - r * 0.5, r * 2, r), paint);
+  pixelOval(canvas,paint,z.x - r, z.y - r * 0.5, r * 2, r);
   paint.setAlphaf(1);
 }

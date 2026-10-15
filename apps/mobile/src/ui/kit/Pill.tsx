@@ -14,7 +14,7 @@ interface PillProps {
 /** Pílula escura em relevo com ícone e valor contornado (dinheiro, fases). */
 export function Pill({ icon, label, color = colors.white, style }: PillProps) {
   return (
-    <Chunky face="#2a2632" edge="#17141b" radius={999} depth={3} gloss={0.08} style={style}>
+    <Chunky face="#252b32" edge="#17141b" radius={999} depth={3} gloss={0.08} style={style}>
       <View style={styles.pill}>
         {icon && <Image source={icon} style={styles.icon} />}
         <AppText variant="number" color={color} style={styles.value}>
@@ -27,10 +27,11 @@ export function Pill({ icon, label, color = colors.white, style }: PillProps) {
 
 /** Botão redondo em relevo com ícone (voltar, pausa). */
 export function IconButton({ icon, onPress, label, size = 46 }: { icon: ImageSourcePropType; onPress: () => void; label: string; size?: number }) {
+  size=Math.max(44,size);
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label}>
       {({ pressed }) => (
-        <Chunky face="#3d3848" edge="#24202c" radius={size / 2} depth={4} pressed={pressed} gloss={0.12}>
+        <Chunky face="#343c42" edge="#171b22" radius={size / 2} depth={4} pressed={pressed} gloss={0.12}>
           <View style={{ width: size - 6, height: size - 10, alignItems: 'center', justifyContent: 'center' }}>
             <Image source={icon} style={{ width: size * 0.46, height: size * 0.46 }} />
           </View>
@@ -47,7 +48,7 @@ export function Segments({ total, filled, color = colors.accent, height = 6 }: {
       {Array.from({ length: total }, (_, i) => (
         <View
           key={i}
-          style={[styles.segment, { height: height + 2, borderRadius: (height + 2) / 2, backgroundColor: i < filled ? color : 'rgba(0, 0, 0, 0.35)' }]}
+          style={[styles.segment, { height: height + 2, backgroundColor: i < filled ? color : 'rgba(0, 0, 0, 0.35)' }]}
         />
       ))}
     </View>

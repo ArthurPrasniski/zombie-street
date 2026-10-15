@@ -52,3 +52,11 @@ example
 *-firebase-adminsdk-*.json
 google-services.json
 GoogleService-Info.plist
+
+# Catálogo gerado do piloto 16-bit
+/artifacts/pixel16/
+
+/artifacts/pixel16-detailed/
+
+# Pacote revisável da landing, fonte mantida em repositório próprio
+/artifacts/zombie-road-site-16bit.tar.gz

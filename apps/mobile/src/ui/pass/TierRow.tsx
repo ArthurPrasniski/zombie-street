@@ -55,7 +55,7 @@ export function TierRow({ tier, reached, free, premium, busy, onClaim }: RowProp
     <View style={styles.row}>
       <RewardCell track="free" {...free} busy={busy} onClaim={() => onClaim('free')} />
       <View style={[styles.tier, reached && styles.tierReached]}>
-        <AppText variant="number" style={styles.tierText}>{`${tier}`}</AppText>
+        <AppText variant="number" color={reached?colors.ink:colors.text} style={styles.tierText}>{`${tier}`}</AppText>
       </View>
       <RewardCell track="premium" {...premium} busy={busy} onClaim={() => onClaim('premium')} />
     </View>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   icon: { width: 26, height: 26 },
   amount: { flex: 1, fontSize: 13, lineHeight: 16 },
   mark: { width: 24, height: 24 },
-  tier: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface, borderWidth: 3, borderColor: colors.outline },
+  tier: { width: 38, height: 38, borderRadius: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface, borderWidth: 3, borderColor: colors.outline },
   tierReached: { backgroundColor: colors.yellow },
   tierText: { fontSize: 15, lineHeight: 18 },
 });

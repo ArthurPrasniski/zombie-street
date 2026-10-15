@@ -1,7 +1,7 @@
+import { pixelOval, pixelCircle, blob } from '@/game/render/fxShapes';
 import { PaintStyle, Skia, StrokeCap, type SkCanvas, type SkPaint } from '@shopify/react-native-skia';
 
 import { FROST_TTL, WORLD_HEIGHT } from '@/game/data/constants';
-import { blob } from '@/game/render/fxShapes';
 import type { Area, Effect } from '@/game/types';
 
 // Armas especiais do Ato 3 (GDD seção 18.4): rajada de gelo, Escudo de Energia, Buraco Negro e
@@ -15,7 +15,7 @@ export function frost(canvas: SkCanvas, paint: SkPaint, e: Extract<Effect, { kin
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color('#bfe6ff'));
   paint.setAlphaf(0.35 * (1 - p));
-  canvas.drawOval(Skia.XYWHRect(e.x - r, e.y - r * 0.6, r * 2, r * 1.2), paint);
+  pixelOval(canvas,paint,e.x - r, e.y - r * 0.6, r * 2, r * 1.2);
   for (let i = 0; i < 8; i++) {
     const a = (i / 8) * Math.PI * 2;
     blob(canvas, paint, e.x + Math.cos(a) * r * 0.8, e.y + Math.sin(a) * r * 0.5, 7 * (1 - p * 0.5), '#e0f8ff', 1 - p);
@@ -32,13 +32,13 @@ function forcefield(canvas: SkCanvas, paint: SkPaint, a: Extract<Area, { kind: '
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color('#3ee8ff'));
   paint.setAlphaf(0.25 + 0.2 * life + 0.1 * pulse);
-  canvas.drawRRect(Skia.RRectXY(Skia.XYWHRect(left, a.y - 14, a.width, 28), 14, 14), paint);
+  canvas.drawRect(Skia.XYWHRect(left, a.y - 14, a.width, 28), paint);
   paint.setStyle(PaintStyle.Stroke);
   paint.setStrokeWidth(3);
   paint.setColor(Skia.Color('#e0ffff'));
   paint.setAlphaf(0.5 + 0.4 * life);
-  canvas.drawRRect(Skia.RRectXY(Skia.XYWHRect(left, a.y - 14, a.width, 28), 14, 14), paint);
-  for (let x = left + 14; x < left + a.width - 8; x += 22) canvas.drawCircle(x, a.y, 7, paint);
+  canvas.drawRect(Skia.XYWHRect(left, a.y - 14, a.width, 28), paint);
+  for (let x = left + 14; x < left + a.width - 8; x += 22) pixelCircle(canvas,paint,x, a.y, 7);
   // Emissores nas pontas
   paint.setStyle(PaintStyle.Fill);
   for (const x of [left, left + a.width]) blob(canvas, paint, x, a.y, 9, '#4a5068', 1);
@@ -50,19 +50,19 @@ function blackhole(canvas: SkCanvas, paint: SkPaint, a: Extract<Area, { kind: 'b
   'worklet';
   const p = 1 - a.ttl / a.duration;
   paint.setStyle(PaintStyle.Stroke);
-  paint.setStrokeCap(StrokeCap.Round);
+  paint.setStrokeCap(StrokeCap.Square);
   for (let i = 0; i < 4; i++) {
     const r = a.radius * (((i / 4 + time * 0.8) % 1) * 0.9 + 0.1);
     paint.setStrokeWidth(4);
     paint.setColor(Skia.Color(i % 2 ? '#c8a0ff' : '#8a4ad8'));
     paint.setAlphaf(0.6 * (r / a.radius));
-    canvas.drawOval(Skia.XYWHRect(a.x - r, a.y - r * 0.55, r * 2, r * 1.1), paint);
+    pixelOval(canvas,paint,a.x - r, a.y - r * 0.55, r * 2, r * 1.1);
   }
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color('#0c0b0f'));
   paint.setAlphaf(0.95);
   const core = 20 + p * 14;
-  canvas.drawOval(Skia.XYWHRect(a.x - core, a.y - core * 0.6, core * 2, core * 1.2), paint);
+  pixelOval(canvas,paint,a.x - core, a.y - core * 0.6, core * 2, core * 1.2);
   for (let i = 0; i < 6; i++) {
     const ang = time * 4 + (i / 6) * Math.PI * 2;
     blob(canvas, paint, a.x + Math.cos(ang) * core * 1.4, a.y + Math.sin(ang) * core * 0.8, 3, '#e0c8ff', 0.8, false);

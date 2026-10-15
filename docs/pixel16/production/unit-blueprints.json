@@ -1,0 +1,212 @@
+{
+  "shotgun": {
+    "kind": "troop",
+    "name": "BRUNO",
+    "description": "stocky adult male survivor, red baseball cap, brown beard, blue work jacket over gray shirt, dark jeans, boots; short double-barrel SHOTGUN (never a rifle/revolver)",
+    "attack": "4aim shotgun,5fire shotgun with small orange muzzle flash,6recoil"
+  },
+  "soldier": {
+    "kind": "troop",
+    "name": "SOLDIER",
+    "description": "brown-skinned adult soldier, olive military helmet, olive camouflaged fatigues, dark boots; compact belt-fed MACHINE GUN with visible ammunition belt",
+    "attack": "4aim machinegun,5fire short muzzleflash,6recoil"
+  },
+  "firefighter": {
+    "kind": "troop",
+    "name": "FIREFIGHTER",
+    "description": "adult firefighter, red fire helmet, yellow turnout coat and trousers with reflective stripes, black boots; FLAMETHROWER connected by hose to red fuel tank on back, not a firearm",
+    "attack": "4aim flamethrower nozzle,5emit a SMALL orange flame at nozzle only,6recover; keep full jet out of sprite because engine draws it"
+  },
+  "medic": {
+    "kind": "troop",
+    "name": "MEDIC",
+    "description": "adult woman with dark brown bobbed hair, white medical cap with red cross, white field medic jacket with green undershirt, gray trousers, boots; red-cross medical bag in hand, no gun",
+    "attack": "4open medical bag,5raise dressing with a small green healing glint,6close bag/recover"
+  },
+  "crossbow": {
+    "kind": "troop",
+    "name": "LARA",
+    "description": "adult woman with long auburn braid, dark olive outdoors jacket, tan trousers, boots, wrist guards; large wooden and steel CROSSBOW held in both hands, visible bow limbs and bolt",
+    "attack": "4aim crossbow,5release bolt with bowstring action (NO muzzle flash),6reload/recover"
+  },
+  "turret": {
+    "kind": "troop",
+    "name": "AUTOMATIC TURRET",
+    "description": "small autonomous olive/gray machine-gun turret on stable tripod, ammunition box and belt, steel barrel. Mechanical structure, NO person, no head, no legs",
+    "attack": "4aim barrel,5fire small orange muzzleflash,6recoil; movement columns1,2,3 repeat stable neutral structure, no walking"
+  },
+  "drone": {
+    "kind": "troop",
+    "name": "COMBAT DRONE",
+    "description": "compact olive steel military QUADCOPTER, exactly four rotor arms, small underslung machine-gun barrel, cyan camera lens; NO person, no humanoid body, flying machine",
+    "attack": "4aim underslung barrel,5fire small orange muzzleflash,6recover; movementcolumns1,2,3 subtle rotor changes but stable body position"
+  },
+  "tesla": {
+    "kind": "troop",
+    "name": "TESLA TOWER",
+    "description": "compact steel-and-copper TESLA COIL on broad olive equipment base, ribbed copper coil, steel terminal sphere, cyan electric insulators; NO person, no humanoid body",
+    "attack": "4charge cyan coil,5small cyan electrical arc at terminal,6recover; movementcolumns1,2,3repeat stable neutral structure"
+  },
+  "laser": {
+    "kind": "troop",
+    "name": "LASER CORPORAL",
+    "description": "adult sci-fi survivor in white/silver armored suit, white helmet with narrow cyan visor, dark gray joints and boots; compact white-gray LASER RIFLE with cyan energy cell",
+    "attack": "4aim laser rifle,5small bright pink/cyan muzzle glint,6recoil"
+  },
+  "titan": {
+    "kind": "troop",
+    "name": "TITAN EXOSUIT",
+    "description": "massive yellow industrial powered EXOSUIT with dark hydraulic joints, visible adult pilot in small glass cockpit, enormous steel fists, heavy mechanical boots, cyan circular reactor on chest; NO gun",
+    "attack": "4raise hydraulic fist,5heavy forward punch,6recover"
+  },
+  "bloater": {
+    "kind": "zombie",
+    "name": "BLOATER",
+    "description": "fat yellow-green undead, swollen belly, tattered ochre shirt, dark trousers, exposed acidic boils, heavy boots",
+    "attack": "4belly swells,5vomiting small acid splash,6recover"
+  },
+  "hulk": {
+    "kind": "zombie",
+    "name": "SWAMP HULK BOSS",
+    "description": "massive moss-green undead giant covered in reeds and vines, ragged brown trousers, huge fists, heavy feet, bog muck and glowing yellow eyes",
+    "attack": "4raise huge fists,5heavy smash,6recover"
+  },
+  "grunt": {
+    "kind": "zombie",
+    "name": "INFECTED RECRUIT",
+    "description": "green undead soldier in faded olive helmet, torn desert military fatigues, dog tags, boots, no gun, fights with claws",
+    "attack": "4claw anticipation,5claw strike,6recover"
+  },
+  "general": {
+    "kind": "zombie",
+    "name": "UNDEAD GENERAL BOSS",
+    "description": "huge green undead military general, peaked olive officer cap with brass badge, tattered decorated military jacket, broad armored shoulders, heavy boots, no gun",
+    "attack": "4raise fists,5heavy commanding punch,6recover"
+  },
+  "frost": {
+    "kind": "zombie",
+    "name": "FROZEN ZOMBIE",
+    "description": "icy pale blue undead, frosted dark hair, torn light-blue parka with white fur trim, dark pants, ice crust on clawed hands and boots",
+    "attack": "4frost claw anticipation,5icy claw strike,6recover"
+  },
+  "yeti": {
+    "kind": "zombie",
+    "name": "ABOMINABLE SNOW BOSS",
+    "description": "massive white-furred snow monster with ice-blue skin visible on face and huge hands, dark small eyes, broad shoulders and long claws, no human clothes",
+    "attack": "4raise clawed arms,5heavy ice smash,6recover"
+  },
+  "spitter": {
+    "kind": "zombie",
+    "name": "ACID SPITTER",
+    "description": "lean sickly yellow-green undead with ragged purple hooded cloak, swollen acid-filled cheeks and throat, green saliva, dark trousers, clawed hands",
+    "attack": "4throat swells,5spit a SMALL bright green acid droplet just by mouth,6recover"
+  },
+  "digger": {
+    "kind": "zombie",
+    "name": "DIGGER ZOMBIE",
+    "description": "brown-green undead miner, battered yellow hardhat, dusty brown work overalls, heavy digging claws instead of tools, dirt-covered boots",
+    "attack": "4raise digging claws,5digging/claw strike,6recover"
+  },
+  "splitter": {
+    "kind": "zombie",
+    "name": "SPLITTER ZOMBIE",
+    "description": "bloated green undead with torn violet shirt and glowing lime fissures across swollen torso, dark trousers, oddly split hair ridge; no graphic gore",
+    "attack": "4body fissures glow,5claw strike with small lime glints,6recover"
+  },
+  "splitling": {
+    "kind": "zombie",
+    "name": "SMALL SPLITLING",
+    "description": "small hunched green undead runt, torn purple vest and short dark pants matching splitter parent, small clawed hands, oversized feral head; small species, no gore",
+    "attack": "4crouch,5small claw leap,6recover"
+  },
+  "shielder": {
+    "kind": "zombie",
+    "name": "SCRAP SHIELD ZOMBIE",
+    "description": "green undead road worker wearing faded orange vest, dirty hardhat, gray trousers and boots, holding large rusty steel road-sign shield with NO text",
+    "attack": "4raise scrap shield,5shield bash,6recover"
+  },
+  "android": {
+    "kind": "zombie",
+    "name": "INFECTED ANDROID",
+    "description": "green cyborg undead with half head in scratched steel plating, red LED eye, small antenna, torn dark slate uniform, metal hand, black boots",
+    "attack": "4mechanical claw anticipation,5metal claw strike,6recover"
+  },
+  "mutant": {
+    "kind": "zombie",
+    "name": "LAB MUTANT",
+    "description": "lime-green humanoid mutant with luminous yellow boils, torn orange-gray laboratory containment clothing, one oversized clawed arm, dark trousers, non-graphic",
+    "attack": "4raise oversized arm,5mutant claw strike,6recover"
+  },
+  "astronaut": {
+    "kind": "zombie",
+    "name": "INFECTED ASTRONAUT",
+    "description": "green undead astronaut in white padded spacesuit with pale gray joints, transparent cracked round helmet dome, backpack life support, boots; damaged suit visible but no gore",
+    "attack": "4gloved claw anticipation,5gloved claw strike,6recover"
+  },
+  "colossus": {
+    "kind": "zombie",
+    "name": "CYBORG COLOSSUS BOSS",
+    "description": "huge green undead cyborg with bulky dark steel plated armor, red reactor and LED eye, massive mechanical fists, antenna, armored boots",
+    "attack": "4charge mechanical fist,5heavy hydraulic punch,6recover"
+  },
+  "director": {
+    "kind": "zombie",
+    "name": "LAB DIRECTOR BOSS",
+    "description": "massive sickly green undead scientist, torn long white lab coat over dark purple suit, cracked goggles, vial bandolier, grotesquely oversized but non-graphic glowing green hands",
+    "attack": "4raise glowing hands,5heavy toxic slam,6recover"
+  },
+  "padChief": {
+    "kind": "zombie",
+    "name": "LAUNCH PAD CHIEF BOSS",
+    "description": "huge green undead ground-crew chief in orange high-visibility launch suit, gray reinforced armor pads, black headset and helmet, enormous work gloves and boots",
+    "attack": "4raise fists,5heavy ground-crew punch,6recover"
+  },
+  "cosmonaut": {
+    "kind": "zombie",
+    "name": "INFECTED COSMONAUT",
+    "description": "green undead in orange padded spacesuit with transparent bubble helmet, silver twin-tank jetpack, gray gloves and boots; keep jetpack obvious in back/profile",
+    "attack": "4ready lunge,5gloved strike,6recover"
+  },
+  "xeno": {
+    "kind": "zombie",
+    "name": "XENO ALIEN",
+    "description": "slender hostile insectoid alien with dark purple chitin, lime glowing eyes, sharp head crest, long clawed arms, digitigrade legs and short tail, no human clothing or weapons",
+    "attack": "4raise claws,5alien claw strike,6recover"
+  },
+  "pod": {
+    "kind": "zombie",
+    "name": "ALIEN BROOD POD",
+    "description": "grounded organic purple-black chitin cocoon with green glowing fissures and squat root-like supports; no face, NO human body or legs. Columns1,2,3 must show species-appropriate pulsing/crawling/undulation poses, never human walking.",
+    "attack": "4seams open,5hatching mouth releases one tiny green larva shape near opening,6seams close"
+  },
+  "larva": {
+    "kind": "zombie",
+    "name": "ALIEN LARVA",
+    "description": "small segmented lime-green alien grub with purple chitin head, tiny mandibles and many short legs, NO human body/clothes, low horizontal silhouette. Columns1,2,3 must show species-appropriate pulsing/crawling/undulation poses, never human walking.",
+    "attack": "4curl head,5small mandible bite,6recover"
+  },
+  "commander": {
+    "kind": "zombie",
+    "name": "INFECTED MISSION COMMANDER BOSS",
+    "description": "massive green undead in reinforced orange-white mission spacesuit, transparent bubble helmet, large silver twin jetpack, brass rank tabs, huge gray armored gloves and boots",
+    "attack": "4ready heavy lunge,5armored punch,6recover"
+  },
+  "lunarWorm": {
+    "kind": "zombie",
+    "name": "LUNAR WORM BOSS",
+    "description": "huge pale gray segmented alien worm, purple armored back plates, circular dark mouth with small ivory fangs and lime glow, thick curved body with ground contact, NO human torso/arms/legs. Columns1,2,3 must show species-appropriate pulsing/crawling/undulation poses, never human walking.",
+    "attack": "4rear head back,5mouth lunges forward,6recover"
+  },
+  "marsTitan": {
+    "kind": "zombie",
+    "name": "MARTIAN TITAN BOSS",
+    "description": "huge armored alien brute with dark rust-red rocky chitin, massive shoulders and fists, glowing orange fissures, green eyes, heavy digitigrade feet, no human clothes",
+    "attack": "4raise rocky fist,5heavy martian smash,6recover"
+  },
+  "queen": {
+    "kind": "zombie",
+    "name": "HIVE QUEEN BOSS",
+    "description": "massive regal alien insect queen with deep violet chitin, large segmented abdomen, long crest/crown horns, lime luminous eyes and green vents, clawed arms and insect legs, no human clothes",
+    "attack": "4raise chitin claws,5queen claw slam,6recover"
+  }
+}

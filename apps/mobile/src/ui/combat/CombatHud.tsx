@@ -32,7 +32,7 @@ export function CombatHud({ onBack, onTogglePause, onSpeed }: Props) {
       <IconButton icon={ICONS.back} label={pt.common.back} onPress={onBack} size={42} />
       <IconButton icon={paused ? ICONS.play : ICONS.pause} label={paused ? pt.combat.resume : pt.combat.paused} onPress={onTogglePause} size={42} />
       <Button label={`${speed}×`} size="s" variant="dark" onPress={() => { const next = speed === 1 ? 2 : 1; useSettingsStore.getState().setSpeed(next); onSpeed?.(next); }} />
-      <Chunky face="#2a2632" edge="#17141b" radius={16} depth={4} gloss={0.08} style={styles.waveBox} faceStyle={styles.wave}>
+      <Chunky face="#252b32" edge="#17141b" radius={16} depth={4} gloss={0.08} style={styles.waveBox} faceStyle={styles.wave}>
         <AppText variant="label" style={styles.text}>
           {survival ? pt.survival.hud(wave) : pt.combat.stageWave(stageLabel(stage), wave, totalWaves)}
         </AppText>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   wave: { gap: 5, paddingVertical: 6, paddingHorizontal: 12 },
   text: { fontSize: 14, lineHeight: 17 },
   segments: { flexDirection: 'row', gap: 4 },
-  segment: { flex: 1, height: 9, borderRadius: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1.5, borderColor: colors.outline, overflow: 'hidden' },
+  segment: { flex: 1, height: 9, borderRadius: 1, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1.5, borderColor: colors.outline, overflow: 'hidden' },
   boss: { backgroundColor: 'rgba(255, 79, 79, 0.45)' },
   fill: { height: '100%', backgroundColor: colors.accent },
 });

@@ -1,6 +1,6 @@
+import { goBack } from '@/ui/navigation';
 import { WeeklyResult } from './WeeklyResult';
 import { tutorialText } from '@/i18n/tutorial';
-import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import type { CombatResult } from '@/hooks/useCombatEvents';
@@ -31,7 +31,7 @@ interface Props {
 
 /** Modais do combate: rádio, pausa, confirmação de saída e o fim da partida. */
 export function CombatModals({ result, training, weekly, radio, onRadioClose, paused, confirmExit, onResume, onStay, onRetry, onNext }: Props) {
-  const back = () => router.back();
+  const back = () => goBack();
   if (weekly && result) return <WeeklyResult />;
   if (training && result) return <GameModal title={tutorialText.training} buttons={<><Button label={pt.stageFailed.exit} variant="dark" onPress={back} /><Button label={pt.stageFailed.retry} onPress={onRetry} /></>}><AppText>{tutorialText.noReward}</AppText></GameModal>;
   if (radio) return <RadioModal key={radio.id} id={radio.id} place={radio.place} onClose={onRadioClose} />;

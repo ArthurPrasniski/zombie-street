@@ -32,7 +32,7 @@ dinheiro ganho subindo o nível das cartas e monta o deck.
   de cima, inclinado, como no Clash Royale. Campo aberto e contínuo: sem rio
   nem pontes; a estrada de terra no meio é só cenário.
 - As unidades andam em x de 30 a 570 e y de -60 a 780.
-- Topo: cemitério. Zumbis nascem em y = -40 (fora da tela), com x sorteado
+- Topo da Fazenda: milharal. Zumbis nascem em y = -40 (fora da tela), com x sorteado
   entre 60 e 540, e descem em linha reta.
 - Base (muro de sacos de areia na largura toda e a caminhonete com a
   metralhadora atrás) ocupa o fundo. A frente do muro é y = 780; a boca da
@@ -219,7 +219,7 @@ do tiro, até o alcance.
 
 ## 12. Telas
 
-Sem abas: tudo parte da Home. Telas de menu têm voltar (botão redondo),
+Sem abas: tudo parte da Home. Telas de menu têm voltar (botão de metal),
 título e dinheiro no topo.
 
 Estilo "asfalto e perigo" (paleta própria): fundo grafite, cartões grandes em
@@ -229,14 +229,19 @@ nome do app é Zombie Road: o logo tem "ZOMBIE" em verde-limão, "ROAD" em
 branco e uma faixa de asfalto com a linha tracejada amarela. O ícone e o
 splash mostram o zumbi comum de frente, grande, na estrada ao pôr do sol.
 
-Acabamento "Clash 2D": títulos, números e botões em Lilita One com contorno
-grosso e sombra; textos corridos em Rubik. Botões, cartões e painéis são
-"gordinhos": contorno escuro, espessura embaixo (afunda ao tocar) e faixa de
-brilho em cima. Cartas com moldura dourada, gota de custo no canto e faixa
-com o nome. Personagens com cabeça grande, volume em degradê, luz de borda e
-contorno escuro em volta da silhueta inteira; 8 quadros por animação, com
-antecipação e esticar/achatar. Arenas com chão quadriculado em dois tons.
-Tudo gerado por código.
+Acabamento atual: pixel art RPG detalhada, com materiais, iluminação e cores
+terrosas na Fazenda, adaptadas aos demais mundos. Os 45 personagens usam folhas
+com três vistas e oito poses por vista, registro estável do corpo e amostragem
+nearest; o motor mantém posições contínuas. Todos os cenários preservam uma área
+de circulação livre e decoração inferior fora do mundo lógico. As três bases
+(normal, blindada e espacial) têm quatro estados de dano cada.
+
+A interface usa painéis de metal/latão, bordas retas, relevos curtos, texturas
+sutis, títulos e números Rubik Black, corpo Rubik Medium/Bold. Cartas conservam
+moldura, custo e nome com retratos derivados da mesma arte do campo. Home e
+identidade de instalação seguem o novo conjunto. A geração cartoon descrita nos
+marcos históricos continua apenas como comparação de desenvolvimento.
+Detalhes e validação: `docs/pixel16/PRODUCAO.md`.
 
 ### Home
 

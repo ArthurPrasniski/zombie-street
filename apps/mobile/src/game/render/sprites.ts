@@ -3,11 +3,18 @@ import { Asset } from 'expo-asset';
 import { useEffect, useState } from 'react';
 
 import layout from '@/game/render/spriteLayout.json';
+import {drawDetailedFrame,drawDetailedBase} from './pixel16/drawDetailed';
+import type {DetailedSheet,DetailedBase} from './pixel16/detailedLayout';
+import {DETAIL_SHEETS,DETAIL_LAYOUTS,DETAIL_BACKGROUNDS,detailedBaseFor,combatViewportHeight} from './pixel16/production';
 import type { TroopId, WorldId, ZombieId } from '@/game/types';
 
 export type UnitId = TroopId | ZombieId;
 
 export interface SpriteSet {
+  detailedUnits?: Partial<Record<UnitId,DetailedSheet>>;
+  detailedBase?: DetailedBase;
+  viewportHeight?: number;
+  pixelBackground?: boolean;
   background: SkImage | null;
   base: SkImage | null;
   /** Só as unidades da partida (tropas do deck e zumbis do mundo); as outras ficam de fora. */
@@ -97,10 +104,12 @@ const BASES: Record<WorldId, number> = {
 };
 
 async function loadImage(module: number): Promise<SkImage | null> {
+  try {
   const asset = Asset.fromModule(module);
   await asset.downloadAsync();
   const data = await Skia.Data.fromURI(asset.localUri ?? asset.uri);
   return Skia.Image.MakeImageFromEncoded(data);
+  } catch { return null; }
 }
 
 const EMPTY: SpriteSet = { background: null, base: null, units: {} };
@@ -109,26 +118,30 @@ const EMPTY: SpriteSet = { background: null, base: null, units: {} };
  * Carrega o cenário e a base do mundo e as sheets das unidades da partida. Enquanto não
  * chegam, o render usa as formas provisórias.
  */
-export function useSprites(world: WorldId, units: UnitId[]): SpriteSet {
-  const [sprites, setSprites] = useState<SpriteSet>(EMPTY);
-  const key = `${world}|${units.join(',')}`;
+export function useSprites(world: WorldId, units: UnitId[], classic=false): SpriteSet {
+  const [sprites, setSprites] = useState<SpriteSet&{request?:string}>(EMPTY);
+  const key = `${world}|${units.join(',')}|${classic?'classic':'detailed'}`;
   useEffect(() => {
     let alive = true;
-    const ids = key.split('|')[1].split(',') as UnitId[];
-    Promise.all([loadImage(BACKGROUNDS[world]), loadImage(BASES[world]), ...ids.map((id) => loadImage(SHEETS[id]))]).then(([background, base, ...sheets]) => {
+    const ids = [...new Set(key.split('|')[1].split(',').filter(Boolean))] as UnitId[];
+    const detailedUnits=classic?{}:DETAIL_LAYOUTS;
+    const backgroundModule=classic?undefined:DETAIL_BACKGROUNDS[world];
+    const detailedWorld=backgroundModule!==undefined;
+    const detailedBase=detailedBaseFor(world);
+    Promise.all([loadImage(backgroundModule??BACKGROUNDS[world]), loadImage(detailedWorld?detailedBase.image:BASES[world]), ...ids.map((id) => loadImage((classic?undefined:DETAIL_SHEETS[id])??SHEETS[id]))]).then(([background, base, ...sheets]) => {
       if (!alive) return;
       const loaded: Partial<Record<UnitId, SkImage>> = {};
       ids.forEach((id, i) => {
         const image = sheets[i];
         if (image) loaded[id] = image;
       });
-      setSprites({ background, base, units: loaded });
+      setSprites({ request:key,background, base, units: loaded, detailedUnits, detailedBase:detailedWorld?detailedBase.layout:undefined, viewportHeight:classic?900:combatViewportHeight(world),pixelBackground:detailedWorld });
     });
     return () => {
       alive = false;
     };
-  }, [key, world]);
-  return sprites;
+  }, [key, world,classic]);
+  return sprites.request===key?sprites:EMPTY;
 }
 
 /**
@@ -136,8 +149,9 @@ export function useSprites(world: WorldId, units: UnitId[]): SpriteSet {
  * `row` é a linha da vista (frente, costas, perfil); `flip` espelha (perfil olhando para a esquerda).
  * O tamanho do quadro em pixels vem da própria imagem (o Brutamontes tem quadros maiores).
  */
-export function drawFrame(canvas: SkCanvas, image: SkImage, frame: number, row: number, x: number, y: number, scale: number, paint: SkPaint, flip = false): void {
+export function drawFrame(canvas: SkCanvas, image: SkImage, frame: number, row: number, x: number, y: number, scale: number, paint: SkPaint, flip = false, detailed?:DetailedSheet): void {
   'worklet';
+  if(detailed){drawDetailedFrame(canvas,image,frame,row,x,y,scale,paint,flip,detailed);return;}
   const px = image.height() / ROWS;
   const size = layout.box * ART_UNIT * scale;
   const src = Skia.XYWHRect(frame * px, row * px, px, px);
@@ -153,8 +167,9 @@ export function drawFrame(canvas: SkCanvas, image: SkImage, frame: number, row: 
 }
 
 /** Base: faixa da largura do campo, embaixo, com a frente do muro em BASE.frontY. */
-export function drawBaseFrame(canvas: SkCanvas, image: SkImage, frame: number, paint: SkPaint): void {
+export function drawBaseFrame(canvas: SkCanvas, image: SkImage, frame: number, paint: SkPaint, detailed?:DetailedBase): void {
   'worklet';
+  if(detailed){drawDetailedBase(canvas,image,frame,paint,detailed);return;}
   const b = layout.base;
   const w = image.width() / b.frames;
   const src = Skia.XYWHRect(frame * w, 0, w, image.height());

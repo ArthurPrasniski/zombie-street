@@ -1,0 +1,3494 @@
+{
+  "schema": 1,
+  "groups": {
+    "identity": 10,
+    "bestiary": 30,
+    "cards": 24,
+    "mascots": 2,
+    "radio": 4,
+    "sprites": 45,
+    "ui": 25,
+    "worlds": 24
+  },
+  "webAvailable": true,
+  "routes": [
+    "apps/mobile/app/_layout.tsx",
+    "apps/mobile/app/achievements.tsx",
+    "apps/mobile/app/bestiary.tsx",
+    "apps/mobile/app/combat.tsx",
+    "apps/mobile/app/deck.tsx",
+    "apps/mobile/app/diary.tsx",
+    "apps/mobile/app/expedition.tsx",
+    "apps/mobile/app/garage.tsx",
+    "apps/mobile/app/index.tsx",
+    "apps/mobile/app/missions.tsx",
+    "apps/mobile/app/pass.tsx",
+    "apps/mobile/app/pixel-pilot.tsx",
+    "apps/mobile/app/play/[...path].tsx",
+    "apps/mobile/app/prepare.tsx",
+    "apps/mobile/app/purchases.tsx",
+    "apps/mobile/app/settings.tsx",
+    "apps/mobile/app/shop.tsx",
+    "apps/mobile/app/stages.tsx",
+    "apps/mobile/app/weekly.tsx"
+  ],
+  "renderModules": [
+    "apps/mobile/src/game/render/animation.ts",
+    "apps/mobile/src/game/render/camera.ts",
+    "apps/mobile/src/game/render/drawEffects.ts",
+    "apps/mobile/src/game/render/drawScenario.ts",
+    "apps/mobile/src/game/render/drawShots.ts",
+    "apps/mobile/src/game/render/drawSpecials.ts",
+    "apps/mobile/src/game/render/drawSpells.ts",
+    "apps/mobile/src/game/render/drawWeather.ts",
+    "apps/mobile/src/game/render/drawWorld.ts",
+    "apps/mobile/src/game/render/fxShapes.ts",
+    "apps/mobile/src/game/render/GameCanvas.tsx",
+    "apps/mobile/src/game/render/pixel16/__tests__/draw.test.ts",
+    "apps/mobile/src/game/render/pixel16/assets.ts",
+    "apps/mobile/src/game/render/pixel16/detailedLayout.ts",
+    "apps/mobile/src/game/render/pixel16/draw.ts",
+    "apps/mobile/src/game/render/pixel16/PixelCanvas.tsx",
+    "apps/mobile/src/game/render/sprites.ts"
+  ],
+  "assets": [
+    {
+      "asset": "apps/mobile/assets/images/android-icon-background.png",
+      "group": "identity",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 212844,
+      "sha256": "0c8b5396f16d4d90ba2ad7074fa39578675a14138a27a863f97660431ac59fe5",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/android-icon-background.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/android-icon-foreground.png",
+      "group": "identity",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 151938,
+      "sha256": "c79e6326621dc733abcef777267727c3fb9b82fe8cdd7d4ca480eb73fe2253c4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/android-icon-foreground.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/android-icon-monochrome.png",
+      "group": "identity",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 23012,
+      "sha256": "c4960f55969212e3e91a94406d19d2681d2d4730d8222698c0079c106602158d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/android-icon-monochrome.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/android.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 30520,
+      "sha256": "891644c3ce55374211ccabf8c3b42be1395fdddaea19f8917d74024650c753a4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/android.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/astronaut.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 30854,
+      "sha256": "30d1d2a60bbf99727da91ed1a564b0798de704cc42c6b7b72698ebd81c49000d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/astronaut.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/bloater.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 32210,
+      "sha256": "b8e055207d812d4bd5ccf6f726a18826ca9cd2453afbd3db7b2cf71c80eb6f27",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/bloater.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/brute.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 33339,
+      "sha256": "5b393fb078f315328b27614f310bfd230e0f395b75b93cef4d68cfb9f786d88d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/brute.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/colossus.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 31015,
+      "sha256": "aec07a6615bcbd2b42824118b28ca585c7d5203f3f95967a82649a2eb5d5be78",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/colossus.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/commander.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 28541,
+      "sha256": "b25e10abf78037c622fa70c4443b54e49377308add6b79687684160b4ff4f5b3",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/commander.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/cop.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29884,
+      "sha256": "6656f1cff986570e7c1a52847d81d4ad2ab72fa3157d2305b9a261ef56245114",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/cop.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/cosmonaut.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 31810,
+      "sha256": "184fff01c66e9266225c96651f094e788761490467603a932448f64fd0d3bdca",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/cosmonaut.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/digger.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29649,
+      "sha256": "df11be64c11a2e802be947fe8318ccf42e7ac997ddbdae640aa1df422c467eaf",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/digger.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/director.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 33968,
+      "sha256": "98bd64fa52b9a077c4d96fadcfc9f96f08cf58accee1b946035d6ab587b20f2b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/director.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/frost.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29209,
+      "sha256": "c292265e79d78009d77cc7781324453a1f58570a103b992673f7e82d9cd7ba28",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/frost.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/general.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 32597,
+      "sha256": "2761c0fc160800ac150d93f14e7f6026f5893b80b8470ea68311afd359814020",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/general.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/grunt.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29872,
+      "sha256": "4a1c555ae5e15cf648fd77160e26ead42c7a427635de048cf89420b73f2d2750",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/grunt.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/hulk.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 32418,
+      "sha256": "4dc586563edea178979bfcb1756f5fefda3f909971f6ecbf570cb9c7bdb9f205",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/hulk.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/larva.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29879,
+      "sha256": "a85a5b66861f05806afb3efa7df47eb81b120046845cabfcb957f5e3b86f80e4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/larva.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/lunarWorm.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 28131,
+      "sha256": "5c5ead2673b4749d907a81acb100b3d4a8ea5bf1c9c501f0041d4dd28ea38727",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/lunarWorm.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/marsTitan.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 34367,
+      "sha256": "a4bd11c7be30e03560bd972cf7a797129b6867fd0cda19138011cc04e97df832",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/marsTitan.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/mutant.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 30056,
+      "sha256": "04fd2d03fe248c0a8dd037f6288685d54011a11ddea2c79157df98edd0b531a4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/mutant.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/padChief.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29354,
+      "sha256": "7a166f73bac3dec41bc072a99ca6657e05c35207e8ab38e2f457698239833a2e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/padChief.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/pod.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 19342,
+      "sha256": "110dff8a0869700e140e92ef4898543b235b43fcdfc9e72693a13e8596382823",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/pod.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/queen.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 36950,
+      "sha256": "020555697bea9951edc307073268a30e7fb5dc971bab7ea197ec6b5b3a76c8b8",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/queen.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/riot.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 32836,
+      "sha256": "fd0b3be0e44b03d46cddef199146114033298c23af9b83cee537557f0ad1db40",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/riot.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/runner.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 26283,
+      "sha256": "1078031aeb6f7732a12612f0b0d7aa5a32d2dcc0656c0c3b9e54a09dbc9273f1",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/runner.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/shielder.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 24252,
+      "sha256": "a3c62830799e2fc5c1f2d4091bc513a9e9a508500ba485f0226aae90d9edd8be",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/shielder.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/spitter.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 29917,
+      "sha256": "466be7e98178ca43ed9b2f57f78b9677ef8731def6c1371bdb26027e59aafeb0",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/spitter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/splitling.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 28350,
+      "sha256": "a34ec90d78665cfc85be527e9d950a2aa30d02992e32c5697d8418d0d1022bd8",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/splitling.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/splitter.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 31754,
+      "sha256": "24bc6dd9587c8eced02184632eb6631a282ef10f3d870fbe7374fb1d87cd67c1",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/splitter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/walker.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 30366,
+      "sha256": "495ca4194318e452edb3304e6a7a0f1c8ae6e08819dd70522a383eeabc3ad243",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/walker.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/xeno.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 26278,
+      "sha256": "48b95874dfafa9f412e5c41b4e591fa3df6017a8a44b836b0d265f389b5167cb",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/xeno.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/bestiary/yeti.png",
+      "group": "bestiary",
+      "width": 256,
+      "height": 256,
+      "bytes": 30584,
+      "sha256": "08378bd47b903f822eb1ed13a03500510352a5deee90a0288b55db9390ace964",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/bestiary/zombieInfo.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/bestiary/yeti.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/airstrike.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 26102,
+      "sha256": "daba7413bd68ea44092cbc828407a185d4d8ae101e896d8fe7771906e23e3a2c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/airstrike.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/barricade.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 32101,
+      "sha256": "4c438016ab83ed68bdf5f615c44226a8b5c89397012cb69f05f3d6093cc3eba7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/barricade.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/blackhole.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 53346,
+      "sha256": "2f60a0411ac989e8da6d323c4ec3854af451bc339cc46d71cbd17ff1508e64a7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/blackhole.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/chainsaw.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 36659,
+      "sha256": "b59fd731f605d2a4e2766d1a0f105521a81932df2635ea8d83d21880f855da6b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/chainsaw.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/crossbow.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 36023,
+      "sha256": "84fc14c6dfaece24856dbf6641d4abeba60775d3d9995e2ec14c03a5bb42058b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/crossbow.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/cryo.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 20588,
+      "sha256": "87f429fc6aa8afeb2d26d9aadc86dc4cffd3b3e84454423657bb2bf505a9e3ee",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/cryo.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/dog.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 26023,
+      "sha256": "65d25857abbad763f45406b7ae1aee6dc1b6c22a106028a61c9b7eb9dae7a17d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/cards/dog.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/cards/dog.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/drone.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 22024,
+      "sha256": "b787fbb1ecfba1984b3ced1cc32e39adbfc35741719028d1be1bfb2a05ae5676",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/drone.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/firefighter.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 35644,
+      "sha256": "8ecfa3493814b0ef608af8d5d80ee6100077896bbe44bb18214e4d5dd2a977a9",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/firefighter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/forcefield.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 29634,
+      "sha256": "80bbaad5485843fe5909f06f011e268cec1bb1f11682a8d9f0da9015fdb4ded0",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/forcefield.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/grenade.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 29786,
+      "sha256": "f4337570738baf1aaf171c33ed23b5d5b8988ff7bb4d51c713fa35b30ea3a4b3",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/grenade.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/landmine.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 24180,
+      "sha256": "8a2715fb341d6a11e88cde7a54f3b612d77ec45a9a05728d896018840ffa7dfc",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/landmine.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/laser.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 33617,
+      "sha256": "6961d0c960c717150d1b3dd99ef7cbc672afef385e104464ce3e3c293174abd0",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/laser.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/medic.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 33642,
+      "sha256": "caa7a0317dbf0ba3710e4d7ef57fcc1e3df9c5db651f2276d1b9f438edfe3d5e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/medic.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/medkit.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 21708,
+      "sha256": "cf686d047e880a18b65e2087cc3287f15123b8ea2ee5ba849dbb0580a5d3005e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/medkit.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/molotov.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 18735,
+      "sha256": "1078c8101bb23b2641d886a0bc6e45df4c84aa209e7e607e50521830e2662857",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/molotov.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/orbital.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 18802,
+      "sha256": "d638063d8622dc13964d3225a2c1dc366515b00eedf0f4948c47ccf2fdec954d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/orbital.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/sheriff.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 38111,
+      "sha256": "17ce0fe5643d3fdc40483453425eae77be888e43f9576a727053106ecb696017",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/cards/sheriff.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/cards/sheriff.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/shotgun.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 35732,
+      "sha256": "604cb3b4c1dcc6ae06c24831e3fcb52612fba7c88c40d571fe35789a8fe36cec",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/shotgun.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/sniper.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 37822,
+      "sha256": "b4cc42adeb27f529ef366ae468477ba2b7daf7a1f16d122c12a5d258e2f5c9c3",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/cards/sniper.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/cards/sniper.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/soldier.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 34958,
+      "sha256": "d2fcd2d8d44096acbfe06e3ccb8c1c6bbc4fa54760cd6978298fb7d034c8e481",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/soldier.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/tesla.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 49509,
+      "sha256": "07185c1be812556150dfa6e2633dea319541b2ca549d21b7f0ce7b8db596fa8d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/cards/tesla.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/cards/tesla.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/titan.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 37355,
+      "sha256": "09e4c3b68f4439d30cffd91919eabc08a70e6dc2203cda1c29788a2e5439f5b3",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/titan.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/cards/turret.png",
+      "group": "cards",
+      "width": 256,
+      "height": 256,
+      "bytes": 23213,
+      "sha256": "857ebc1e608619bee5d32a22c696c2db302721a82a12cf894447c330e64d3a26",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/cards/CardView.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/cards/turret.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/favicon.png",
+      "group": "identity",
+      "width": 48,
+      "height": 48,
+      "bytes": 5214,
+      "sha256": "8f3e940301b3156b68e3238d4ee29fdf910552bf8db223211d80d2a5b600a626",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/favicon.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/google-g.png",
+      "group": "identity",
+      "width": 200,
+      "height": 204,
+      "bytes": 33661,
+      "sha256": "d1ce9c2af0b10a7333abc99bc706f9a6a199e5b65bf3e3009624f076b8638e6a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/account/ProviderLoginButtons.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/google-g.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/icon.png",
+      "group": "identity",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 333030,
+      "sha256": "1bec32d48f80c8b4002d32d2579823aed199200d687f9708e63ff4f17923e215",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/icon.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/icon.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/lobby.png",
+      "group": "identity",
+      "width": 1080,
+      "height": 1185,
+      "bytes": 263491,
+      "sha256": "2b7d1ef04061ae88113ae63de132d2a079e154217b7c739f54faf8d8f6c43332",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/app/index.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/lobby.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/lobby.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/logo.png",
+      "group": "identity",
+      "width": 641,
+      "height": 150,
+      "bytes": 20237,
+      "sha256": "f3ce7b97d041420b8c392b2b896e79414b946f03baa47b5d36b5ceb51bdb89e9",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/app/index.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/logo.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/logo.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/mascots/truck.png",
+      "group": "mascots",
+      "width": 512,
+      "height": 512,
+      "bytes": 84559,
+      "sha256": "333735b06bf9c4055781d041eaecad12dc52a5df26a67f151cabfbf9bf155bf7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/app/garage.tsx",
+        "apps/mobile/scripts/art/buildPlayFeatureGraphic.mjs"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/mascots/truck.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/mascots/truck.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/mascots/walker.png",
+      "group": "mascots",
+      "width": 512,
+      "height": 512,
+      "bytes": 74598,
+      "sha256": "d64a7f92845fd015c8f9bc3c22c0c218595a363f550c73160477d918e25ea241",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/home/HomeShortcuts.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/mascots/walker.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/notification-icon.png",
+      "group": "identity",
+      "width": 96,
+      "height": 96,
+      "bytes": 1339,
+      "sha256": "a5e7fd620b523fb9234e6b291be33da98190d5fbb44ff9fd16f199f07dbb6b68",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/notification-icon.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/radio/sheriff.png",
+      "group": "radio",
+      "width": 256,
+      "height": 256,
+      "bytes": 36410,
+      "sha256": "da72935a83a54c55e98fc7a63fe82c516b65c07d5c178049dbd1d820bdb8a619",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/radio/radioArt.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/radio/sheriff.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/radio/sniper.png",
+      "group": "radio",
+      "width": 256,
+      "height": 256,
+      "bytes": 34038,
+      "sha256": "3a80392dcb23a63dc2e7c012d3658f101e9a5ae506495491b7daa65eb0e498f6",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/radio/radioArt.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/radio/sniper.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/radio/static.png",
+      "group": "radio",
+      "width": 256,
+      "height": 256,
+      "bytes": 20535,
+      "sha256": "05e50c2fbbd2e0d5784fa27b993d4fd9f1d7695c386df2f94b74fbe95bb85a0a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/radio/radioArt.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/radio/static.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/radio/vega.png",
+      "group": "radio",
+      "width": 256,
+      "height": 256,
+      "bytes": 33421,
+      "sha256": "5acb16111379386e9c4d44ee13c979c15999615d3f551ec7f74217f144854322",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/portraits.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/radio/radioArt.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/radio/vega.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/splash-icon.png",
+      "group": "identity",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 252842,
+      "sha256": "68cf66c7af9a95bba03bf480139c132bbbeef31d11b647586a50f3016a20ad97",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/brand.mjs",
+        "apps/mobile/scripts/art/lobby.mjs"
+      ],
+      "consumers": [],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/splash-icon.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/android.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 598169,
+      "sha256": "fa9ce43103ec7b5831d274affe84469eded4cc765280442923ff2d00552a527b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/android.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/astronaut.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 603970,
+      "sha256": "53a69486aeafdc2390cd85f3372dc81af1d74e9d20b352928e8a7156373d3347",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/astronaut.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/barricade.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 113103,
+      "sha256": "996ed62bdb0c3194a2c2d70c9667de6ff1d37a58c998c1bb38f7de7a9c1fe6fd",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/barricade.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 1000,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/bloater.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 610064,
+      "sha256": "64a4a6e2b4e06a2fb3f771da5dc9e7f5fbc8a14d7a437f44271d17814e49358e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/bloater.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/brute.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1396994,
+      "sha256": "2f11b65f81c219f12a001112b2426ec1349491a2d6551bbe3ef1cf3a8d54ca9c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/brute.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 840,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/chainsaw.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 628381,
+      "sha256": "e50668aa3af1a50d403286fda24f4aa186af4d04bf65daead48ee038c002eefc",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/chainsaw.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 1000,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/colossus.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1383222,
+      "sha256": "2319676a4af098bafdf38ad046520b14b2fc683fa114057cdf2c11fb8f6c91fa",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/colossus.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/commander.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1332302,
+      "sha256": "418501b0d1cde357255b9e2695d23fd33edf77512bd1684c931737f68c44d9ed",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/commander.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/cop.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 571076,
+      "sha256": "41276ae79eb3b0db54079e0018c5deaacd1b08868040ed06def337c8b76b99b4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/cop.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/cosmonaut.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 656947,
+      "sha256": "f0be5deeb80f6f45a0f671a3f688efcd3bdd0452197618b1072c39e7f81ba9fc",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/cosmonaut.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/crossbow.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 595674,
+      "sha256": "2d48e1c485079bfcfd267d2894da183097f5729017bd17af86d64fa6c89959f0",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/crossbow.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/digger.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 588401,
+      "sha256": "8c92414a281e3e573ff7d1afc54754f0699471fb9a37e34b89b6d8bb97d92343",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/digger.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/director.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1387057,
+      "sha256": "2e2fac6cec94a22b53ac81d14c9d8a5fa3363730310843a0282cbe146e3b4570",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/director.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/dog.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 545932,
+      "sha256": "b80aaec83b8752c341454224325e47f2ffc365cab76b1119f1aa8a3948a4cd5d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/dog.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 1000,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/drone.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 442012,
+      "sha256": "32b66c1d2e076c1a0f5910357e39a37f166c146fde0c21adefc247867d5304bc",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/drone.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/firefighter.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 609793,
+      "sha256": "9ace61ae307146accdb023a2b5bc26dc87a2cd0500c99fa3a59aeb05b858a7a9",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/firefighter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/frost.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 590641,
+      "sha256": "11bf27e82a02e551c09d0f08f860c5f8755ce50f5d0d18353ad54c864b6f28a6",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/frost.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/general.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1402643,
+      "sha256": "f0b42ac9610f6f32fb7a0444e2cb8c03943e79223d5bb54a525d2c6bef89fbf8",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/general.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/grunt.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 586957,
+      "sha256": "0dfcddf96a84d04ae7159b232cc999ded59e4aba2363dd9a39b3061ea5b6156c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/grunt.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/hulk.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1411524,
+      "sha256": "71a736d08e290d5622060a4719f59338e15ab90f0eb40ab2d8cce995ba8d8355",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/hulk.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/larva.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 586515,
+      "sha256": "44544b65ac9240808ab6ef41ae7449be5227ac827089df54a03b7f0d786ebdc9",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/larva.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/laser.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 555438,
+      "sha256": "37b9aa76a3befe9554c289bf07b760ed97bcd836efc7eb46222b1ede16204974",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/laser.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/lunarWorm.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 999395,
+      "sha256": "6352dab87926a67cedaac4bd34f4851ccd78cb440bfd6f384ef237864b608ec7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/lunarWorm.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/marsTitan.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1543685,
+      "sha256": "48c03957c108069d98be73720040540ed9d58047de137d70b88132e7abae8aac",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/marsTitan.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/medic.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 561305,
+      "sha256": "894d3881ece6f1db180fe2e1ba9b5ce9c10fb602eb6f013632d4f349ae2cdec6",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/medic.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/mutant.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 582027,
+      "sha256": "1e671860f86285f29b958bbf8bf2870bf03cbcee28047a754a665ed20c74647d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/mutant.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/padChief.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1338893,
+      "sha256": "acb3c39732cc2278edc1406a2634e81e0a81274767b9a6fd6568722b0d37c1ea",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/padChief.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/pod.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 344403,
+      "sha256": "2d663ce8b0ffe730dd9bead5c3a268c168cf2defb62edb34168ea3b4f1f1338d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/pod.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/queen.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1633692,
+      "sha256": "7a1ce79e2406670948597599e65f0db944d81fa88247a4949f6daa6358e4f02a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/queen.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/riot.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1436437,
+      "sha256": "8e6a8441e6af49759bc5594cd8e7c56b9da3086cbcdaa1380d273ad5a4ec060e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/riot.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/runner.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 544259,
+      "sha256": "0645ecafe3a5dc92e02cab1e78a798f7849185e0668808978c6497a99e152a36",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/runner.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 840,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/sheriff.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 598586,
+      "sha256": "a832e4bc42e6f6f7bd8f3793011a83dc1097bbec9071db9c8f98a56c01da2068",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/sheriff.png",
+      "status": "pilot",
+      "targetSource": null,
+      "targetDimensions": {
+        "width": 1000,
+        "height": 120
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/shielder.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 538944,
+      "sha256": "e758e881e11c7112cd1c85b6f31ec07b831ce454c8cae4606bd59c00e43cbdac",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/shielder.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/shotgun.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 586189,
+      "sha256": "b1e30a736fa0735aa401a2780fdbea9ead9c978408287b925510e6f8782da5f9",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/shotgun.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/sniper.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 592133,
+      "sha256": "0d7d1a787d8a1038caef8f88862fca4ec301b412ca46f0f6e36a26367e2f26a8",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16-detailed/sniper.png",
+      "status": "detailed-pilot",
+      "targetSource": "docs/pixel16/detailed/provenance.json",
+      "targetDimensions": {
+        "width": 2048,
+        "height": 768
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/soldier.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 565744,
+      "sha256": "e38f889af358d453c43a96d05a638538a72ef94ca71cc16900d1758630a0ba27",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/soldier.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/spitter.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 580805,
+      "sha256": "dd7fd9c3aea28b23db5ee5ff8a0b8899f933290d28554a6231c44068329f72ad",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/spitter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/splitling.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 544837,
+      "sha256": "816c582a2e987ce88f95fa98314a1757959a2de33fc10dd90b684919057a4e7b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/splitling.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/splitter.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 601794,
+      "sha256": "429759cd3823e736ceb672ec3b09d0d860d03bebe25aa1ec44f3069909348004",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/splitter.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/tesla.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 802467,
+      "sha256": "ddba8a422d5f3d8debef6dd3206d69df85833dfdc8ee1e10daec26637391cbd4",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/tesla.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/titan.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 698545,
+      "sha256": "989a7ea06b59a1bb83dfb12b724139d18b10054ab1eeb2a8142d02d9f221698f",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/titan.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/turret.png",
+      "group": "sprites",
+      "width": 4000,
+      "height": 480,
+      "bytes": 381074,
+      "sha256": "53e25ab76da095b51fce28f46d363f66c01cb04491570924c3900808bf8297d2",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/turret.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/walker.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 599218,
+      "sha256": "d0dcd1e2081d89bed7270ee44869d9866420461054abf7292940ca59d8b85f91",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16-detailed/walker.png",
+      "status": "detailed-pilot",
+      "targetSource": "docs/pixel16/detailed/provenance.json",
+      "targetDimensions": {
+        "width": 2048,
+        "height": 768
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/xeno.png",
+      "group": "sprites",
+      "width": 3360,
+      "height": 480,
+      "bytes": 545924,
+      "sha256": "45c91b1ca45ba61294bab57d6c855222f7e9ab3bd396b780b4176e032402f76c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/xeno.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/sprites/yeti.png",
+      "group": "sprites",
+      "width": 6048,
+      "height": 864,
+      "bytes": 1265763,
+      "sha256": "8d4bd9acc61da4a9458b8347f9be76d3814f8026de96e3dd920e9df9fb5e3579",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/units.mjs",
+        "apps/mobile/scripts/art/clash.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/sprites/yeti.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/back.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 3913,
+      "sha256": "c3b0b88405e2fb776c52f886a64d656aad509fcd08db6f60eb9a07309a83c6c5",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/back.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/bag.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 7312,
+      "sha256": "5fb88f48c5cc8b6bc6676101f5ce48718d196610ef08a7e7a2b7ae48ff790e15",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/bag.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/blood.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 7103,
+      "sha256": "6285d0b0a5df8857da5efa6558cf78ef027bdaaedc980cfa41154627cd6f987a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/blood.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/book.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 5519,
+      "sha256": "6517243c453e775b3164cc8a35a62ca3c62a6abc780ca405766c15094a67cc70",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/book.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/bullet.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 5036,
+      "sha256": "e0e1c7e6e89cfcb7864737b3f69019ea54ec9b089e0c2fd163e28e9a1a604e6e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/bullet.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/check.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 9311,
+      "sha256": "fa77b785f8e967fbf1047cc25f6b27c82835b6df137444cc7a397e7e16b3649c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/check.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/coin.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 8398,
+      "sha256": "7ff7717bf2fcc4fa3b734cb11408b9b51c20c93c37ed2e0ad97bda7be8c1fca2",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/coin.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/crown.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 8027,
+      "sha256": "a54c1fd6ebc078dbf0f733e2231c88a09cc7d9b65016c6394ec3e394814d1c2e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/crown.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/evo.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 10829,
+      "sha256": "88e7a6fa09e41419271abff18bd0b770d6be1a3e230a853dd3d5b64e4e8b836d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/evo.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/gear.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 8465,
+      "sha256": "bc3ea3e8ec20760acac626767be0a633c974bf8e9ea7c511aa6189c56359bffc",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/gear.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/gem.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 6931,
+      "sha256": "d6d8e558b15687279ad5bd4d3139e79f8415bcd28b6823188f869cf41a175e67",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/gem.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/hourglass.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 6373,
+      "sha256": "17862a7199af40373727a03f3568ef5ac313be8f8ed1ed9c9be324364bb2179f",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/hourglass.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/lock.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 6807,
+      "sha256": "79710531f9b8a60f105f9cbafa49331c2e907bd6ccfbeb5045f2422c56217b0b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/lock.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/next.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 3821,
+      "sha256": "120dc434bcfb93fb18178b9fb73a25bc95aec8e9ab18037e319ad0a8f013bdee",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/next.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/pause.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 2982,
+      "sha256": "bae61017eed843ab38b490407d4efc31ad96534834bf427f8fe9fd46cabba87d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/pause.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/play.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 3702,
+      "sha256": "0d02545ed330b5431d75531273de07ac22dc09a755470f2d054f764385857691",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/play.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/radio.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 5856,
+      "sha256": "53725cd13ec01ebd3b7a5741d4e4865974676a604bf647b5a96f5069a5e36cc0",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/radio.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/shield.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 8159,
+      "sha256": "d7ff726786ffe21a6f3ad249429a543b0075f226087b49957ce4df56962d499e",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/shield.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/skull.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 4938,
+      "sha256": "f77f0040ecebbcdb32a1987b1953e82013e37d214e2950484af9a236a37bd87d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/skull.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/star.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 7643,
+      "sha256": "09bf0237fef359efced5b088b72310d381cdd1e37de8b5338a114f536503254f",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/star.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/starEmpty.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 5377,
+      "sha256": "4a1c7832f724ab47b93db17b1fffcd521393bf1d55f3287247a11992af9fe75a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/starEmpty.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/trophy.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 7502,
+      "sha256": "3cdcff7b86c7798ce2f03373fdb8eb3a897bccbda660b8eeaf647e438d9b86b7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/trophy.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/tv.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 6956,
+      "sha256": "b601db15fb8b3f3b747af30ee07819068fd5920100d800418d5da7e7caa8a206",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/tv.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/up.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 9176,
+      "sha256": "a0d76dd57315e5ba9fa12f11e36a2ae9c3e4f0432a12eae1bf1a34b1e9e9a160",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/up.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/ui/wrench.png",
+      "group": "ui",
+      "width": 96,
+      "height": 96,
+      "bytes": 6559,
+      "sha256": "2c04b49371f5dc0eac2e51c50acb0373e58ac9b5d5334ac3bc9e9583fb27f403",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/icons.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/ui/icons.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/ui/wrench.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/city-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 200271,
+      "sha256": "bf7bf075b8bb6cc6debca04417e6f06b3a592cb2eb8b4505edf04acc53ff7321",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/city-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/city.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 385634,
+      "sha256": "cafcd484123f6c00f01d4640948740d137956dc13496c4e7985bb27fa503bfe6",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/worlds/city.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/worlds/city.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/desert-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 208316,
+      "sha256": "c25f68b11ab687123fe096c04b3dd83d3aad6c89cb50031c5eedaf9bcb1d3a62",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/desert-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/desert.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 363719,
+      "sha256": "cd33838ae158aa3e2c2f50effc5e8cf5762e34dda1cae96dca939137f1a22850",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/desert.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/farm-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 204805,
+      "sha256": "b5e45e69bdea52017457e80fff241440ef6474f617a0ed7e5ba7dd929f7b1855",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16-detailed/farm-base.png",
+      "status": "detailed-pilot",
+      "targetSource": "docs/pixel16/detailed/provenance.json",
+      "targetDimensions": {
+        "width": 1254,
+        "height": 1254
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/farm.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 497129,
+      "sha256": "92077de41361ded24fa68838769a612aa4dad1d4897e86f2182f20ca73056d4f",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/worlds/farm.png"
+      ],
+      "target": "apps/mobile/assets/pixel16-detailed/farm.png",
+      "status": "detailed-pilot",
+      "targetSource": "docs/pixel16/detailed/provenance.json",
+      "targetDimensions": {
+        "width": 948,
+        "height": 1659
+      }
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/hive-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 150270,
+      "sha256": "e35c9c2f9d182b5c02d2a535e2eff733e81009518b0c64289cd4e4313c08b24b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/hive-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/hive.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 241595,
+      "sha256": "8d743070df4bf50551fc5ae289aa86df82e93dd0107d354f2d65441b9389dc43",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/hive.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/lab-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 207210,
+      "sha256": "5f9529ef7b29c7db2eb1438745ff707cd2cad0f968dd739e1d7bbeaa1e6f691b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/lab-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/lab.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 228590,
+      "sha256": "cf3aa2034f30c5b95ab326f1ee8341dada93d75bfb069ba6a218513eb9605e2a",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/worlds/lab.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/worlds/lab.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/launch-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 202702,
+      "sha256": "9d6328a25f2b674c2ff14f3bd1791145c7fd8a8aa7878ff830ddfcf855d2abc8",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/launch-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/launch.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 357400,
+      "sha256": "228ede0a4f72ede919b6458ae975199534d7fa2b09f751499338f89d8d99949d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/launch.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/mars-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 156959,
+      "sha256": "d67cecc50071c5510558b3c7dca8df0607993ee8abe287b5276f7c2fd84bb1c7",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/mars-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/mars.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 129183,
+      "sha256": "948260998c8b86de92a081983131062466743d65b26c6e18a7b245b8402df30c",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/worlds/mars.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/worlds/mars.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/moon-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 155291,
+      "sha256": "5f547e135fb34e555255a7c37dbb802d53f65c37c5562be8f4a507546dca5fd1",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/moon-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/moon.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 151269,
+      "sha256": "1e4f76ace6de7453e95ba79362e0fc8090b4399271ff1f757bce43c0a398ab51",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [
+        "sites/zombie-road/dist/assets/worlds/moon.png"
+      ],
+      "target": "apps/mobile/assets/pixel16/worlds/moon.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/snow-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 215330,
+      "sha256": "e79cdde9ecd2baab65e7d8ff3813753ac86d02aabecc8555002a5fdb5b098bd6",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/snow-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/snow.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 384081,
+      "sha256": "9bb8dd49a2f081b941dd492a5512d93efb993215b12c7682be4b59eaf3c83835",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/snow.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/station-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 151912,
+      "sha256": "34c1244c9764a93ec9b8d1197122e59b1a344356d11daf1a815adfae258fb848",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/station-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/station.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 154496,
+      "sha256": "e556bd6fc05f1ba1c65c03c7e27f339348685b67ba65a7dd9d298b9fe81fee1b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/station.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/swamp-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 204208,
+      "sha256": "d4e2d6481225708e069600f17aa64726a404015ead83f2d3de3dab125584ad0b",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/swamp-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/swamp.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 480378,
+      "sha256": "f7efe3d78f8cc974504c78fac57c0d9159e73a508f2b5785080d048ef72bf33d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/swamp.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/tech-base.png",
+      "group": "worlds",
+      "width": 4800,
+      "height": 270,
+      "bytes": 193460,
+      "sha256": "eeb362b672bded48e884e56f00602edc0f4cb1b7a1ec88eb3a65c0523ce3950d",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/tech-base.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    },
+    {
+      "asset": "apps/mobile/assets/images/worlds/tech.png",
+      "group": "worlds",
+      "width": 1200,
+      "height": 1800,
+      "bytes": 325414,
+      "sha256": "5e71e8f04d579c9bbca8cef9726ac685b3b7a0e3af8a66bd94f7cc5846c05589",
+      "sources": [
+        "apps/mobile/scripts/art/build.mjs",
+        "apps/mobile/scripts/art/arena.mjs",
+        "apps/mobile/scripts/art/base.mjs"
+      ],
+      "consumers": [
+        "apps/mobile/src/game/render/sprites.ts",
+        "apps/mobile/src/ui/WorldBanner.tsx"
+      ],
+      "webCopies": [],
+      "target": "apps/mobile/assets/pixel16/worlds/tech.png",
+      "status": "planned",
+      "targetSource": null,
+      "targetDimensions": null
+    }
+  ]
+}

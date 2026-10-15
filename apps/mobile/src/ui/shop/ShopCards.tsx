@@ -58,7 +58,7 @@ const GemLabelIcon = () => <Image source={ICONS.gem} style={styles.small} />;
 const styles = StyleSheet.create({
   card: { flex: 1 },
   face: { alignItems: 'center', gap: 6, paddingVertical: 12, paddingHorizontal: 8 },
-  badge: { position: 'absolute', top: 6, right: 6, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 999, backgroundColor: colors.yellow, zIndex: 2 },
+  badge: { position: 'absolute', top: 6, right: 6, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 2, backgroundColor: colors.yellow, zIndex: 2 },
   pile: { flexDirection: 'row', height: 56, alignItems: 'flex-end' },
   gem: { width: 48, height: 48 },
   button: { alignSelf: 'stretch' },

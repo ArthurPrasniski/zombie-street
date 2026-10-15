@@ -57,7 +57,12 @@
     "art": "node scripts/art/build.mjs",
     "art:brand": "node scripts/art/buildBrand.mjs",
     "sfx": "node scripts/audio/build.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "art:pixel": "node scripts/pixel16/build.mjs",
+    "art:pixel:check": "node scripts/pixel16/check.mjs",
+    "art:pixel:inventory": "node scripts/pixel16/inventory.mjs",
+    "art:pixel:detailed": "node scripts/pixel16-detailed/build.mjs",
+    "art:pixel:detailed:check": "node scripts/pixel16-detailed/check.mjs"
   },
   "private": true,
   "jest": {

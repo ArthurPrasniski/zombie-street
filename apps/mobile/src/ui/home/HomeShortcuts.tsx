@@ -21,7 +21,7 @@ import { Badge } from '@/ui/kit/Badge';
 import { Card } from '@/ui/kit/Card';
 import { colors, radius } from '@/ui/theme';
 
-const WALKER = require('@/assets/images/mascots/walker.png');
+const WALKER = require('@/assets/pixel16-detailed/extras/walker.png');
 const FAN = [-14, 0, 14];
 
 /** Atalhos da Home: Deck (cartas em leque e quantas podem melhorar), Fases, Sobrevivência e os atalhos pequenos (2 x 2). */

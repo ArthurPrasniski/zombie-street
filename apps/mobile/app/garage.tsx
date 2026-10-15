@@ -12,7 +12,7 @@ import { AppText } from '@/ui/kit/AppText';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { colors } from '@/ui/theme';
 
-const TRUCK = require('@/assets/images/mascots/truck.png');
+const TRUCK = require('@/assets/pixel16-detailed/extras/truck.png');
 
 /** Oficina (GDD seção 17.3): a caminhonete e as três peças para melhorar com dinheiro. */
 export default function GarageScreen() {
@@ -23,11 +23,9 @@ export default function GarageScreen() {
         <ScreenHeader title={pt.garage.title} />
         <ScrollView contentContainerStyle={styles.list}>
           <View style={styles.hero}>
-            <View style={styles.glow} />
             <Image source={TRUCK} style={styles.truck} />
-            <View style={{ position: 'absolute', top: 145, width: 75, height: 8, backgroundColor: TRUCK_PAINTS[progress.truckPaint], borderRadius: 3 }} />
+            <View style={{ width: 75, height: 4, backgroundColor: TRUCK_PAINTS[progress.truckPaint], borderRadius: 3 }} />
             <AppText variant="small" color={colors.textMuted} style={styles.summary}>
-              <TruckPaints />
           {TRUCK_PART_IDS.map((part) => pt.garage.value(pt.garage.stats[part], statText(part, progress.truck))).join('  ·  ')}
             </AppText>
           </View>
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   list: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
   hero: { alignItems: 'center', paddingVertical: 8, gap: 6 },
-  glow: { position: 'absolute', top: 10, width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255, 201, 40, 0.12)' },
   truck: { width: 200, height: 200 },
   summary: { textAlign: 'center' },
 });

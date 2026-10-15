@@ -68,7 +68,7 @@ export function AchievementRow({ def, value, reached, reward, goal, onClaim }: P
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 14 },
   medals: { gap: 4 },
-  medal: { width: 16, height: 16, borderRadius: 8, borderWidth: 2.5, borderColor: colors.outline },
+  medal: { width: 16, height: 16, borderRadius: 2, borderWidth: 2.5, borderColor: colors.outline },
   texts: { flex: 1, gap: 3 },
   track: { height: 9, borderRadius: 5, borderWidth: 1.5, borderColor: colors.outline, backgroundColor: 'rgba(0, 0, 0, 0.35)', overflow: 'hidden' },
   fill: { height: '100%', backgroundColor: colors.accent },

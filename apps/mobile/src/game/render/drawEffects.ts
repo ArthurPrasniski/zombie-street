@@ -1,9 +1,9 @@
+import { pixelOval, pixelCircle, blob, flame, noise, OUTLINE, plus } from '@/game/render/fxShapes';
 import { PaintStyle, Skia, StrokeJoin, type SkCanvas, type SkFont, type SkPaint } from '@shopify/react-native-skia';
 
 import { DAMAGE_TEXT_TTL, DIRT_TTL, HEAL_TTL, SMOKE_TTL, SPIT_TTL } from '@/game/data/constants';
 import { flameJet, zap } from '@/game/render/drawShots';
 import { frost } from '@/game/render/drawSpells';
-import { blob, flame, noise, OUTLINE, plus } from '@/game/render/fxShapes';
 import type { Area, Effect } from '@/game/types';
 
 // Efeitos em estilo cartoon liso: formas com contorno escuro, cores chapadas e brilho.
@@ -32,10 +32,10 @@ function fire(canvas: SkCanvas, paint: SkPaint, a: Extract<Area, { kind: 'fire' 
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color('#3a1a12'));
   paint.setAlphaf(0.45 * fade);
-  canvas.drawOval(Skia.XYWHRect(a.x - a.radius, a.y - a.radius * 0.7, a.radius * 2, a.radius * 1.4), paint);
+  pixelOval(canvas,paint,a.x - a.radius, a.y - a.radius * 0.7, a.radius * 2, a.radius * 1.4);
   paint.setColor(Skia.Color('#ff8a1f'));
   paint.setAlphaf(0.18 * fade);
-  canvas.drawOval(Skia.XYWHRect(a.x - a.radius * 0.8, a.y - a.radius * 0.55, a.radius * 1.6, a.radius * 1.1), paint);
+  pixelOval(canvas,paint,a.x - a.radius * 0.8, a.y - a.radius * 0.55, a.radius * 1.6, a.radius * 1.1);
   const tick = Math.floor(time * 10);
   for (let i = 0; i < 9; i++) {
     const ang = noise(i, 3, 0) * Math.PI * 2;
@@ -56,8 +56,8 @@ function airstrikeMarker(canvas: SkCanvas, paint: SkPaint, a: Extract<Area, { ki
   paint.setStrokeWidth(5);
   paint.setColor(Skia.Color('#ff4f4f'));
   paint.setAlphaf(0.55 + 0.4 * pulse);
-  canvas.drawCircle(a.x, a.y, a.radius, paint);
-  canvas.drawCircle(a.x, a.y, a.radius * 0.4, paint);
+  pixelCircle(canvas,paint,a.x, a.y, a.radius);
+  pixelCircle(canvas,paint,a.x, a.y, a.radius * 0.4);
   canvas.drawLine(a.x - a.radius, a.y, a.x - a.radius * 0.6, a.y, paint);
   canvas.drawLine(a.x + a.radius * 0.6, a.y, a.x + a.radius, a.y, paint);
   // Sombra do avião cruzando o campo até o alvo
@@ -66,8 +66,8 @@ function airstrikeMarker(canvas: SkCanvas, paint: SkPaint, a: Extract<Area, { ki
   paint.setColor(Skia.Color('#0c0b0f'));
   paint.setAlphaf(0.3);
   const px = a.x - 600 + p * 600;
-  canvas.drawOval(Skia.XYWHRect(px - 55, a.y - 120, 110, 20), paint);
-  canvas.drawOval(Skia.XYWHRect(px - 12, a.y - 142, 24, 62), paint);
+  pixelOval(canvas,paint,px - 55, a.y - 120, 110, 20);
+  pixelOval(canvas,paint,px - 12, a.y - 142, 24, 62);
   paint.setAlphaf(1);
 }
 
@@ -112,7 +112,7 @@ function heal(canvas: SkCanvas, paint: SkPaint, e: Extract<Effect, { kind: 'heal
   paint.setStrokeWidth(4);
   paint.setColor(Skia.Color('#9be04a'));
   paint.setAlphaf(alpha * 0.7);
-  canvas.drawOval(Skia.XYWHRect(e.x - 24 - p * 10, e.y - 8 - p * 3, 48 + p * 20, 16 + p * 6), paint);
+  pixelOval(canvas,paint,e.x - 24 - p * 10, e.y - 8 - p * 3, 48 + p * 20, 16 + p * 6);
   for (let i = 0; i < 3; i++) plus(canvas, paint, e.x - 16 + i * 16, e.y - 44 - p * 36 - i * 8, 6, alpha);
 }
 

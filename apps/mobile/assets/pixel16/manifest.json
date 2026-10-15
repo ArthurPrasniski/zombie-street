@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "style": "cartoon-pixel16-pilot",
+  "frame": 40,
+  "foot": [
+    20,
+    38
+  ],
+  "worldSize": [
+    600,
+    900
+  ],
+  "backgroundSize": [
+    300,
+    450
+  ],
+  "views": {
+    "front": 0,
+    "back": 1,
+    "side": 2
+  },
+  "troops": {
+    "idle": {
+      "start": 0,
+      "count": 8
+    },
+    "attack": {
+      "start": 8,
+      "count": 8
+    },
+    "down": {
+      "start": 16,
+      "count": 1
+    },
+    "walk": {
+      "start": 17,
+      "count": 8
+    }
+  },
+  "zombies": {
+    "walk": {
+      "start": 0,
+      "count": 8
+    },
+    "attack": {
+      "start": 8,
+      "count": 8
+    },
+    "death": {
+      "start": 16,
+      "count": 5
+    }
+  },
+  "base": {
+    "width": 600,
+    "height": 136,
+    "y": 764,
+    "frames": 4
+  },
+  "muzzle": {
+    "sniper": {
+      "front": [
+        28,
+        23
+      ],
+      "back": [
+        28,
+        17
+      ],
+      "side": [
+        35,
+        24
+      ]
+    },
+    "sheriff": {
+      "front": [
+        28,
+        23
+      ],
+      "back": [
+        28,
+        17
+      ],
+      "side": [
+        35,
+        24
+      ]
+    },
+    "chainsaw": {
+      "front": [
+        28,
+        23
+      ],
+      "back": [
+        28,
+        17
+      ],
+      "side": [
+        35,
+        24
+      ]
+    },
+    "dog": {
+      "front": null,
+      "back": null,
+      "side": null
+    },
+    "barricade": {
+      "front": null,
+      "back": null,
+      "side": null
+    }
+  },
+  "assets": [
+    {
+      "path": "sprites/sniper.png",
+      "width": 1000,
+      "height": 120,
+      "bytes": 4622,
+      "sha256": "065cd28882155a6c39baa15c9fe49b0690cc30322a5e17f53fb4cbf8f1744618"
+    },
+    {
+      "path": "cards/sniper.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 473,
+      "sha256": "091164d9a479bb1c1c97ec2fd68e5e6653929dcbfa269215f1d6239ba1bfb719"
+    },
+    {
+      "path": "sprites/sheriff.png",
+      "width": 1000,
+      "height": 120,
+      "bytes": 4689,
+      "sha256": "00bc3017f98851ab6f14e7d6dbd374d2fddeedb32229b9ee73dec01d5b63e566"
+    },
+    {
+      "path": "cards/sheriff.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 454,
+      "sha256": "876afd7ff69b3dacee9532bd4524287467b11879088460be9ef7ed34e402c00b"
+    },
+    {
+      "path": "sprites/chainsaw.png",
+      "width": 1000,
+      "height": 120,
+      "bytes": 4633,
+      "sha256": "9282fd7c277644dc652080a6d34f2993a5aa64adb1e9a2ecc6a061db191ad21e"
+    },
+    {
+      "path": "cards/chainsaw.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 480,
+      "sha256": "075727212e55545b9379b9a3ddf11c51e5bbf2213cce37672ae0e607dc6668cf"
+    },
+    {
+      "path": "sprites/dog.png",
+      "width": 1000,
+      "height": 120,
+      "bytes": 2860,
+      "sha256": "087c2f2172b78c1d9531053ca279bbfc9f7586338aa8e5a97f22333c1a119706"
+    },
+    {
+      "path": "cards/dog.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 354,
+      "sha256": "39ab391b2391e99d83d244e9a7cdc0f514fd12c1e412feddca83fb23aa865dde"
+    },
+    {
+      "path": "sprites/barricade.png",
+      "width": 1000,
+      "height": 120,
+      "bytes": 3506,
+      "sha256": "794f84c06301049b870444a7250b40f2272b368e546470aed98e16d2eea1a981"
+    },
+    {
+      "path": "cards/barricade.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 411,
+      "sha256": "7112a1354e3a4f3d76e8972a013f33198c9328f0914798b28a8b892d4f4b2168"
+    },
+    {
+      "path": "sprites/walker.png",
+      "width": 840,
+      "height": 120,
+      "bytes": 5109,
+      "sha256": "c711ac45594b8e37e6207c09b9a28990b797d4048c349143472bc827f04df414"
+    },
+    {
+      "path": "sprites/runner.png",
+      "width": 840,
+      "height": 120,
+      "bytes": 5103,
+      "sha256": "6c2dea78fa5fbbdeaeadcf4badf640efa6d349762580435133f7787a5754a5e7"
+    },
+    {
+      "path": "sprites/brute.png",
+      "width": 840,
+      "height": 120,
+      "bytes": 5208,
+      "sha256": "2821d6655c43855f8fdf52110c16b3e9b772072d56d8fc1e0aae31bf117f2e13"
+    },
+    {
+      "path": "cards/grenade.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 325,
+      "sha256": "cf2d9133bd42581e05ee78eab44108eacdf4cdaf8f50f5bafc04d70d7c724645"
+    },
+    {
+      "path": "cards/medkit.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 227,
+      "sha256": "677cfa95bc852ecfde06ea6632b252704f18b742a6d90a93769209f81ec7ad1d"
+    },
+    {
+      "path": "cards/molotov.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 268,
+      "sha256": "e38443e6bf9ac027da0bfc8732e5814d5a84f05af7eff5255384a36027e538f7"
+    },
+    {
+      "path": "worlds/farm.png",
+      "width": 300,
+      "height": 450,
+      "bytes": 4131,
+      "sha256": "96bdd40be6543679a50a7723a2cab8f42fefdbe2b28f8d9b7d1a6009ba234a53"
+    },
+    {
+      "path": "worlds/farm-base.png",
+      "width": 1200,
+      "height": 68,
+      "bytes": 1605,
+      "sha256": "b087094647c802a46ecb3408a546fb37e01dbc14de02849c7bc174dec56edf16"
+    },
+    {
+      "path": "comparison.png",
+      "width": 80,
+      "height": 40,
+      "bytes": 549,
+      "sha256": "86b61effce2e835b108bde16fe8d5cef4ef2b13468be474ee40b85f10b83cbb7"
+    }
+  ]
+}

@@ -43,9 +43,9 @@ export function BloodBar({ snapshot, blood, width }: { snapshot: SharedValue<Ren
 
 const styles = StyleSheet.create({
   row: { height: DROP, justifyContent: 'center' },
-  track: { marginLeft: DROP * 0.55, height: 26, borderRadius: 13, backgroundColor: '#3d2026', borderWidth: 3, borderColor: colors.outline, overflow: 'hidden' },
-  fill: { position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: '#e8323f', borderBottomWidth: 5, borderBottomColor: '#9a1424' },
-  shine: { position: 'absolute', left: 4, right: 4, top: 3, height: 5, borderRadius: 3, backgroundColor: 'rgba(255, 255, 255, 0.4)' },
+  track: { marginLeft: DROP * 0.55, height: 26, borderRadius: 1, backgroundColor: '#3d2026', borderWidth: 3, borderColor: colors.outline, overflow: 'hidden' },
+  fill: { position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: '#b94f59', borderBottomWidth: 5, borderBottomColor: '#9a1424' },
+  shine: { position: 'absolute', left: 4, right: 4, top: 3, height: 2, borderRadius: 0, backgroundColor: 'rgba(255, 255, 255, 0.4)' },
   area: { position: 'absolute', left: DROP * 0.45, right: 0, top: 0, bottom: 0 },
   cells: { ...StyleSheet.absoluteFill, flexDirection: 'row' },
   cell: { flex: 1, borderRightWidth: 3, borderRightColor: colors.outline },

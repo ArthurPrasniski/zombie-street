@@ -186,6 +186,7 @@ export const pt = {
     worldZombie: (n: number, name: string) => `Mundo ${n} · ${name}`,
     worldBoss: (n: number, name: string) => `Chefe do mundo ${n} · ${name}`,
     fromStage: (label: string) => `A partir da fase ${label}`,
+    fromPod: "Sai do Casulo",
     fromSplitter: 'Sai do Divisor',
     close: 'Fechar',
     descriptions: {

@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   zebra: { backgroundColor: 'rgba(255, 255, 255, 0.04)' },
   label: { flex: 1 },
   value: { fontSize: 16, lineHeight: 20 },
-  gain: { marginLeft: 4, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 999, backgroundColor: colors.accent },
+  gain: { marginLeft: 4, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 2, backgroundColor: colors.accent },
   cost: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   costIcon: { width: 24, height: 24 },
   costValue: { fontSize: 22, lineHeight: 26 },

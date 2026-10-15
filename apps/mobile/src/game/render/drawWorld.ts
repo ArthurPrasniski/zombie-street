@@ -1,3 +1,5 @@
+import { attachedEffects } from './pixel16/effects';
+import { pixelCircle } from '@/game/render/fxShapes';
 import { BlendMode, FilterMode, MipmapMode, PaintStyle, Skia, type SkCanvas, type SkFont, type SkImage, type SkPaint } from '@shopify/react-native-skia';
 
 import { CARDS, TROOPS } from '@/game/data/cards';
@@ -13,12 +15,15 @@ import { drawAura, drawEvoRing, drawMound, drawStunStars, drawToxicAura } from '
 import { drawTracer } from '@/game/render/drawShots';
 import layout from '@/game/render/spriteLayout.json';
 import { ART_UNIT, drawBaseFrame, drawFrame, type SpriteSet } from '@/game/render/sprites';
+import type {DetailedSheet,DetailedBase} from './pixel16/detailedLayout';
+import {detailedMuzzle} from './pixel16/drawDetailed';
+import {drawDetailedTruckAppearance} from './pixel16/truckAppearance';
 import type { RenderSnapshot, TroopId } from '@/game/types';
 
 type TroopSnap = RenderSnapshot['troops'][number];
 type ZombieSnap = RenderSnapshot['zombies'][number];
 
-const COLORS = { ground: '#2c7d5b', barBack: '#17141b', troopBar: '#b8e835', zombieBar: '#ff4f4f', base: '#ffc928', invalid: '#ff4f4f', flash: '#ffffff', zone: '#ffffff', suit: '#7fd0ff' };
+const COLORS = { ground: '#2c7d5b', barBack: '#17141b', troopBar: '#c3d875', zombieBar: '#c75c63', base: '#dfb85e', invalid: '#ff4f4f', flash: '#ffffff', zone: '#ffffff', suit: '#7fd0ff' };
 // Tamanho de desenho de cada zumbi (os chefes são maiores); tropas ficam em 1.
 const UNIT_SCALE: Partial<Record<string, number>> = Object.fromEntries([...Object.values(ZOMBIES), ...Object.values(TROOPS)].map((u) => [u.id, u.scale ?? 1]));
 const BAR_W = 34;
@@ -54,7 +59,7 @@ function pill(canvas: SkCanvas, paint: SkPaint, x: number, y: number, w: number,
   paint.setStyle(PaintStyle.Fill);
   paint.setColor(Skia.Color(color));
   paint.setAlphaf(1);
-  canvas.drawRRect(Skia.RRectXY(Skia.XYWHRect(x, y, w, h), h / 2, h / 2), paint);
+  canvas.drawRect(Skia.XYWHRect(x, y, w, h), paint);
 }
 
 /** Barra de vida arredondada com borda escura. */
@@ -64,7 +69,7 @@ function bar(canvas: SkCanvas, paint: SkPaint, cx: number, y: number, width: num
   if (ratio > 0) pill(canvas, paint, cx - width / 2, y, Math.max(BAR_H, width * ratio), BAR_H, color);
 }
 
-function drawBackground(canvas: SkCanvas, paint: SkPaint, image: SkImage | null): void {
+function drawBackground(canvas: SkCanvas, paint: SkPaint, image: SkImage | null,height=WORLD_HEIGHT,pixel=false): void {
   'worklet';
   if (!image) {
     rect(canvas, paint, 0, 0, WORLD_WIDTH, WORLD_HEIGHT, COLORS.ground);
@@ -72,14 +77,14 @@ function drawBackground(canvas: SkCanvas, paint: SkPaint, image: SkImage | null)
   }
   paint.setAlphaf(1);
   const src = Skia.XYWHRect(0, 0, image.width(), image.height());
-  canvas.drawImageRectOptions(image, src, Skia.XYWHRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT), FilterMode.Linear, MipmapMode.None, paint);
+  canvas.drawImageRectOptions(image, src, Skia.XYWHRect(0, 0, WORLD_WIDTH, height), pixel?FilterMode.Nearest:FilterMode.Linear, MipmapMode.None, paint);
 }
 
-function drawBase(canvas: SkCanvas, paint: SkPaint, base: RenderSnapshot['base'], image: SkImage | null): void {
+function drawBase(canvas: SkCanvas, paint: SkPaint, base: RenderSnapshot['base'], image: SkImage | null,detailed?:DetailedBase): void {
   'worklet';
   if (image) {
     paint.setAlphaf(1);
-    drawBaseFrame(canvas, image, baseFrame(base.hpRatio), paint);
+    drawBaseFrame(canvas, image, baseFrame(base.hpRatio), paint,detailed);
   } else {
     rect(canvas, paint, 0, BASE.frontY, WORLD_WIDTH, WORLD_HEIGHT - BASE.frontY, '#3a4a3c');
   }
@@ -92,7 +97,7 @@ function drawBase(canvas: SkCanvas, paint: SkPaint, base: RenderSnapshot['base']
   if (base.hpRatio > 0) pill(canvas, paint, b.x, b.y, Math.max(b.height, b.width * base.hpRatio), b.height, COLORS.base);
 }
 
-function drawTroop(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPaint, t: TroopSnap, index: number, time: number, image: SkImage | null): void {
+function drawTroop(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPaint, t: TroopSnap, index: number, time: number, image: SkImage | null,sheet?:DetailedSheet): void {
   'worklet';
   drawEvoRing(canvas, paint, t.x, t.y, t.evo, time);
   if (image) {
@@ -100,15 +105,15 @@ function drawTroop(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPa
     const row = viewRow(t.dirX, t.dirY);
     // Golpe: pisca branco; congelada (Congelado/Abominável): fica azulada
     const look = t.flash ? flash : t.chilled ? frost : paint;
-    drawFrame(canvas, image, troopFrame(t, time, index), row, t.x, t.y, UNIT_SCALE[t.kind] ?? 1, look, viewFlip(row, t.dirX));
+    drawFrame(canvas, image, troopFrame(t, time, index), row, t.x, t.y, UNIT_SCALE[t.kind] ?? 1, look, viewFlip(row, t.dirX),sheet);
     paint.setAlphaf(1);
   } else {
     rect(canvas, paint, t.x - 14, t.y - 56, 28, 56, '#4da3ff');
   }
-  bar(canvas, paint, t.x, t.y - TROOP_BAR_Y * (UNIT_SCALE[t.kind] ?? 1), BAR_W, t.hpRatio, COLORS.troopBar);
+  bar(canvas, paint, t.x, t.y - (sheet?.height?sheet.height+6:TROOP_BAR_Y) * (UNIT_SCALE[t.kind] ?? 1), BAR_W, t.hpRatio, COLORS.troopBar);
 }
 
-function drawZombie(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPaint, z: ZombieSnap, image: SkImage | null, time: number): void {
+function drawZombie(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPaint, z: ZombieSnap, image: SkImage | null, time: number,sheet?:DetailedSheet): void {
   'worklet';
   if (z.burrowed) {
     drawMound(canvas, paint, z);
@@ -120,13 +125,14 @@ function drawZombie(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkP
     // Cosmonauta e Comandante quicam enquanto andam (passam por cima de tudo)
     const hop = z.leaper && !z.attacking ? Math.abs(Math.sin(z.travelled * LEAP_RATE)) * LEAP_HEIGHT * z.scale : 0;
     // Mordida do Rex evoluído: azulado, como a tropa congelada
-    drawFrame(canvas, image, zombieFrame(z), row, z.x, z.y - hop, z.scale, z.flash ? flash : z.slowed ? frost : paint, viewFlip(row, z.dirX));
+    drawFrame(canvas, image, zombieFrame(z), row, z.x, z.y - hop, z.scale, z.flash ? flash : z.slowed ? frost : paint, viewFlip(row, z.dirX),sheet);
   } else {
     rect(canvas, paint, z.x - 14, z.y - 32 * z.scale, 28 * z.scale, 32 * z.scale, '#5fbf4a');
   }
-  bar(canvas, paint, z.x, z.y - ZOMBIE_BAR_Y * z.scale, BAR_W * z.scale, z.hpRatio, COLORS.zombieBar);
+  const barY=sheet?.height?sheet.height+6:ZOMBIE_BAR_Y;
+  bar(canvas, paint, z.x, z.y - barY * z.scale, BAR_W * z.scale, z.hpRatio, COLORS.zombieBar);
   // Traje do Astronauta: barra azul em cima da vida, até trincar
-  if (z.suitRatio > 0) bar(canvas, paint, z.x, z.y - ZOMBIE_BAR_Y * z.scale - BAR_H - 5, BAR_W * z.scale, z.suitRatio, COLORS.suit);
+  if (z.suitRatio > 0) bar(canvas, paint, z.x, z.y - barY * z.scale - BAR_H - 5, BAR_W * z.scale, z.suitRatio, COLORS.suit);
   if (z.stunned) drawStunStars(canvas, paint, z, time);
 }
 
@@ -139,16 +145,16 @@ function drawUnits(canvas: SkCanvas, paint: SkPaint, flash: SkPaint, frost: SkPa
   let j = 0;
   while (i < troops.length || j < zombies.length) {
     if (j >= zombies.length || (i < troops.length && troops[i].t.y <= zombies[j].y)) {
-      drawTroop(canvas, paint, flash, frost, troops[i].t, troops[i].i, snap.time, sprites.units[troops[i].t.kind] ?? null);
+      drawTroop(canvas, paint, flash, frost, troops[i].t, troops[i].i, snap.time, sprites.units[troops[i].t.kind] ?? null,sprites.detailedUnits?.[troops[i].t.kind]);
       i++;
     } else {
-      drawZombie(canvas, paint, flash, frost, zombies[j], sprites.units[zombies[j].kind] ?? null, snap.time);
+      drawZombie(canvas, paint, flash, frost, zombies[j], sprites.units[zombies[j].kind] ?? null, snap.time,sprites.detailedUnits?.[zombies[j].kind]);
       j++;
     }
   }
 }
 
-function drawTracers(canvas: SkCanvas, paint: SkPaint, snap: RenderSnapshot): void {
+function drawTracers(canvas: SkCanvas, paint: SkPaint, snap: RenderSnapshot,sprites:SpriteSet): void {
   'worklet';
   for (const e of snap.effects) {
     if (e.kind !== 'tracer') continue;
@@ -157,7 +163,9 @@ function drawTracers(canvas: SkCanvas, paint: SkPaint, snap: RenderSnapshot): vo
     const shooter = snap.troops.find((t) => t.x === e.fromX && t.y === e.fromY);
     const row = shooter ? viewRow(shooter.dirX, shooter.dirY) : 0;
     const muzzle = shooter ? MUZZLES[shooter.kind]?.[VIEW_NAMES[row]] : undefined;
-    if (shooter && muzzle) {
+    const sheet=shooter?sprites.detailedUnits?.[shooter.kind]:undefined;
+    if(shooter&&sheet){const offset=detailedMuzzle(sheet,row,viewFlip(row,shooter.dirX),UNIT_SCALE[shooter.kind]??1);fromX+=offset[0];fromY+=offset[1];}
+    else if (shooter && muzzle) {
       fromX = shooter.x + (muzzle[0] - layout.footX) * ART_UNIT * (viewFlip(row, shooter.dirX) ? -1 : 1);
       fromY = shooter.y + (muzzle[1] - layout.footY) * ART_UNIT;
     }
@@ -176,7 +184,7 @@ function drawDrag(canvas: SkCanvas, paint: SkPaint, tint: SkPaint, drag: DragPre
     const image = sprites.units[card.id];
     if (image) {
       paint.setAlphaf(0.6);
-      drawFrame(canvas, image, layout.troops.idle.start, layout.views.back, drag.x, drag.y, 1, drag.valid ? paint : tint);
+      drawFrame(canvas, image, layout.troops.idle.start, layout.views.back, drag.x, drag.y, 1, drag.valid ? paint : tint,false,sprites.detailedUnits?.[card.id]);
     }
     paint.setAlphaf(1);
     return;
@@ -199,11 +207,11 @@ function drawDrag(canvas: SkCanvas, paint: SkPaint, tint: SkPaint, drag: DragPre
   }
   paint.setStyle(PaintStyle.Fill);
   paint.setAlphaf(0.15);
-  canvas.drawCircle(drag.x, drag.y, card.radius, paint);
+  pixelCircle(canvas, paint, drag.x, drag.y, card.radius);
   paint.setStyle(PaintStyle.Stroke);
   paint.setStrokeWidth(3);
   paint.setAlphaf(0.7);
-  canvas.drawCircle(drag.x, drag.y, card.radius, paint);
+  pixelCircle(canvas, paint, drag.x, drag.y, card.radius);
   paint.setStyle(PaintStyle.Fill);
   paint.setAlphaf(1);
 }
@@ -212,6 +220,7 @@ function drawDrag(canvas: SkCanvas, paint: SkPaint, tint: SkPaint, drag: DragPre
 export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: SpriteSet, drag: DragPreview, font: SkFont | null, appearance?: { color: string; hull: number; gun: number; tank: number }): void {
   'worklet';
   const paint = Skia.Paint();
+  paint.setAntiAlias(false);
   const flash = Skia.Paint();
   flash.setColorFilter(Skia.ColorFilter.MakeBlend(Skia.Color(COLORS.flash), BlendMode.SrcIn));
   const frost = Skia.Paint();
@@ -225,12 +234,13 @@ export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: Sprit
   const shakeY = snap.shake > 0 ? Math.cos(snap.time * 70) * snap.shake * SHAKE_Y : 0;
   canvas.translate(shakeX, shakeY);
 
-  drawBackground(canvas, paint, sprites.background);
+  drawBackground(canvas, paint, sprites.background,sprites.viewportHeight??900,sprites.pixelBackground);
   drawGroundAreas(canvas, paint, snap.areas, snap.time);
   drawScenarioGround(canvas, paint, snap.areas, snap.time);
   drawSpellGround(canvas, paint, snap.areas, snap.time);
-  drawBase(canvas, paint, snap.base, sprites.base);
-  if (appearance) {
+  drawBase(canvas, paint, snap.base, sprites.base,sprites.detailedBase);
+  if (appearance&&sprites.detailedBase)drawDetailedTruckAppearance(canvas,paint,appearance);
+  else if (appearance) {
     rect(canvas, paint, 210, 840, 180, 6, appearance.color);
     for (let i = 0; i < Math.ceil(appearance.hull / 5); i++) {
       rect(canvas, paint, 180 + i * 18, 858, 12, 8, '#b8c1c6');
@@ -246,7 +256,7 @@ export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: Sprit
     const { frame, alpha } = corpseFrame(e.unit, e.ttl);
     paint.setAlphaf(alpha);
     const row = viewRow(e.dirX, e.dirY);
-    drawFrame(canvas, image, frame, row, e.x, e.y, UNIT_SCALE[e.unit] ?? 1, paint, viewFlip(row, e.dirX));
+    drawFrame(canvas, image, frame, row, e.x, e.y, UNIT_SCALE[e.unit] ?? 1, paint, viewFlip(row, e.dirX),sprites.detailedUnits?.[e.unit]);
   }
   paint.setAlphaf(1);
   for (const z of snap.zombies) {
@@ -255,10 +265,10 @@ export function drawWorld(canvas: SkCanvas, snap: RenderSnapshot, sprites: Sprit
     if (z.toxic > 0) drawToxicAura(canvas, paint, z, snap.time);
   }
   drawUnits(canvas, paint, flash, frost, snap, sprites);
-  drawTracers(canvas, paint, snap);
+  drawTracers(canvas, paint, snap,sprites);
   drawScenarioOverlay(canvas, paint, snap.areas, snap.time);
   drawSpellOverlay(canvas, paint, snap.areas, snap.time);
-  drawOverlayEffects(canvas, paint, snap.effects, snap.areas, snap.time, font);
+  drawOverlayEffects(canvas, paint, attachedEffects(snap,sprites), snap.areas, snap.time, font);
   drawWeather(canvas, paint, snap.weather, snap.time, [...snap.troops, { x: BASE.gunX, y: BASE.gunY }]);
   drawDrag(canvas, paint, tint, drag, sprites);
   canvas.restore();

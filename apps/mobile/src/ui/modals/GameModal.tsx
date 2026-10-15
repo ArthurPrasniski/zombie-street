@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
-import { colors, darkEdge, radius } from '@/ui/theme';
+import { colors, darkEdge, radius,textOnColor } from '@/ui/theme';
 
 interface Props {
   title: string;
@@ -28,7 +28,7 @@ export function GameModal({ title, eyebrow, accent = colors.accent, children, bu
         </Chunky>
         {/* Faixa do título por cima do painel, na cor do resultado */}
         <Chunky face={accent} edge={darkEdge(accent)} radius={16} depth={5} gloss={0.25} style={styles.ribbon} faceStyle={styles.ribbonFace}>
-          <AppText variant="title" style={styles.title}>
+          <AppText variant="title" color={textOnColor(accent)} style={styles.title}>
             {title}
           </AppText>
         </Chunky>

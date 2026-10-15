@@ -1,0 +1,62 @@
+{
+  "swamp": {
+    "name": "SWAMP",
+    "floor": "broad flat traversable muddy-brown and muted moss-gray clearing, shallow puddles and flat leaf litter; no deep water within walking field",
+    "border": "reeds, mangrove roots and water ONLY at the extreme outermost 4% edges",
+    "rear": "small weathered timber swamp research shack with amber windows"
+  },
+  "desert": {
+    "name": "DESERT MILITARY BASE",
+    "floor": "broad flat warm tan packed-dirt and concrete military hardstand, faded runway markings and tire tracks",
+    "border": "very narrow cactus and military perimeter fragments only at outermost4% edges",
+    "rear": "low sand-colored military maintenance hangar with green steel doors"
+  },
+  "snow": {
+    "name": "SNOWFIELD",
+    "floor": "broad flat packed-snow clearing, subdued blue-gray ice patches and footprints; even readable terrain",
+    "border": "snowy pine fragments and low snow banks only at outermost4% edges",
+    "rear": "weathered wooden alpine shelter with warm lit windows and snow on roof"
+  },
+  "tech": {
+    "name": "TECHNOLOGICAL CITY",
+    "floor": "broad uninterrupted dark blue-gray paved industrial avenue, flush cable channels, tiny cyan power traces, worn yellow hazard floor paint",
+    "border": "narrow neon-lit industrial facade fragments ONLY at outermost4% edges",
+    "rear": "low electronics workshop/control building with cyan windows and amber lamps"
+  },
+  "lab": {
+    "name": "ABANDONED LABORATORY",
+    "floor": "broad continuous desaturated gray-green laboratory tile floor, flush drainage lines, scuffs and small flat paper scraps; no equipment in walking field",
+    "border": "cutaway steel/glass lab wall fragments ONLY at outermost4% edges",
+    "rear": "low containment control-room cutaway structure with dim green/amber monitors, no readable text"
+  },
+  "launch": {
+    "name": "ROCKET LAUNCH FACILITY",
+    "floor": "broad flat gray concrete launch-apron surface, faded runway lane markings, dusty oil stains and flush service covers",
+    "border": "tiny clipped orange gantry/support details only at outermost4% edges",
+    "rear": "low launch control bunker with warm amber windows and orange steel door"
+  },
+  "station": {
+    "name": "ORBITAL STATION",
+    "floor": "broad continuous dark steel space-station floor deck, detailed flush panel seams and small pale-blue guide lights; traversable solid floor everywhere",
+    "border": "thin station hull rim at outermost4% edges with outer space/stars beyond the rim, never holes within field",
+    "rear": "low armored airlock/control module with pale cyan windows and pressure door"
+  },
+  "moon": {
+    "name": "LUNAR OUTPOST",
+    "floor": "broad flat muted gray lunar regolith plain, small shallow crater marks, dust tracks and fine mineral texture; no large rocks or pits within walking field",
+    "border": "tiny clipped rock ridges only at outermost4% edges, dark lunar horizon at very top",
+    "rear": "low gray lunar habitat module with airlock, small solar equipment outside the safe-rear doorway and warm lit windows"
+  },
+  "mars": {
+    "name": "MARTIAN OUTPOST",
+    "floor": "broad flat muted rusty-red packed regolith, flat cracks and rover tracks, fine stone texture; no large rocks within walking field",
+    "border": "clipped small rock ridges at outermost4% edges and dusty distant martian horizon",
+    "rear": "low ivory/orange Mars habitat shelter with warm amber windows and dust-covered panels"
+  },
+  "hive": {
+    "name": "ALIEN HIVE",
+    "floor": "broad uninterrupted flat dark violet organic chitin floor, subtle flat ribbed texture, muted green veins, no raised spikes or roots within walking field",
+    "border": "very narrow alien hive wall fragments at outermost4% edges with faint green luminescence",
+    "rear": "low fortified human expedition shelter built against the organic hive wall, steel door and small amber windows"
+  }
+}

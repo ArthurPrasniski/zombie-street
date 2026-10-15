@@ -68,5 +68,5 @@ export function SurvivalOverModal({ expedition, stats, waves, best, record, cash
 }
 
 const styles = StyleSheet.create({
-  stamp: { paddingVertical: 4, paddingHorizontal: 14, borderRadius: 10, borderWidth: 3, borderColor: colors.yellow, transform: [{ rotate: '-6deg' }] },
+  stamp: { paddingVertical: 4, paddingHorizontal: 14, borderRadius: 2, borderWidth: 3, borderColor: colors.yellow, transform: [{ rotate: '-6deg' }] },
 });

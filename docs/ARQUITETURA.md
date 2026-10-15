@@ -25,7 +25,7 @@ exporta o TypeScript direto, sem build. Dentro de apps/mobile:
 
 ```
 app/                      Expo Router (pilha, sem abas)
-  _layout.tsx             layout raiz: fontes (Lilita One e Rubik) e progresso salvo
+  _layout.tsx             layout raiz: fontes (Rubik Black, Bold e Medium) e progresso salvo
   index.tsx               Home (cena, rota, Jogar, Deck, Fases, Sobrevivência, atalhos)
   stages.tsx              Fases -> Combate (com estrelas)
   deck.tsx                deck de 8, coleção, níveis e evolução das cartas
@@ -125,7 +125,9 @@ src/
   i18n/pt.ts, ptRadio.ts  textos (as falas do rádio à parte; ptShop e ptPush: loja e avisos)
   utils/format.ts         1.2K, 3.4M, 1.150, tempo
 assets/                   imagens, fontes e sons (gerados pelos scripts)
-scripts/art/              arte vetorial (CanvasKit): `npm run art` recria assets/images;
+scripts/pixel16-detailed/ pixel art RPG: empacotamento, registro, retratos, identidade e validação
+                          `npm run art:pixel:detailed`; fontes em assets/pixel16-detailed
+scripts/art/              legado vetorial (CanvasKit): `npm run art` recria assets/images;
                           `npm run art -- ui sprites=spitter` gera só as partes pedidas;
                           `npm run art:brand` só logo, ícones do app e splash
 scripts/art-pixel/        pixel art antiga (não entra no build)

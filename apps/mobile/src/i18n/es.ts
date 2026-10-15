@@ -186,6 +186,7 @@ export const es = {
     worldZombie: (n: number, name: string) => `Mundo ${n} · ${name}`,
     worldBoss: (n: number, name: string) => `Jefe del mundo ${n} · ${name}`,
     fromStage: (label: string) => `A partir de la fase ${label}`,
+    fromPod: "Sale del Capullo",
     fromSplitter: "Sale del Divisor",
     close: "Cerrar",
     descriptions: {

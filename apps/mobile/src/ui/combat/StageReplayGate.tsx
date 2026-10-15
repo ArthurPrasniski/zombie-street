@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { goBack } from '@/ui/navigation';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
@@ -45,7 +45,7 @@ export function StageReplayGate({ stage, survival, children }: { stage: number; 
     <View style={styles.screen}>
       <GameModal title={t.ads.replayTitle} buttons={
         <>
-          <Button label={t.common.back} variant="dark" disabled={busy} onPress={() => router.back()} />
+          <Button label={t.common.back} variant="dark" disabled={busy} onPress={() => goBack()} />
           <Button label={member ? t.membership.play : t.ads.replayWatch} disabled={busy || (!member && !ready)} onPress={watch} />
         </>
       }>

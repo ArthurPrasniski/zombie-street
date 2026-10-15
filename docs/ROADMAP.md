@@ -1,5 +1,16 @@
 # Zombie Road — plano de evolução do app e presença na web
 
+## Em execução — conversão visual para 16-bit
+
+Backlog em [CONVERSAO_16_BIT.md](CONVERSAO_16_BIT.md), com 24 tarefas de conversão
+e uma tarefa opcional de áudio. Inventário, geração isolada e piloto técnico
+jogável em Ajustes implementados. As novas referências pedem pixel art detalhada:
+Direção aprovada (PIX-02); Fazenda, base e atlas iniciais de Mira/Andarilho integrados.
+PIX-04/05 em revisão de animação/desempenho; acabamento de PIX-06 pendente.
+Detalhes em [pixel16/detailed/ENTREGA.md](pixel16/detailed/ENTREGA.md).
+A estimativa anterior de 35–59 dias úteis precisa ser refeita após o novo lote visual.
+Evidências e limites em [pixel16/PILOTO.md](pixel16/PILOTO.md).
+
 ## Execução — 14/10/2026
 
 Implementação das oito etapas entregue na ordem, com validação incremental e migrações.
@@ -200,3 +211,12 @@ de ativar monetização. Escopo inicial autorizado na execução: vantagens temp
   no Chrome em 390/1440 px, sem imagens quebradas ou rolagem horizontal.
 - Prévia privada atualizada via Sites: https://zombie-road-official.arthurprasniski.chatgpt.site
   Fonte independente em `sites/zombie-road`; commit `f18f4c2`. O app/backend permanecem em Changes.
+
+### Conversão detalhada — implementação concluída
+
+Todo o catálogo visual do aplicativo está integrado: 45 unidades, 24 cartas,
+30 retratos de inimigos, 12 cenários, três bases e os componentes de todas as telas.
+Home, ícones/splash e landing também seguem a direção detalhada. Cobertura,
+reprodução e limites reais em [pixel16/PRODUCAO.md](pixel16/PRODUCAO.md).
+Homologação física, FPS/memória em aparelho, interfaces de compra/anúncio reais e
+build/publicação nativos continuam separados da conclusão de implementação.

@@ -1,3 +1,4 @@
+import { WORLD_MODULES } from '@/assets/pixel16-detailed/modules';
 import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { MAX_STARS } from '@/game/data/balance';
@@ -10,25 +11,12 @@ import { IconButton, Segments } from '@/ui/kit/Pill';
 import { colors, radius } from '@/ui/theme';
 import { worldDetails, worldName, worldTint } from '@/ui/worldInfo';
 
-const SCENES: Record<WorldId, number> = {
-  farm: require('@/assets/images/worlds/farm.png'),
-  city: require('@/assets/images/worlds/city.png'),
-  swamp: require('@/assets/images/worlds/swamp.png'),
-  desert: require('@/assets/images/worlds/desert.png'),
-  snow: require('@/assets/images/worlds/snow.png'),
-  tech: require('@/assets/images/worlds/tech.png'),
-  lab: require('@/assets/images/worlds/lab.png'),
-  launch: require('@/assets/images/worlds/launch.png'),
-  station: require('@/assets/images/worlds/station.png'),
-  moon: require('@/assets/images/worlds/moon.png'),
-  mars: require('@/assets/images/worlds/mars.png'),
-  hive: require('@/assets/images/worlds/hive.png'),
-};
+const SCENES = WORLD_MODULES as Record<WorldId, number>;
 const BANNER_H = 150;
 
 /** Nomes longos (planetas da Fronteira) com fonte menor, para caber entre as setas. */
 const nameSize = (name: string) => (name.length > 22 ? { fontSize: 19, lineHeight: 23 } : name.length > 16 ? { fontSize: 23, lineHeight: 27 } : null);
-const SCENE_RATIO = 900 / 600;
+const SCENE_RATIO = 1150 / 600;
 
 interface Props {
   world: number;

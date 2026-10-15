@@ -40,7 +40,7 @@ export function DiaryEntry({ id, title, heard }: { id: string; title: string; he
 const styles = StyleSheet.create({
   card: { padding: 12, gap: 8 },
   line: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
-  portrait: { width: 40, height: 40, borderRadius: 10, backgroundColor: '#1d3a2e' },
+  portrait: { width: 40, height: 40, borderRadius: 2, backgroundColor: '#1d3a2e' },
   texts: { flex: 1, gap: 1 },
   name: { fontSize: 14, lineHeight: 17 },
 });

@@ -48,7 +48,7 @@ export function StageTile({ stage, onPress }: { stage: number; onPress: () => vo
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  tile: { flex: 1, minHeight: 90, borderRadius: 24 },
+  tile: { flex: 1, minHeight: 90, borderRadius: 2 },
   number: { fontSize: 38, lineHeight: 42, marginTop: 2 },
   status: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 'auto' },
   icon: { width: 18, height: 18 },

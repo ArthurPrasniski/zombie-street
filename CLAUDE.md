@@ -36,9 +36,8 @@ pacotes), `npm run lint`, `npm run art`, `npm run art:brand` e `npm run sfx`.
 - Node 24 (fixado em `.nvmrc`; rode `nvm use` antes de qualquer comando).
 - Expo (SDK estável mais recente), TypeScript em modo strict, Expo Router em
   pilha, sem abas: Home -> Fases -> Combate e Home -> Deck
-- Fontes da interface (assets/fonts, licença OFL, via expo-font): Lilita One
-  nos títulos, números e botões (com contorno) e Rubik (Medium, Bold, Black)
-  nos textos
+- Fontes da interface (assets/fonts, licença OFL, via expo-font): Rubik Black
+  nos títulos, números e botões; Rubik Medium/Bold nos textos
 - @shopify/react-native-skia: renderização da cena de combate
 - react-native-reanimated: ponte entre o motor e o Skia, animações de
   interface
@@ -97,14 +96,23 @@ pacotes), `npm run lint`, `npm run art`, `npm run art:brand` e `npm run sfx`.
   (src/game/engine/rng.ts).
 - Escreva testes Jest para as fórmulas (src/game/data/balance.ts) e para cada
   sistema do motor.
-- A arte é vetorial (cartoon liso: contorno escuro, sombra em crescente,
-  brilho) e gerada por código em scripts/art com o CanvasKit que já vem com o
-  react-native-skia (`npm run art` recria assets/images; `npm run art:brand` só o logo, os
-  ícones do app e o splash); os sons, em
-  scripts/audio (`npm run sfx`). Ajuste lá, nunca editando os arquivos
-  gerados à mão. Não baixe assets externos sem perguntar. Sem sprite
-  carregada, o render usa formas geométricas. A pixel art antiga ficou em
-  scripts/art-pixel (fora do build).
+- A produção usa pixel art RPG detalhada, aprovada em `docs/pixel16/DIRECAO_VISUAL.md`.
+  Fontes PNG preservadas em `assets/pixel16-detailed`; prompts/procedência em
+  `docs/pixel16/production/` e `docs/pixel16/detailed/provenance.json`.
+  `npm run art:pixel:detailed` empacota fontes, registro, retratos, ícones, materiais
+  e identidade sem alterar os originais. `art:pixel:detailed:check` verifica o conjunto.
+  Editar scripts/fontes, nunca saídas geradas manualmente. Não baixar assets/fontes
+  externos sem perguntar. Arte nova usa imagegen quando apropriado.
+- A campanha, demais modos e a interface usam o catálogo completo: 45 unidades,
+  24 cartas, 30 retratos de inimigos, 12 cenários e três bases (normal/blindada/espacial).
+  Metadados e módulos em `src/game/render/pixel16/production.ts`. Mundo lógico não muda;
+  viewport decorativo não altera colisões nem zona de arrasto. Nearest para as imagens,
+  posições contínuas para evitar trepidação. Paths novos usam Skia.PathBuilder.
+- `scripts/art`/`assets/images` preservam a geração cartoon anterior para comparação
+  de desenvolvimento. `npm run art` e `art:brand` são comandos legados; não substituem
+  a arte de produção. Os sons continuam em `scripts/audio` (`npm run sfx`).
+  Sem sprite carregada, render mantém fallback geométrico. Cobertura/QA em
+  `docs/pixel16/PRODUCAO.md`. Homologação física não é inferida de testes de simulador.
 
 ## Como trabalhar em cada etapa
 

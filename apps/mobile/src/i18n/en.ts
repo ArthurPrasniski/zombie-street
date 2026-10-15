@@ -186,6 +186,7 @@ export const en = {
     worldZombie: (n: number, name: string) => `World ${n} · ${name}`,
     worldBoss: (n: number, name: string) => `World boss ${n} · ${name}`,
     fromStage: (label: string) => `From stage ${label}`,
+    fromPod: "Spawns from the Pod",
     fromSplitter: "Spawns from the Splitter",
     close: "Close",
     descriptions: {

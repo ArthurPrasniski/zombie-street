@@ -10,37 +10,13 @@ import { t as pt } from '@/i18n';
 import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { colors } from '@/ui/theme';
+import {DETAILED_CARD_ART} from '@/ui/pixel16/productionPortraits';
 
-/** Retratos das cartas (gerados por scripts/art/portraits.mjs). */
-export const CARD_ART: Record<CardId, number> = {
-  sniper: require('@/assets/images/cards/sniper.png'),
-  sheriff: require('@/assets/images/cards/sheriff.png'),
-  shotgun: require('@/assets/images/cards/shotgun.png'),
-  chainsaw: require('@/assets/images/cards/chainsaw.png'),
-  dog: require('@/assets/images/cards/dog.png'),
-  barricade: require('@/assets/images/cards/barricade.png'),
-  grenade: require('@/assets/images/cards/grenade.png'),
-  medkit: require('@/assets/images/cards/medkit.png'),
-  molotov: require('@/assets/images/cards/molotov.png'),
-  airstrike: require('@/assets/images/cards/airstrike.png'),
-  soldier: require('@/assets/images/cards/soldier.png'),
-  firefighter: require('@/assets/images/cards/firefighter.png'),
-  medic: require('@/assets/images/cards/medic.png'),
-  crossbow: require('@/assets/images/cards/crossbow.png'),
-  turret: require('@/assets/images/cards/turret.png'),
-  landmine: require('@/assets/images/cards/landmine.png'),
-  drone: require('@/assets/images/cards/drone.png'),
-  tesla: require('@/assets/images/cards/tesla.png'),
-  laser: require('@/assets/images/cards/laser.png'),
-  titan: require('@/assets/images/cards/titan.png'),
-  cryo: require('@/assets/images/cards/cryo.png'),
-  forcefield: require('@/assets/images/cards/forcefield.png'),
-  blackhole: require('@/assets/images/cards/blackhole.png'),
-  orbital: require('@/assets/images/cards/orbital.png'),
-};
+/** Retratos das cartas (arte RPG detalhada). */
+export const CARD_ART: Record<CardId, number> = DETAILED_CARD_ART;
 
-const FRAMES = ['#ffd96a', '#6ab8ff', '#c08aff'];
-const FRAME_EDGES = ['#9a6a1a', '#1f5a9a', '#5a2a9a'];
+const FRAMES = ['#b89a60', '#7297ac', '#aa87ba'];
+const FRAME_EDGES = ['#655035', '#364f63', '#594366'];
 
 interface Props {
   card: CardId;
@@ -74,8 +50,8 @@ export function CardView({ card, width, level, dimmed, selected, locked, hideNam
   // Moldura pela evolução: dourada, azul (nível 10) ou roxa (nível 20)
   const tier = level === undefined ? 0 : evolutionTier(level);
   return (
-    <View style={[styles.frame, { width, height, padding: pad, borderRadius: width * 0.18, backgroundColor: FRAMES[tier] }, quiet && styles.quietFrame, quiet && tier === 0 ? { backgroundColor: '#746647' } : null, quiet && locked ? styles.quietLocked : null, selected && styles.selected]}>
-      <View style={[styles.inner, { borderRadius: width * 0.13, borderColor: FRAME_EDGES[tier], backgroundColor: def.kind === 'troop' ? '#2f6aa8' : '#b8502a' }, mastery > 0 ? { borderColor: ['#8c8067','#d5b581','#75cace','#c695ff'][mastery] } : null]}>
+    <View style={[styles.frame, { width, height, padding: pad, borderRadius: 2, backgroundColor: FRAMES[tier] }, quiet && styles.quietFrame, quiet && tier === 0 ? { backgroundColor: '#746647' } : null, quiet && locked ? styles.quietLocked : null, selected && styles.selected]}>
+      <View style={[styles.inner, { borderRadius: 0, borderColor: FRAME_EDGES[tier], backgroundColor: def.kind === 'troop' ? '#303f43' : '#554333' }, mastery > 0 ? { borderColor: ['#8c8067','#d5b581','#75cace','#c695ff'][mastery] } : null]}>
         {!quiet && <View style={styles.glow} />}
         <CardArt card={card} size={width * 0.94} />
         {!hideName && (
@@ -125,7 +101,7 @@ const styles = StyleSheet.create({
   quietLockIcon: { width: 16, height: 16 },
   selected: { backgroundColor: colors.accent },
   inner: { flex: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'flex-end', borderWidth: 2 },
-  glow: { position: 'absolute', width: '125%', aspectRatio: 1, top: '4%', borderRadius: 999, backgroundColor: 'rgba(255, 255, 255, 0.22)' },
+  glow: { position: 'absolute', left: 0, right: 0, top: 0, height: 2, backgroundColor: '#e5c77f55' },
   ribbon: { position: 'absolute', bottom: 3, left: -3, right: -3, paddingVertical: 1, paddingHorizontal: 6, alignItems: 'center', backgroundColor: 'rgba(23, 20, 27, 0.72)' },
   name: { textAlign: 'center' },
   cost: { position: 'absolute', alignItems: 'center' },

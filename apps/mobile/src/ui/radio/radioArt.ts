@@ -1,11 +1,11 @@
 import type { Speaker } from '@/game/data/story';
 
-/** Retratos do rádio (gerados por scripts/art/portraits.mjs). */
+/** Retratos do rádio (arte RPG detalhada, derivada pelo pipeline pixel16-detailed). */
 export const RADIO_ART: Record<Speaker, number> = {
-  sheriff: require('@/assets/images/radio/sheriff.png'),
-  sniper: require('@/assets/images/radio/sniper.png'),
-  vega: require('@/assets/images/radio/vega.png'),
-  static: require('@/assets/images/radio/static.png'),
+  sheriff: require('@/assets/pixel16-detailed/radio/sheriff.png'),
+  sniper: require('@/assets/pixel16-detailed/radio/sniper.png'),
+  vega: require('@/assets/pixel16-detailed/extras/vega.png'),
+  static: require('@/assets/pixel16-detailed/extras/static.png'),
 };
 
 /** Cor do nome de quem fala. */

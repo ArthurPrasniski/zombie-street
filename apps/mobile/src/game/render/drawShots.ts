@@ -16,7 +16,7 @@ function bolt(canvas: SkCanvas, paint: SkPaint, fromX: number, fromY: number, to
   const hx = fromX + dx * p;
   const hy = fromY + dy * p;
   paint.setStyle(PaintStyle.Stroke);
-  paint.setStrokeCap(StrokeCap.Round);
+  paint.setStrokeCap(StrokeCap.Square);
   paint.setColor(Skia.Color(OUTLINE));
   paint.setStrokeWidth(5);
   paint.setAlphaf(1);
@@ -46,7 +46,7 @@ function laserBeam(canvas: SkCanvas, paint: SkPaint, fromX: number, fromY: numbe
   'worklet';
   const alpha = Math.max(0, ttl / (TRACER_TTL * 1.5));
   paint.setStyle(PaintStyle.Stroke);
-  paint.setStrokeCap(StrokeCap.Round);
+  paint.setStrokeCap(StrokeCap.Square);
   for (const [width, color, a] of [[12, '#ff4fd8', 0.35], [6, '#ff7ae4', 0.8], [2.4, '#ffffff', 1]] as const) {
     paint.setStrokeWidth(width);
     paint.setColor(Skia.Color(color));
@@ -62,7 +62,7 @@ export function zap(canvas: SkCanvas, paint: SkPaint, e: Extract<Effect, { kind:
   'worklet';
   const alpha = Math.max(0, e.ttl / ZAP_TTL);
   const tick = Math.floor(e.ttl * 60);
-  const path = Skia.Path.Make();
+  const path = Skia.PathBuilder.Make();
   path.moveTo(e.points[0], e.points[1]);
   for (let i = 2; i < e.points.length; i += 2) {
     const ax = e.points[i - 2];
@@ -75,13 +75,14 @@ export function zap(canvas: SkCanvas, paint: SkPaint, e: Extract<Effect, { kind:
       path.lineTo(ax + (bx - ax) * t + jitter, ay + (by - ay) * t - jitter * 0.6);
     }
   }
+  const shape=path.detach();
   paint.setStyle(PaintStyle.Stroke);
-  paint.setStrokeCap(StrokeCap.Round);
+  paint.setStrokeCap(StrokeCap.Square);
   for (const [width, color, a] of [[9, '#3ee8ff', 0.3], [4, '#9ff4ff', 0.9], [1.6, '#ffffff', 1]] as const) {
     paint.setStrokeWidth(width);
     paint.setColor(Skia.Color(color));
     paint.setAlphaf(alpha * a);
-    canvas.drawPath(path, paint);
+    canvas.drawPath(shape, paint);
   }
   paint.setStyle(PaintStyle.Fill);
   paint.setAlphaf(1);
@@ -99,7 +100,7 @@ export function drawTracer(canvas: SkCanvas, paint: SkPaint, fromX: number, from
   }
   const alpha = Math.max(0, ttl / TRACER_TTL);
   paint.setStyle(PaintStyle.Stroke);
-  paint.setStrokeCap(StrokeCap.Round);
+  paint.setStrokeCap(StrokeCap.Square);
   paint.setStrokeWidth(6);
   paint.setColor(Skia.Color('#ffc93c'));
   paint.setAlphaf(alpha * 0.6);

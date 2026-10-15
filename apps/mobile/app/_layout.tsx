@@ -29,13 +29,12 @@ const theme = {
   colors: { ...DarkTheme.colors, background: colors.background, card: colors.surface, primary: colors.accent },
 };
 
-/** Layout raiz: carrega as fontes (Lilita One e Rubik) e o progresso salvo antes de mostrar o app. */
+/** Root layout loads the bundled Rubik family and saved progress before showing the app. */
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     [fonts.medium]: require('@/assets/fonts/Rubik-Medium.ttf'),
     [fonts.bold]: require('@/assets/fonts/Rubik-Bold.ttf'),
     [fonts.black]: require('@/assets/fonts/Rubik-Black.ttf'),
-    [fonts.display]: require('@/assets/fonts/LilitaOne-Regular.ttf'),
     GoogleSans: require('@/assets/fonts/GoogleSans.ttf'),
   });
   const [loadTimeout, setLoadTimeout] = useState(false);

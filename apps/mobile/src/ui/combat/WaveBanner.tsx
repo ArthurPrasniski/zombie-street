@@ -25,5 +25,5 @@ export function WaveBanner() {
 
 const styles = StyleSheet.create({
   banner: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
-  card: { alignItems: 'center', gap: 2, paddingVertical: 14, paddingHorizontal: 28, borderRadius: 24, backgroundColor: colors.veil },
+  card: { alignItems: 'center', gap: 2, paddingVertical: 14, paddingHorizontal: 28, borderRadius: 2, backgroundColor: colors.veil },
 });

@@ -24,7 +24,7 @@ export function RouteProgress({ first, total, cleared, next }: { first: number; 
           if (stage === next && stage > cleared) {
             return (
               <View key={stage} style={styles.pin}>
-                <AppText variant="number" style={styles.pinText}>
+                <AppText variant="number" color={colors.ink} style={styles.pinText}>
                   {`${i + 1}`}
                 </AppText>
               </View>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 22,
-    borderRadius: 11,
+    borderRadius: 1,
     backgroundColor: '#3a3640',
     flexDirection: 'row',
     alignItems: 'center',
@@ -63,12 +63,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.outline,
   },
-  dash: { width: 10, height: 3, borderRadius: 1.5, backgroundColor: 'rgba(255, 201, 40, 0.55)' },
+  dash: { width: 10, height: 3, borderRadius: 0, backgroundColor: 'rgba(255, 201, 40, 0.55)' },
   stops: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 2 },
   stop: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: 2,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.surfaceHigh,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   pin: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 2,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.yellow,

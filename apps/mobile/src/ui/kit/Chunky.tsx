@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+
+import { MATERIAL_MODULES } from '@/assets/pixel16-detailed/modules';
 
 import { colors } from '@/ui/theme';
 
 interface Props {
   /** Cor da face e da espessura embaixo (mais escura). */
   face: string;
+  material?: keyof typeof MATERIAL_MODULES;
   edge: string;
   radius?: number;
   /** Espessura embaixo, em pontos; some quando pressionado. */
@@ -19,13 +22,16 @@ interface Props {
   children?: ReactNode;
 }
 
-/** Peça "gordinha" estilo Clash: contorno escuro, espessura embaixo e brilho no alto da face. */
-export function Chunky({ face, edge, radius = 16, depth = 5, pressed, gloss = 0.3, glossHeight = '40%', style, faceStyle, children }: Props) {
+/** Reusable steel/brass panel. Small bevels replace the former rounded plastic gloss. */
+export function Chunky({ face, edge, material = 'steel', depth = 4, pressed, gloss = 0.15, style, faceStyle, children }: Props) {
   return (
-    <View style={[styles.outer, { borderRadius: radius, backgroundColor: edge, paddingBottom: pressed ? 1 : depth, marginTop: pressed ? depth - 1 : 0 }, style]}>
-      <View style={[styles.face, { borderRadius: radius - 3, backgroundColor: face }, faceStyle]}>
-        {gloss > 0 && <View style={[styles.gloss, { height: glossHeight, borderRadius: Math.max(4, radius - 6), backgroundColor: `rgba(255, 255, 255, ${gloss})` }]} />}
+    <View style={[styles.outer, { backgroundColor: edge, paddingBottom: pressed ? 1 : depth, marginTop: pressed ? depth - 1 : 0 }, style, styles.square]}>
+      <View style={[styles.face, { backgroundColor: face }, faceStyle, styles.square]}>
+        <Image accessible={false} source={MATERIAL_MODULES[material]} resizeMode="repeat" style={styles.texture} />
         {children}
+        <View pointerEvents="none" style={styles.bevel} />
+        {gloss > 0 && <View pointerEvents="none" style={[styles.highlight, { opacity: Math.min(gloss,0.22) }]} />}
+        <View pointerEvents="none" style={styles.seam} />
       </View>
     </View>
   );
@@ -33,6 +39,10 @@ export function Chunky({ face, edge, radius = 16, depth = 5, pressed, gloss = 0.
 
 const styles = StyleSheet.create({
   outer: { borderWidth: 3, borderColor: colors.outline },
+  square: { borderRadius: 2 },
+  texture: { ...StyleSheet.absoluteFill, opacity: 0.13 },
   face: { overflow: 'hidden' },
-  gloss: { position: 'absolute', left: 5, right: 5, top: 3 },
+  bevel: { ...StyleSheet.absoluteFill, borderTopWidth: 1, borderLeftWidth: 1, borderBottomWidth: 2, borderRightWidth: 2, borderTopColor: '#fff0c140', borderLeftColor: '#fff0c128', borderBottomColor: '#090d144d', borderRightColor: '#090d1433' },
+  highlight: { position: 'absolute', left: 4, right: 4, top: 2, height: 1, backgroundColor: '#fff0c1' },
+  seam: { position: 'absolute', left: 3, bottom: 2, width: 3, height: 3, backgroundColor: '#fff0c124' },
 });

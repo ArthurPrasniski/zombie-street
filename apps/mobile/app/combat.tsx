@@ -44,7 +44,7 @@ import { AppText } from '@/ui/kit/AppText';
 import { colors } from '@/ui/theme';
 import { worldName, worldTint } from '@/ui/worldInfo';
 
-type Params = { mode?: string; autoplay?: string; stress?: string; fast?: string; spawn?: string; event?: string; stage?: string; deck?: string; cast?: string };
+type Params = { mode?: string; autoplay?: string; stress?: string; fast?: string; spawn?: string; event?: string; stage?: string; deck?: string; cast?: string;artworld?:string };
 
 /** Ferramentas de desenvolvimento pela URL (docs/ARQUITETURA.md); fora do __DEV__, nada. */
 function devOptions(dev: Params): DevOptions {
@@ -89,7 +89,6 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
   const devDeck = devOptions(params).deck;
   const deck = weekly ? [...WEEKLY_DECK] : devDeck ? matchDeck(devDeck, savedDeck) : savedDeck;
   const session = useSessionStore();
-  const { insets, sceneW, sceneH, stripH, cardWidth } = useCombatLayout();
   const [runId, setRunId] = useState(0);
   const [confirmExit, setConfirmExit] = useState(false);
   const { result, clearResult, scenario, onEvent } = useCombatEvents(training, expedition, !weekly && !survival && stage === 1);
@@ -105,11 +104,14 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
   // Na Sobrevivência o cenário muda a cada 10 ondas; as sheets seguem o mundo atual
   const worldIndex = survival ? survivalWorld(session.wave) : worldOf(stage);
   const world = survival ? WORLDS[worldIndex] : worldDef(worldIndex);
+  // Development art review can use training without advancing a campaign save.
+  const visualWorld=__DEV__?WORLDS.find(w=>w.id===params.artworld)?.id??world.id:world.id;
+  const { insets, sceneW, sceneH, stripH, cardWidth, scaleY } = useCombatLayout();
   const zombies = [...(survival ? survivalZombies(session.wave) : stageZombies(stage)), ...(devOptions(params).spawn ?? [])];
   const units: UnitId[] = [...deck.filter((c) => isTroop(CARDS[c])), ...zombies] as UnitId[];
   const match: MatchKind = expedition ? { mode: 'expedition' } : weekly ? { mode: 'weekly' } : training ? { mode: 'training' } : survival ? { mode: 'survival' } : { mode: 'stage', stage };
   const { snapshot, send } = useGameLoop(match, runId, (event) => { if (event.type === 'expeditionChoice') setBoons(event.choices); onEvent(event); }, devOptions(params));
-  const { drag, draggingSlot, canvasView, measure, ghostStyle, handlers } = useCardDrag(session.hand, send, cardWidth);
+  const { drag, draggingSlot, canvasView, measure, ghostStyle, handlers } = useCardDrag(session.hand, send, cardWidth, scaleY);
 
   const togglePause = () => send({ type: 'setPaused', paused: !session.paused });
   const askExit = () => {
@@ -148,16 +150,18 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
   const showBanner = session.phase === 'intermission' && !session.paused && !result;
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <View style={styles.screen}>
       <View ref={canvasView} style={[styles.scene, { width: sceneW, height: sceneH }]} onLayout={measure}>
-        <GameCanvas snapshot={snapshot} drag={drag} width={sceneW} world={world.id} units={units} />
+        <GameCanvas snapshot={snapshot} drag={drag} width={sceneW} height={sceneH} world={visualWorld} units={units} />
         {!survival && worldTint(worldIndex) && <View style={[styles.tint, { backgroundColor: worldTint(worldIndex) ?? undefined }]} pointerEvents="none" />}
-        <View style={styles.hud} pointerEvents="box-none">
-          <CombatHud onSpeed={(speed) => send({ type: 'setSpeed', speed })} onBack={askExit} onTogglePause={togglePause} />
+        <View style={[StyleSheet.absoluteFill, { top: insets.top, left: insets.left, right: insets.right }]} pointerEvents="box-none">
+          <View style={styles.hud} pointerEvents="box-none">
+            <CombatHud onSpeed={(speed) => send({ type: 'setSpeed', speed })} onBack={askExit} onTogglePause={togglePause} />
+          </View>
+          <TutorialRadio active={!weekly && stage === 1 && !survival && !intro && !result} />
+          {scenario && !result && <EventBanner kind={scenario} />}
         </View>
-        <TutorialRadio active={!weekly && stage === 1 && !survival && !intro && !result} />
         {training && <View style={{ position: 'absolute', bottom: 12, left: 12, right: 12 }}><AppText variant="small">{tutorialText.noReward}</AppText></View>}
-        {scenario && !result && <EventBanner kind={scenario} />}
         {showBanner && <WaveBanner />}
         {session.troopsFull && !result && (
           <View style={styles.full} pointerEvents="none">
@@ -167,7 +171,7 @@ function CombatMatch({ onReplay }: { onReplay: () => void }) {
           </View>
         )}
       </View>
-      <View style={[styles.strip, { height: stripH }]}>
+      <View style={[styles.strip, { height: stripH, paddingBottom: insets.bottom }]}>
         <CardHand hand={session.hand} next={session.next} blood={session.blood} troopsFull={session.troopsFull} cardWidth={cardWidth} draggingSlot={draggingSlot} {...handlers} />
         <BloodBar snapshot={snapshot} blood={session.blood} width={cardWidth * 4 + 24} />
       </View>
@@ -201,5 +205,5 @@ const styles = StyleSheet.create({
   strip: { alignSelf: 'stretch', paddingHorizontal: 12, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.line, alignItems: 'center', justifyContent: 'center', gap: 10 },
   ghost: { position: 'absolute', left: 0, top: 0 },
   tint: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  full: { position: 'absolute', bottom: 8, alignSelf: 'center', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 999, backgroundColor: 'rgba(216, 38, 58, 0.85)', borderWidth: 2, borderColor: colors.outline },
+  full: { position: 'absolute', bottom: 8, alignSelf: 'center', paddingVertical: 4, paddingHorizontal: 12, borderRadius: 2, backgroundColor: 'rgba(216, 38, 58, 0.85)', borderWidth: 2, borderColor: colors.outline },
 });

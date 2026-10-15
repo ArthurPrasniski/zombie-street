@@ -23,7 +23,7 @@ interface Props {
   padding?: number;
 }
 
-/** Cartão-painel estilo Clash: cor chapada, contorno escuro, espessura embaixo e enfeites da Home. */
+/** Painel de metal com textura discreta, contorno escuro e relevo curto. */
 export function Card({ children, color = colors.surface, accent, watermark, split, border, onPress, style, containerStyle, padding = 20 }: Props) {
   const body = (pressed: boolean) => (
     <Chunky

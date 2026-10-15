@@ -33,6 +33,6 @@ export function LevelUpBurst({ label, color = colors.yellow }: { label: string; 
 const styles = StyleSheet.create({
   wrap: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(10, 9, 12, 0.55)', zIndex: 30 },
   rays: { position: 'absolute', width: 320, height: 320, alignItems: 'center', justifyContent: 'center' },
-  ray: { position: 'absolute', width: 18, height: 320, borderRadius: 9, opacity: 0.18 },
+  ray: { position: 'absolute', width: 18, height: 320, borderRadius: 2, opacity: 0.18 },
   label: { fontSize: 48, lineHeight: 54 },
 });

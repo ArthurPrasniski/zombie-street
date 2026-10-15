@@ -1,5 +1,5 @@
 import { useSettingsStore } from '@/state/settingsStore';
-import { StyleSheet, Text, type TextProps } from 'react-native';
+import { StyleSheet, Text, type TextProps,type TextStyle } from 'react-native';
 
 import { StrokeText } from '@/ui/kit/StrokeText';
 import { colors, fonts } from '@/ui/theme';
@@ -9,22 +9,19 @@ type Variant = 'display' | 'title' | 'heading' | 'body' | 'small' | 'eyebrow' | 
 interface Props extends TextProps {
   variant?: Variant;
   color?: string;
-  /** Contorno grosso estilo Clash; padrão: ligado nos títulos, rótulos e números. */
+  /** Optional outline for text over busy artwork. Panel text stays unoutlined. */
   stroke?: boolean;
 }
 
-const STROKED = new Set<Variant>(['display', 'title', 'heading', 'label', 'number']);
-
-/**
- * Texto da interface. Títulos, rótulos e números: Lilita One com contorno e sombra (estilo
- * Clash). Corpo e textos pequenos: Rubik. eyebrow/display/label: caixa alta.
- */
+/** Readable RPG typography using bundled fonts; preserves all locale glyphs. */
 export function AppText({ variant = 'body', color, style, children, stroke, ...props }: Props) {
   const large = useSettingsStore((s) => s.largeText);
   const upper = variant === 'display' || variant === 'eyebrow' || variant === 'label';
   const content = upper && typeof children === 'string' ? children.toUpperCase() : children;
-  const textStyle = [styles.base, styles[variant], color ? { color } : null, style, large ? { fontSize: styles[variant].fontSize * 1.2, lineHeight: styles[variant].lineHeight * 1.2 } : null];
-  if (!large && (stroke ?? STROKED.has(variant))) {
+  const baseStyle = [styles.base, styles[variant], color ? { color } : null, style];
+  const resolved = StyleSheet.flatten(baseStyle) as TextStyle;
+  const textStyle = [baseStyle, large ? { fontSize: (resolved.fontSize ?? 15) * 1.2, lineHeight: (resolved.lineHeight ?? 20) * 1.2 } : null];
+  if (!large && stroke) {
     return (
       <StrokeText {...props} style={textStyle}>
         {content}

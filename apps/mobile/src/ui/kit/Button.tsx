@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { AppText } from '@/ui/kit/AppText';
 import { Chunky } from '@/ui/kit/Chunky';
-import { colors, darkEdge } from '@/ui/theme';
+import { colors, darkEdge,textOnColor } from '@/ui/theme';
 
 type Variant = 'primary' | 'solid' | 'dark';
 type Size = 'l' | 'm' | 's';
@@ -28,22 +28,22 @@ const PAD: Record<Size, { v: number; h: number; font: number; depth: number }> =
   s: { v: 6, h: 12, font: 15, depth: 4 },
 };
 
-/** Botão "gordinho" estilo Clash: amarelo (padrão), colorido ou escuro, texto branco contornado. */
+/** Botão de metal com relevo curto e texto legível sobre cada cor. */
 export function Button({ label, onPress, variant = 'primary', size = 'm', color, chevron, icon, disabled, style }: Props) {
   const face = variant === 'primary' ? colors.yellow : variant === 'dark' ? colors.surfaceHigh : (color ?? colors.featured);
   const pad = PAD[size];
   const text = { fontSize: pad.font, lineHeight: pad.font + 4 };
   return (
-    <Pressable onPress={onPress} disabled={disabled} accessibilityRole="button" accessibilityLabel={label} style={style}>
+    <Pressable onPress={onPress} disabled={disabled} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{disabled:!!disabled}} style={style}>
       {({ pressed }) => (
-        <Chunky face={face} edge={darkEdge(face)} radius={size === 's' ? 12 : 16} depth={pad.depth} pressed={pressed} gloss={variant === 'dark' ? 0.08 : 0.3} style={disabled && styles.disabled}>
+        <Chunky material={variant === 'primary' ? 'brass' : 'steel'} face={face} edge={darkEdge(face)} radius={size === 's' ? 12 : 16} depth={pad.depth} pressed={pressed} gloss={variant === 'dark' ? 0.08 : 0.3} style={disabled && styles.disabled}>
           <View style={[styles.content, { paddingVertical: pad.v, paddingHorizontal: pad.h }]}>
             {icon}
-            <AppText variant="label" style={text}>
+            <AppText variant="label" color={textOnColor(face)} style={[text,styles.label]}>
               {label}
             </AppText>
             {chevron && (
-              <AppText variant="label" style={{ fontSize: pad.font + 4, lineHeight: pad.font + 4 }}>
+              <AppText variant="label" color={textOnColor(face)} style={{ fontSize: pad.font + 4, lineHeight: pad.font + 4 }}>
                 ›
               </AppText>
             )}
@@ -55,6 +55,7 @@ export function Button({ label, onPress, variant = 'primary', size = 'm', color,
 }
 
 const styles = StyleSheet.create({
-  content: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  content: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  label: { flexShrink:1, textAlign:'center' },
   disabled: { opacity: 0.45 },
 });
