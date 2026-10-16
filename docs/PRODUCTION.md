@@ -180,3 +180,23 @@ Referências: [deploy Dokploy](./DEPLOY.md),
 
 Referências de configuração: [certificados do Google Sign-In](https://react-native-google-signin.github.io/docs/setting-up/get-config-file)
 e [planos Google Play no RevenueCat](https://www.revenuecat.com/docs/getting-started/entitlements/android-products).
+
+### Google Play: “Este item já é seu”
+
+Esse aviso é diferente de uma tentativa sem cobrança: a Play informa que há um item
+adquirido. O cliente sincroniza os recibos existentes com RevenueCat sem reabrir o
+pagamento, consulta a entrega no backend e mantém a proteção do produto enquanto
+ela não for confirmada. Uma pendência não bloqueia outros produtos nem a atualização
+de preços. Não apagar ou liberar uma tentativa com código 6 como se não houvesse compra.
+
+Em Ajustes → Compras e entregas, “Verificar entregas” agora consulta a loja e o servidor.
+O diagnóstico mostra códigos e IDs públicos de produtos, sem mensagens brutas do SDK,
+chaves ou e-mail. Para diagnosticar a assinatura, abrir a loja, atualizar os preços e
+depois consultar `membership`, `membershipPlans` e `offerings` nessa tela. A consulta
+sem filtro de plano só aceita o retorno `zr_membership_monthly:monthly`; outro plano
+fica registrado no diagnóstico e não é vendido como mensal.
+
+Na RevenueCat, confirmar que gemas e passe são consumíveis no aplicativo Android:
+um produto marcado como não consumível deixa de ser consumido automaticamente na Play.
+Se já estão corretos, usar o código de `sync` para investigar a validação do recibo e
+conferir evento/webhook no mesmo projeto e ambiente da conta do aplicativo.

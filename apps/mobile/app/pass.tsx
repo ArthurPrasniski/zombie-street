@@ -113,7 +113,7 @@ export default function PassScreen() {
       ) : (
         <View style={{ gap: 8 }}>
           <AppText variant="small" color={colors.textMuted}>{pt.pass.validity(formatDateTime(pass.endsAt))}</AppText>
-          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || purchase.pending || !price || !purchasesAvailable()} onPress={() => { setError(null); void purchase.buy(PASS_PRODUCT_ID); }} />
+          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || purchase.isPending(PASS_PRODUCT_ID) || !price || !purchasesAvailable()} onPress={() => { setError(null); void purchase.buy(PASS_PRODUCT_ID); }} />
           {pricesError && (
             <>
               <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>

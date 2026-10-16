@@ -34,7 +34,7 @@ export default function ShopScreen() {
   const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(GEM_PRODUCT_IDS);
   const [acting, setBusy] = useState(false);
   const purchase = useProductPurchase();
-  const busy = acting || purchase.busy || purchase.pending;
+  const busy = acting || purchase.busy;
   const [note, setNote] = useState<string | null>(null);
   const connected = user !== null && online;
 
@@ -91,7 +91,7 @@ export default function ShopScreen() {
             </View>
           </Card>
 
-          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} loading={loading} onRetry={retryPrices} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
+          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} loading={loading} onRetry={retryPrices} canRestore={connected && purchasesAvailable()} disabled={busy || purchase.isPending(MEMBERSHIP.productId) || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
 
           <AppText variant="eyebrow" style={styles.section}>
             {pt.shop.gems}
@@ -99,7 +99,7 @@ export default function ShopScreen() {
           <AppText variant="small" color={colors.textMuted}>
             {purchasesAvailable() ? pt.shop.gemsHint : pt.shop.noStore}
           </AppText>
-          {pricesError && (
+          {pricesError && GEM_PACKS.some((pack) => !prices[pack.productId]) && (
             <View style={{ gap: 8 }}>
               <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
               <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={loading} onPress={retryPrices} />
@@ -108,7 +108,7 @@ export default function ShopScreen() {
           <View style={styles.grid}>
             {GEM_PACKS.map((pack) => (
               <View key={pack.productId} style={styles.cell}>
-                <GemPackCard pack={pack} price={prices[pack.productId] ?? null} loading={loading} disabled={busy || !connected || !purchasesAvailable()} onBuy={() => buyGems(pack.productId)} />
+                <GemPackCard pack={pack} price={prices[pack.productId] ?? null} loading={loading} disabled={busy || purchase.isPending(pack.productId) || !connected || !purchasesAvailable()} onBuy={() => buyGems(pack.productId)} />
               </View>
             ))}
           </View>

@@ -7,7 +7,7 @@ import { type PurchaseAttempt, usePurchaseStore } from '@/state/purchaseStore';
 /** User-reviewed attempts without a receipt may be released without changing balances. */
 export function releaseUnchargedAttempt(id: string): void {
   const attempt = usePurchaseStore.getState().attempts.find((a) => a.id === id);
-  if (attempt?.userId !== useAccountStore.getState().user?.id || attempt?.status !== 'pending' || attempt.transactionId) return;
+  if (attempt?.userId !== useAccountStore.getState().user?.id || attempt?.status !== 'pending' || attempt.transactionId || attempt.errorCode === '6') return;
   usePurchaseStore.getState().update(id, { status: 'error' });
 }
 

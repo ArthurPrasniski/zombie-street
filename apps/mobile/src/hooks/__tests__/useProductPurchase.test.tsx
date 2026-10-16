@@ -12,6 +12,7 @@ const mockListeners = new Set<() => void>();
 jest.mock('@/services/economy', () => ({
   buyProduct: (...args: unknown[]) => mockBuy(...args),
   refreshEconomy: () => mockRefresh(),
+  recoverStorePurchases: () => mockRefresh(),
   purchaseConfirmed: () => mockConfirmed(),
 }));
 jest.mock('@/state/accountStore', () => ({ useAccountStore: {
@@ -87,4 +88,26 @@ test('atualizar status consulta a entrega sem comprar novamente', async () => {
   expect(mockRefresh).toHaveBeenCalledTimes(1);
   expect(mockBuy).toHaveBeenCalledTimes(1);
   expect(hook.message).toBe('Gemas recebidas!');
+});
+
+test('pendência bloqueia apenas o produto afetado', async () => {
+  mockBuy.mockResolvedValueOnce('pending').mockResolvedValueOnce('confirmed');
+  await act(async () => hook.buy('zr_gems_80'));
+  mockAttempts = [{ userId: 'player', productId: 'zr_gems_80', status: 'pending' }];
+  act(() => { mockStoreListeners.forEach((listener) => listener({ attempts: mockAttempts })); });
+  expect(hook.isPending('zr_gems_80')).toBe(true);
+  expect(hook.isPending('zr_membership_monthly')).toBe(false);
+  await act(async () => hook.buy('zr_membership_monthly'));
+  expect(mockBuy).toHaveBeenCalledTimes(2);
+  expect(hook.message).toContain('Assinatura confirmada');
+  expect(hook.isPending('zr_gems_80')).toBe(true);
+});
+
+test('erro ao recuperar não deixa controles presos em confirmação', async () => {
+  mockBuy.mockResolvedValue('pending');
+  await act(async () => hook.buy('zr_gems_80'));
+  mockRefresh.mockRejectedValueOnce(new Error('sync unavailable'));
+  await act(async () => hook.check());
+  expect(hook.busy).toBe(false);
+  expect(hook.pending).toBe(true);
 });

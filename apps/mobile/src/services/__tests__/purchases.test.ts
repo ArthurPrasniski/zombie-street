@@ -3,13 +3,14 @@ const mockLogIn = jest.fn();
 const mockGetProducts = jest.fn();
 const mockGetOfferings = jest.fn();
 const mockPurchaseStoreProduct = jest.fn();
+const mockSync = jest.fn();
 let mockRevenueCatKey = 'test_public_key';
 
 jest.mock('@/services/env', () => ({ NATIVE: true, KEYS: { get revenueCat() { return mockRevenueCatKey; } } }));
 jest.mock('@/services/api', () => ({ api: jest.fn() }));
 jest.mock('react-native-purchases', () => ({
   __esModule: true,
-  default: { configure: mockConfigure, logIn: mockLogIn, getProducts: mockGetProducts, getOfferings: mockGetOfferings, purchaseStoreProduct: mockPurchaseStoreProduct },
+  default: { configure: mockConfigure, logIn: mockLogIn, getProducts: mockGetProducts, getOfferings: mockGetOfferings, purchaseStoreProduct: mockPurchaseStoreProduct, syncPurchasesForResult: mockSync },
   PURCHASES_ERROR_CODE: jest.requireActual('@revenuecat/purchases-typescript-internal').PURCHASES_ERROR_CODE,
   PRODUCT_CATEGORY: { NON_SUBSCRIPTION: 'gems', SUBSCRIPTION: 'subscription' },
 }));
@@ -23,6 +24,7 @@ beforeEach(() => {
   mockRevenueCatKey = 'test_public_key';
   mockGetOfferings.mockReset().mockResolvedValue({ all: {} });
   mockPurchaseStoreProduct.mockReset();
+  mockSync.mockReset().mockResolvedValue({ customerInfo: { nonSubscriptionTransactions: [] } });
 });
 afterEach(() => jest.restoreAllMocks());
 
@@ -114,4 +116,51 @@ test('produto rejeitado pela loja não cria uma entrega pendente', async () => {
   await productPrices('player');
   mockPurchaseStoreProduct.mockRejectedValue({ code: '5' });
   await expect(purchase('zr_gems_80')).rejects.toMatchObject({ name: 'Error', message: 'Compra não iniciada', code: '5' });
+});
+
+test('item já comprado sincroniza a loja sem abrir outra cobrança nem inventar recibo', async () => {
+  const { productPrices, purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_gems_80', priceString: 'R$ 4,99' }]);
+  await productPrices('player');
+  mockPurchaseStoreProduct.mockRejectedValue({ code: '6' });
+  const receipt = jest.fn();
+  await expect(purchase('zr_gems_80', receipt)).rejects.toMatchObject({ code: '6' });
+  expect(mockSync).toHaveBeenCalledTimes(1);
+  expect(mockPurchaseStoreProduct).toHaveBeenCalledTimes(1);
+  expect(receipt).not.toHaveBeenCalled();
+});
+
+test('falha na sincronização preserva o código de propriedade e seu diagnóstico', async () => {
+  const { productPrices, purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_gems_80', priceString: 'R$ 4,99' }]);
+  await productPrices('player');
+  mockPurchaseStoreProduct.mockRejectedValue({ code: '6' });
+  mockSync.mockRejectedValue({ code: '11', message: 'secret' });
+  await expect(purchase('zr_gems_80')).rejects.toMatchObject({ code: '6' });
+  const { useStoreDiagnostics } = jest.requireActual<typeof import('../storeDiagnostics')>('../storeDiagnostics');
+  expect(useStoreDiagnostics.getState().entries).toEqual(expect.arrayContaining([expect.objectContaining({ stage: 'sync', code: '11' })]));
+  expect(JSON.stringify(useStoreDiagnostics.getState())).not.toContain('secret');
+});
+
+test('consulta sem filtro recupera somente o plano mensal esperado no Android', async () => {
+  mockRevenueCatKey = 'goog_public_key';
+  jest.replaceProperty(jest.requireActual('react-native').Platform, 'OS', 'android');
+  const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
+  mockGetProducts.mockImplementation(async (ids: string[]) => ids[0] === 'zr_membership_monthly' ? [
+    { identifier: 'zr_membership_monthly:annual', priceString: 'R$ 199,00' },
+    { identifier: 'zr_membership_monthly:monthly', priceString: 'R$ 19,90' },
+  ] : []);
+  expect(await productPrices('player')).toEqual({ zr_membership_monthly: 'R$ 19,90' });
+});
+
+test('outro plano não é vendido como mensal e aparece no diagnóstico', async () => {
+  mockRevenueCatKey = 'goog_public_key';
+  jest.replaceProperty(jest.requireActual('react-native').Platform, 'OS', 'android');
+  const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
+  mockGetProducts.mockImplementation(async (ids: string[]) => ids[0] === 'zr_membership_monthly' ? [
+    { identifier: 'zr_membership_monthly:annual', priceString: 'R$ 199,00' },
+  ] : []);
+  expect(await productPrices('player')).toEqual({});
+  const { useStoreDiagnostics } = jest.requireActual<typeof import('../storeDiagnostics')>('../storeDiagnostics');
+  expect(useStoreDiagnostics.getState().entries).toEqual(expect.arrayContaining([expect.objectContaining({ stage: 'membershipPlans', code: 'EXPECTED_PLAN_NOT_RETURNED', products: ['zr_membership_monthly:annual'] })]));
 });

@@ -7,6 +7,7 @@ import { KEYS, NATIVE } from '@/services/env';
 import { localeTag, regionCode } from '@/i18n/locale';
 import { formatMoney } from '@/utils/format';
 import { PurchaseNotStartedError } from '@/services/purchaseErrors';
+import { recordStoreDiagnostic } from '@/services/storeDiagnostics';
 
 // Compras pela App Store / Google Play com o RevenueCat. Quem credita as gemas e ativa o passe é
 // o servidor (webhook do RevenueCat); aqui só abrimos a compra. No Expo Go, a compra é simulada
@@ -38,8 +39,9 @@ export async function identifyPurchaser(userId: string): Promise<void> {
     if (configuredFor === null) Purchases.configure({ apiKey: KEYS.revenueCat, appUserID: userId, preferredUILocaleOverride: localeTag });
     else await Purchases.logIn(userId);
     configuredFor = userId;
+    recordStoreDiagnostic('identity');
   });
-  identification = task.catch(() => undefined);
+  identification = task.catch((error) => { recordStoreDiagnostic('identity', error); });
   await task;
 }
 
@@ -59,7 +61,19 @@ export async function productPrices(userId?: string): Promise<Record<string, str
     Purchases.getProducts([PASS_PRODUCT_ID], PRODUCT_CATEGORY.NON_SUBSCRIPTION),
     Purchases.getProducts([membershipId], PRODUCT_CATEGORY.SUBSCRIPTION),
   ]);
+  const stages = ['gems', 'pass', 'membership'] as const;
+  results.forEach((result, index) => recordStoreDiagnostic(stages[index], result.status === 'rejected' ? result.reason : result.value.length ? undefined : { code: 'PRODUCT_NOT_RETURNED' }, result.status === 'fulfilled' ? result.value.map((p) => p.identifier) : []));
   const products = results.flatMap((result) => result.status === 'fulfilled' ? result.value : []);
+  if (membershipId !== MEMBERSHIP.productId && !products.some((p) => isMembershipProduct(p.identifier))) {
+    try {
+      // Query the subscription without a plan filter to support older native SDKs
+      // and diagnose a catalog that returns a different base-plan identifier.
+      const plans = await Purchases.getProducts([MEMBERSHIP.productId], PRODUCT_CATEGORY.SUBSCRIPTION);
+      const monthly = plans.filter((p) => p.identifier === MEMBERSHIP.androidProductId);
+      products.push(...monthly);
+      recordStoreDiagnostic('membershipPlans', monthly.length ? undefined : { code: 'EXPECTED_PLAN_NOT_RETURNED' }, plans.map((p) => p.identifier));
+    } catch (error) { recordStoreDiagnostic('membershipPlans', error); }
+  }
   if (!products.some((p) => isMembershipProduct(p.identifier))) {
     // Offerings can expose the selected Google Play base plan as a package.
     try {
@@ -69,7 +83,8 @@ export async function productPrices(userId?: string): Promise<Record<string, str
           if (isMembershipProduct(pack.product.identifier)) products.push(pack.product);
         }
       }
-    } catch { /* Preserve prices from product queries when offerings are unavailable. */ }
+      recordStoreDiagnostic('offerings', products.some((p) => isMembershipProduct(p.identifier)) ? undefined : { code: 'MEMBERSHIP_NOT_RETURNED' });
+    } catch (error) { recordStoreDiagnostic('offerings', error); }
   }
   if (!products.length && results.every((result) => result.status === 'rejected')) {
     throw (results[0] as PromiseRejectedResult).reason;
@@ -81,6 +96,17 @@ export async function productPrices(userId?: string): Promise<Record<string, str
 
 export async function restorePurchases(): Promise<void> {
   if (NATIVE) await rc().default.restorePurchases();
+}
+
+/** Resubmit existing store receipts; this never starts a new payment. */
+export async function syncStorePurchases(userId: string) {
+  if (!NATIVE) return null;
+  await identifyPurchaser(userId);
+  try {
+    const result = await rc().default.syncPurchasesForResult();
+    recordStoreDiagnostic('sync');
+    return result.customerInfo;
+  } catch (error) { recordStoreDiagnostic('sync', error); throw error; }
 }
 
 export async function manageSubscriptions(): Promise<void> {
@@ -106,6 +132,11 @@ export async function purchase(productId: string, onReceipt?: (transactionId: st
     if ((error as { userCancelled?: boolean }).userCancelled) return false;
     const code = String((error as { code?: unknown }).code ?? '');
     const C = rc().PURCHASES_ERROR_CODE;
+    recordStoreDiagnostic('purchase', error);
+    if (code === C.PRODUCT_ALREADY_PURCHASED_ERROR && configuredFor) {
+      try { await syncStorePurchases(configuredFor); }
+      catch { /* Diagnostics retain the sync error; ownership still protects this product. */ }
+    }
     if ([C.PURCHASE_NOT_ALLOWED_ERROR, C.PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR].some((value) => value !== undefined && String(value) === code)) {
       throw new PurchaseNotStartedError(code);
     }

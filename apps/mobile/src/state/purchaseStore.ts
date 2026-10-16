@@ -6,6 +6,7 @@ export type PurchaseStatus = 'buying' | 'confirming' | 'pending' | 'success' | '
 export interface PurchaseAttempt {
   id: string; userId: string; productId: string; transactionId: string | null;
   previousReceipts: string[]; startedAt: string; deliveredAt: string | null; status: PurchaseStatus;
+  errorCode?: string;
 }
 interface State { attempts: PurchaseAttempt[]; put(attempt: PurchaseAttempt): void; update(id: string, patch: Partial<PurchaseAttempt>): void }
 export const usePurchaseStore = create<State>()(persist((set) => ({

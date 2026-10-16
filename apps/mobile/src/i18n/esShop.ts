@@ -2,6 +2,7 @@
 
 export const esShop = {
   shop: {
+    alreadyOwned: 'La tienda informa que este producto ya pertenece a tu cuenta. Actualiza el estado para recuperar la compra existente.',
     purchasing: 'Esperando a la tienda…',
     confirming: 'Compra completada en la tienda. Confirmando la entrega…',
     purchasePending: 'No se pudo confirmar la compra o la entrega. No compres de nuevo hasta revisar el historial de la tienda. Actualiza el estado en unos instantes.',

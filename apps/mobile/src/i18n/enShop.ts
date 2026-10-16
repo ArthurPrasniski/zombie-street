@@ -2,6 +2,7 @@
 
 export const enShop = {
   shop: {
+    alreadyOwned: 'The store reports that you already own this product. Check the status to recover the existing purchase.',
     purchasing: 'Waiting for the store…',
     confirming: 'Purchase completed in the store. Confirming delivery…',
     purchasePending: 'The purchase or delivery could not be confirmed. Do not purchase again until you check your store history. Check the status shortly.',

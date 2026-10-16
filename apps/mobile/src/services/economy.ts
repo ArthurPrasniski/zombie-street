@@ -4,13 +4,14 @@ import type { PassTrack } from '@zombie-road/shared/pass';
 import * as Crypto from 'expo-crypto';
 
 import { api, hasApiToken } from '@/services/api';
-import { identifyPurchaser, purchase } from '@/services/purchases';
+import { identifyPurchaser, purchase, syncStorePurchases } from '@/services/purchases';
 import { type AccountState, MAX_APPLIED, useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 import { syncMembershipCoins } from '@/services/membership';
 import { matchingReceipt, reconcilePurchases } from '@/services/purchaseRecovery';
 import { usePurchaseStore } from '@/state/purchaseStore';
 import { PurchaseNotStartedError } from '@/services/purchaseErrors';
+import { storeErrorCode } from '@/services/storeDiagnostics';
 
 // Gemas, loja e Passe (GDD seção 19). O servidor manda nas gemas e no passe; as moedas que ele
 // devolve o app soma no progresso uma vez só (lista `applied`).
@@ -45,6 +46,14 @@ export async function refreshEconomy(): Promise<void> {
   }
 }
 
+/** Manual recovery checks the store as well as the server's delivered receipts. */
+export async function recoverStorePurchases(): Promise<void> {
+  const userId = useAccountStore.getState().user?.id;
+  if (!userId) return;
+  await syncStorePurchases(userId);
+  if (useAccountStore.getState().user?.id === userId) await refreshEconomy();
+}
+
 // O webhook do RevenueCat pode levar alguns segundos: confere a carteira algumas vezes.
 const CONFIRMATION_MS = 60000;
 const POLL_MS = 1000;
@@ -60,7 +69,7 @@ export type PurchaseResult = 'cancelled' | 'confirmed' | 'pending';
 export async function buyProduct(productId: string, onPurchased?: () => void): Promise<PurchaseResult> {
   const before = useAccountStore.getState();
   if (!before.user) throw new Error('sem sessão');
-  if (usePurchaseStore.getState().attempts.some((a) => a.userId === before.user!.id && ['buying', 'confirming', 'pending'].includes(a.status))) return 'pending';
+  if (usePurchaseStore.getState().attempts.some((a) => a.userId === before.user!.id && (['buying', 'confirming'].includes(a.status) || (a.status === 'pending' && a.productId === productId)))) return 'pending';
   await identifyPurchaser(before.user.id);
   const history = await api<PurchaseHistory>('GET', '/purchases');
   if (useAccountStore.getState().user?.id !== before.user.id) throw new Error('conta mudou');
@@ -74,7 +83,11 @@ export async function buyProduct(productId: string, onPurchased?: () => void): P
     }
   } catch (error) {
     const hasReceipt = usePurchaseStore.getState().attempts.find((a) => a.id === id)?.transactionId;
-    usePurchaseStore.getState().update(id, { status: error instanceof PurchaseNotStartedError && !hasReceipt ? 'error' : 'pending' });
+    usePurchaseStore.getState().update(id, { status: error instanceof PurchaseNotStartedError && !hasReceipt ? 'error' : 'pending', errorCode: storeErrorCode(error) });
+    if (storeErrorCode(error) === '6') {
+      await refreshEconomy();
+      return usePurchaseStore.getState().attempts.find((a) => a.id === id)?.status === 'success' ? 'confirmed' : 'pending';
+    }
     throw error;
   }
   usePurchaseStore.getState().update(id, { status: 'confirming' });

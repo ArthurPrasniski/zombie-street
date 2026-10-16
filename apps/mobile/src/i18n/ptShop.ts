@@ -2,6 +2,7 @@
 
 export const ptShop = {
   shop: {
+    alreadyOwned: 'A loja informa que este produto já pertence à sua conta. Atualize o status para recuperar a compra existente.',
     title: 'Loja',
     open: 'Loja',
     subtitle: 'Gemas, moedas e o Passe',

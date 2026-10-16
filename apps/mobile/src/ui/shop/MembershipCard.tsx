@@ -16,7 +16,7 @@ import { Card } from '@/ui/kit/Card';
 import { colors, radius } from '@/ui/theme';
 import { formatDate, formatInt } from '@/utils/format';
 
-export function MembershipCard({ price, disabled, onBuy, loading = false, onRetry }: { price: string | null; disabled: boolean; onBuy: () => void; loading?: boolean; onRetry?: () => void }) {
+export function MembershipCard({ price, disabled, onBuy, loading = false, onRetry, canRestore = true }: { price: string | null; disabled: boolean; onBuy: () => void; loading?: boolean; onRetry?: () => void; canRestore?: boolean }) {
   const active = useMembershipActive();
   const membership = useAccountStore((s) => s.membership);
   const [busy, setBusy] = useState(false);
@@ -65,7 +65,7 @@ export function MembershipCard({ price, disabled, onBuy, loading = false, onRetr
       <AppText variant="small" color={colors.textMuted}>{t.membership.terms}</AppText>
       {NATIVE && (
         <View style={styles.actions}>
-          <Button label={t.membership.restore} variant="dark" size="s" disabled={busy || disabled} onPress={() => { void action(true); }} />
+          <Button label={t.membership.restore} variant="dark" size="s" disabled={busy || !canRestore} onPress={() => { void action(true); }} />
           {active && <Button label={t.membership.manage} variant="dark" size="s" disabled={busy || disabled} onPress={() => { void action(false); }} />}
         </View>
       )}

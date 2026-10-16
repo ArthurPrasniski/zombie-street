@@ -5,17 +5,19 @@ import { releaseUnchargedAttempt } from '@/services/purchaseRecovery';
 jest.mock('@/services/telemetry', () => ({ track: jest.fn() }));
 const mockPurchase = jest.fn();
 const mockApi = jest.fn();
+const mockSync = jest.fn();
 let mockState: AccountState;
 let mockAttempts: PurchaseAttempt[] = [];
 let mockRecords: AccountState['purchases'] = [];
-jest.mock('@/services/purchases', () => ({ identifyPurchaser: jest.fn().mockResolvedValue(undefined), purchase: (...args: unknown[]) => mockPurchase(...args) }));
+jest.mock('@/services/purchases', () => ({ identifyPurchaser: jest.fn().mockResolvedValue(undefined), purchase: (...args: unknown[]) => mockPurchase(...args), syncStorePurchases: (...args: unknown[]) => mockSync(...args) }));
 jest.mock('@/services/api', () => ({ api: (...args: unknown[]) => mockApi(...args), hasApiToken: () => true }));
 jest.mock('@/state/accountStore', () => ({ MAX_APPLIED: 100, useAccountStore: { getState: () => mockState, setState: (patch: Partial<AccountState>) => { mockState = { ...mockState, ...patch }; } } }));
 jest.mock('@/state/progressStore', () => ({ useProgressStore: { getState: () => ({ highestCleared: 0 }) } }));
 jest.mock('@/state/purchaseStore', () => ({ usePurchaseStore: { getState: () => ({ attempts: mockAttempts, put: (a: PurchaseAttempt) => { mockAttempts.push(a); }, update: (id: string, patch: Partial<PurchaseAttempt>) => { mockAttempts = mockAttempts.map((a) => a.id === id ? { ...a, ...patch } : a); } }) } }));
-const { buyProduct, purchaseConfirmed } = jest.requireActual<typeof import('../economy')>('../economy');
+const { buyProduct, purchaseConfirmed, recoverStorePurchases } = jest.requireActual<typeof import('../economy')>('../economy');
 beforeEach(() => {
   jest.useFakeTimers(); mockAttempts = []; mockRecords = [];
+  mockSync.mockReset().mockResolvedValue(null);
   mockState = { user: { id: 'player' }, gems: 0, pass: { premium: false }, purchases: [], online: true } as unknown as AccountState;
   mockPurchase.mockReset().mockImplementation(async (_id, receipt) => { receipt('tx-1'); return true; });
   mockApi.mockReset().mockImplementation(async (_method, path) => path === '/wallet' ? { gems: mockState.gems } : path === '/membership' ? mockState.membership : path === '/purchases' ? { records: mockRecords } : mockState.pass);
@@ -84,4 +86,34 @@ test('não libera uma tentativa de outra conta', async () => {
   mockState = { ...mockState, user: { ...mockState.user!, id: 'other' } };
   releaseUnchargedAttempt(mockAttempts[0].id);
   expect(mockAttempts[0].status).toBe('pending');
+});
+
+test('recupera item já comprado somente após a entrega pelo servidor', async () => {
+  mockPurchase.mockImplementation(async () => { mockRecords = [delivered('zr_gems_80')]; throw { code: '6' }; });
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('confirmed');
+  expect(mockPurchase).toHaveBeenCalledTimes(1);
+  expect(mockAttempts[0].status).toBe('success');
+});
+
+test('histórico antigo não comprova entrega de outra compra que a loja diz estar adquirida', async () => {
+  mockRecords = [delivered('zr_gems_80', 'old')];
+  mockPurchase.mockRejectedValue({ code: '6' });
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('pending');
+  expect(mockAttempts[0].errorCode).toBe('6');
+  releaseUnchargedAttempt(mockAttempts[0].id);
+  expect(mockAttempts[0].status).toBe('pending');
+});
+
+test('pendência de gemas não impede consultar e comprar outro produto', async () => {
+  mockPurchase.mockRejectedValueOnce({ code: '6' }).mockResolvedValueOnce(false);
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('pending');
+  await expect(buyProduct('zr_membership_monthly')).resolves.toBe('cancelled');
+  expect(mockPurchase).toHaveBeenCalledTimes(2);
+});
+
+test('recuperação manual sincroniza a loja antes de consultar as entregas', async () => {
+  await recoverStorePurchases();
+  expect(mockSync).toHaveBeenCalledWith('player');
+  expect(mockApi).toHaveBeenCalledWith('GET', '/purchases');
+  expect(mockPurchase).not.toHaveBeenCalled();
 });
