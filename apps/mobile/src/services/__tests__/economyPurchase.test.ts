@@ -9,6 +9,8 @@ const mockSync = jest.fn();
 let mockState: AccountState;
 let mockAttempts: PurchaseAttempt[] = [];
 let mockRecords: AccountState['purchases'] = [];
+let mockAttemptId = 0;
+jest.mock('expo-crypto', () => ({ randomUUID: () => `attempt-${++mockAttemptId}` }));
 jest.mock('@/services/purchases', () => ({ identifyPurchaser: jest.fn().mockResolvedValue(undefined), purchase: (...args: unknown[]) => mockPurchase(...args), syncStorePurchases: (...args: unknown[]) => mockSync(...args) }));
 jest.mock('@/services/api', () => ({ api: (...args: unknown[]) => mockApi(...args), hasApiToken: () => true }));
 jest.mock('@/state/accountStore', () => ({ MAX_APPLIED: 100, useAccountStore: { getState: () => mockState, setState: (patch: Partial<AccountState>) => { mockState = { ...mockState, ...patch }; } } }));
@@ -17,6 +19,7 @@ jest.mock('@/state/purchaseStore', () => ({ usePurchaseStore: { getState: () => 
 const { buyProduct, purchaseConfirmed, recoverStorePurchases } = jest.requireActual<typeof import('../economy')>('../economy');
 beforeEach(() => {
   jest.useFakeTimers(); mockAttempts = []; mockRecords = [];
+  mockAttemptId = 0;
   mockSync.mockReset().mockResolvedValue(null);
   mockState = { user: { id: 'player' }, gems: 0, pass: { premium: false }, purchases: [], online: true } as unknown as AccountState;
   mockPurchase.mockReset().mockImplementation(async (_id, receipt) => { receipt('tx-1'); return true; });
@@ -88,25 +91,28 @@ test('não libera uma tentativa de outra conta', async () => {
   expect(mockAttempts[0].status).toBe('pending');
 });
 
-test('recupera item já comprado somente após a entrega pelo servidor', async () => {
+test('rejeição por item adquirido consulta a entrega sem declarar uma nova compra', async () => {
   mockPurchase.mockImplementation(async () => { mockRecords = [delivered('zr_gems_80')]; throw { code: '6' }; });
-  await expect(buyProduct('zr_gems_80')).resolves.toBe('confirmed');
+  const onPurchased = jest.fn();
+  await expect(buyProduct('zr_gems_80', onPurchased)).resolves.toBe('owned');
   expect(mockPurchase).toHaveBeenCalledTimes(1);
-  expect(mockAttempts[0].status).toBe('success');
+  expect(mockAttempts[0].status).toBe('error');
+  expect(mockState.purchases).toHaveLength(1);
+  expect(onPurchased).not.toHaveBeenCalled();
 });
 
 test('histórico antigo não comprova entrega de outra compra que a loja diz estar adquirida', async () => {
   mockRecords = [delivered('zr_gems_80', 'old')];
   mockPurchase.mockRejectedValue({ code: '6' });
-  await expect(buyProduct('zr_gems_80')).resolves.toBe('pending');
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('owned');
   expect(mockAttempts[0].errorCode).toBe('6');
   releaseUnchargedAttempt(mockAttempts[0].id);
-  expect(mockAttempts[0].status).toBe('pending');
+  expect(mockAttempts[0].status).toBe('error');
 });
 
 test('pendência de gemas não impede consultar e comprar outro produto', async () => {
   mockPurchase.mockRejectedValueOnce({ code: '6' }).mockResolvedValueOnce(false);
-  await expect(buyProduct('zr_gems_80')).resolves.toBe('pending');
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('owned');
   await expect(buyProduct('zr_membership_monthly')).resolves.toBe('cancelled');
   expect(mockPurchase).toHaveBeenCalledTimes(2);
 });
@@ -116,4 +122,36 @@ test('recuperação manual sincroniza a loja antes de consultar as entregas', as
   expect(mockSync).toHaveBeenCalledWith('player');
   expect(mockApi).toHaveBeenCalledWith('GET', '/purchases');
   expect(mockPurchase).not.toHaveBeenCalled();
+});
+
+test('permite duas compras sucessivas de 80 gemas, cada uma com seu recibo', async () => {
+  let order = 0;
+  mockPurchase.mockImplementation(async (_product, receipt) => {
+    const transaction = `tx-${++order}`;
+    receipt(transaction);
+    mockRecords.push(delivered('zr_gems_80', transaction));
+    return true;
+  });
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('confirmed');
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('confirmed');
+  expect(mockAttempts.map((a) => a.transactionId)).toEqual(['tx-1', 'tx-2']);
+  expect(mockAttempts.every((a) => a.status === 'success')).toBe(true);
+});
+
+test('permite nova tentativa manual após rejeição por item adquirido', async () => {
+  mockPurchase.mockRejectedValueOnce({ code: '6' }).mockResolvedValueOnce(false);
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('owned');
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('cancelled');
+  expect(mockPurchase).toHaveBeenCalledTimes(2);
+});
+
+test('um recibo reembolsado encerra a pendência e libera a próxima compra', async () => {
+  mockPurchase.mockImplementationOnce(async (_product, receipt) => {
+    receipt('tx-refunded');
+    mockRecords.push({ ...delivered('zr_gems_80', 'tx-refunded'), refunded: true });
+    return true;
+  }).mockResolvedValueOnce(false);
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('refunded');
+  expect(mockAttempts[0].status).toBe('refunded');
+  await expect(buyProduct('zr_gems_80')).resolves.toBe('cancelled');
 });

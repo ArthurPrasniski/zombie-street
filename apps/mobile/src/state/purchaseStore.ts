@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type PurchaseStatus = 'buying' | 'confirming' | 'pending' | 'success' | 'error' | 'cancelled';
+export type PurchaseStatus = 'buying' | 'confirming' | 'pending' | 'success' | 'error' | 'cancelled' | 'refunded';
 export interface PurchaseAttempt {
   id: string; userId: string; productId: string; transactionId: string | null;
   previousReceipts: string[]; startedAt: string; deliveredAt: string | null; status: PurchaseStatus;

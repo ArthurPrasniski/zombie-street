@@ -3,6 +3,7 @@ import { isMembershipProduct, MEMBERSHIP } from '@zombie-road/shared/catalog';
 import type { PurchaseRecord } from '@zombie-road/shared/api';
 import { useAccountStore } from '@/state/accountStore';
 import { type PurchaseAttempt, usePurchaseStore } from '@/state/purchaseStore';
+import { isOwnedRejection } from '@/services/purchaseAttempt';
 
 /** User-reviewed attempts without a receipt may be released without changing balances. */
 export function releaseUnchargedAttempt(id: string): void {
@@ -21,6 +22,16 @@ export function reconcilePurchases(): void {
   const account = useAccountStore.getState();
   for (const attempt of usePurchaseStore.getState().attempts) {
     if (attempt.userId !== account.user?.id || !['confirming', 'pending'].includes(attempt.status)) continue;
+    if (isOwnedRejection(attempt)) {
+      usePurchaseStore.getState().update(attempt.id, { status: 'error' });
+      continue;
+    }
+    const productId = isMembershipProduct(attempt.productId) ? MEMBERSHIP.productId : attempt.productId;
+    const refunded = attempt.transactionId && account.purchases.find((r) => r.transactionId === attempt.transactionId && r.productId === productId && r.refunded);
+    if (refunded) {
+      usePurchaseStore.getState().update(attempt.id, { status: 'refunded' });
+      continue;
+    }
     const receipt = matchingReceipt(attempt, account.purchases);
     if (receipt) {
       usePurchaseStore.getState().update(attempt.id, { status: 'success', transactionId: receipt.transactionId, deliveredAt: receipt.deliveredAt });

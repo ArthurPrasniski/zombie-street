@@ -2,6 +2,7 @@
 
 export const ptShop = {
   shop: {
+    purchaseRefunded: 'Esta compra foi reembolsada. Uma nova compra pode ser iniciada quando a loja liberar o produto.',
     alreadyOwned: 'A loja informa que este produto já pertence à sua conta. Atualize o status para recuperar a compra existente.',
     title: 'Loja',
     open: 'Loja',

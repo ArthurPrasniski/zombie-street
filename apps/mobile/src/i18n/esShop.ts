@@ -2,6 +2,7 @@
 
 export const esShop = {
   shop: {
+    purchaseRefunded: 'Esta compra fue reembolsada. Puedes iniciar otra compra cuando la tienda libere el producto.',
     alreadyOwned: 'La tienda informa que este producto ya pertenece a tu cuenta. Actualiza el estado para recuperar la compra existente.',
     purchasing: 'Esperando a la tienda…',
     confirming: 'Compra completada en la tienda. Confirmando la entrega…',

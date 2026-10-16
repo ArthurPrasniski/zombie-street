@@ -126,7 +126,7 @@ export default function PassScreen() {
         <View accessibilityLiveRegion="polite" style={{ gap: 8 }}>
           {purchase.busy && <ActivityIndicator color={colors.yellow} />}
           <AppText variant="label" color={purchase.status === 'error' ? colors.danger : purchase.status === 'success' ? colors.accent : colors.yellow}>{purchase.message}</AppText>
-          {purchase.pending && <Button label={pt.shop.checkPurchase} variant="dark" size="s" onPress={() => { void purchase.check(); }} />}
+          {purchase.recoverable && <Button label={pt.shop.checkPurchase} variant="dark" size="s" onPress={() => { void purchase.check(); }} />}
         </View>
       )}
       {error && <AppText color={colors.danger}>{error}</AppText>}

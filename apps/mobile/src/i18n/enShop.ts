@@ -2,6 +2,7 @@
 
 export const enShop = {
   shop: {
+    purchaseRefunded: 'This purchase was refunded. You can start a new purchase once the store releases the product.',
     alreadyOwned: 'The store reports that you already own this product. Check the status to recover the existing purchase.',
     purchasing: 'Waiting for the store…',
     confirming: 'Purchase completed in the store. Confirming delivery…',

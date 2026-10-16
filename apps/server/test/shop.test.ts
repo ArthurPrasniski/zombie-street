@@ -48,4 +48,21 @@ describe('gemas e loja', () => {
     const res = await webhook(ctx.app, { type: 'NON_RENEWING_PURCHASE', app_user_id: '$RCAnonymousID:abc', product_id: 'zr_gems_80', transaction_id: 't9' });
     assert.equal(res.json().outcome, 'unknown-user');
   });
+
+  it('permite repetir o pacote de 80 gemas e comprar novamente após reembolso', async () => {
+    const buyer = await guest(ctx.app, 'repeat-gems-customer-0001');
+    const buy = (transaction: string) => webhook(ctx.app, { type: 'NON_RENEWING_PURCHASE', app_user_id: buyer.id, product_id: 'zr_gems_80', transaction_id: transaction });
+    const balance = async () => (await call(ctx.app, 'GET', '/wallet', buyer.token)).body.gems;
+    await buy('repeat-80-1');
+    await buy('repeat-80-2');
+    await buy('repeat-80-2');
+    assert.equal(await balance(), 160);
+    await webhook(ctx.app, { type: 'CANCELLATION', cancel_reason: 'CUSTOMER_SUPPORT', app_user_id: buyer.id, product_id: 'zr_gems_80', transaction_id: 'repeat-80-1' });
+    assert.equal(await balance(), 80);
+    await buy('repeat-80-3');
+    assert.equal(await balance(), 160);
+    const history = await call(ctx.app, 'GET', '/purchases', buyer.token);
+    assert.equal(history.body.records.length, 3);
+    assert.equal(history.body.records.filter((r: { refunded: boolean }) => r.refunded).length, 1);
+  });
 });

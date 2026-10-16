@@ -12,6 +12,7 @@ import { matchingReceipt, reconcilePurchases } from '@/services/purchaseRecovery
 import { usePurchaseStore } from '@/state/purchaseStore';
 import { PurchaseNotStartedError } from '@/services/purchaseErrors';
 import { storeErrorCode } from '@/services/storeDiagnostics';
+import { attemptBlocksPurchase } from '@/services/purchaseAttempt';
 
 // Gemas, loja e Passe (GDD seção 19). O servidor manda nas gemas e no passe; as moedas que ele
 // devolve o app soma no progresso uma vez só (lista `applied`).
@@ -63,13 +64,13 @@ export function purchaseConfirmed(productId: string, before: AccountState, now: 
   return !!matchingReceipt({ productId, transactionId: null, previousReceipts: (before.purchases ?? []).map((r) => r.transactionId) }, now.purchases ?? []);
 }
 
-export type PurchaseResult = 'cancelled' | 'confirmed' | 'pending';
+export type PurchaseResult = 'cancelled' | 'confirmed' | 'pending' | 'owned' | 'refunded';
 
 /** A loja concluir não significa que o webhook já entregou o produto. */
 export async function buyProduct(productId: string, onPurchased?: () => void): Promise<PurchaseResult> {
   const before = useAccountStore.getState();
   if (!before.user) throw new Error('sem sessão');
-  if (usePurchaseStore.getState().attempts.some((a) => a.userId === before.user!.id && (['buying', 'confirming'].includes(a.status) || (a.status === 'pending' && a.productId === productId)))) return 'pending';
+  if (usePurchaseStore.getState().attempts.some((a) => a.userId === before.user!.id && attemptBlocksPurchase(a) && (a.status !== 'pending' || a.productId === productId))) return 'pending';
   await identifyPurchaser(before.user.id);
   const history = await api<PurchaseHistory>('GET', '/purchases');
   if (useAccountStore.getState().user?.id !== before.user.id) throw new Error('conta mudou');
@@ -83,10 +84,11 @@ export async function buyProduct(productId: string, onPurchased?: () => void): P
     }
   } catch (error) {
     const hasReceipt = usePurchaseStore.getState().attempts.find((a) => a.id === id)?.transactionId;
-    usePurchaseStore.getState().update(id, { status: error instanceof PurchaseNotStartedError && !hasReceipt ? 'error' : 'pending', errorCode: storeErrorCode(error) });
+    const owned = storeErrorCode(error) === '6' && !hasReceipt;
+    usePurchaseStore.getState().update(id, { status: (error instanceof PurchaseNotStartedError || owned) && !hasReceipt ? 'error' : 'pending', errorCode: storeErrorCode(error) });
     if (storeErrorCode(error) === '6') {
       await refreshEconomy();
-      return usePurchaseStore.getState().attempts.find((a) => a.id === id)?.status === 'success' ? 'confirmed' : 'pending';
+      return owned ? 'owned' : 'pending';
     }
     throw error;
   }
@@ -98,6 +100,7 @@ export async function buyProduct(productId: string, onPurchased?: () => void): P
     const now = useAccountStore.getState();
     const current = usePurchaseStore.getState().attempts.find((a) => a.id === id)!;
     if (current.status === 'success') return 'confirmed';
+    if (current.status === 'refunded') return 'refunded';
     if (now.user?.id !== before.user?.id || Date.now() >= deadline) { usePurchaseStore.getState().update(id, { status: 'pending' }); return 'pending'; }
     await new Promise((r) => setTimeout(r, Math.min(POLL_MS, deadline - Date.now())));
   }

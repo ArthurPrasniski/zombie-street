@@ -185,9 +185,17 @@ e [planos Google Play no RevenueCat](https://www.revenuecat.com/docs/getting-sta
 
 Esse aviso é diferente de uma tentativa sem cobrança: a Play informa que há um item
 adquirido. O cliente sincroniza os recibos existentes com RevenueCat sem reabrir o
-pagamento, consulta a entrega no backend e mantém a proteção do produto enquanto
-ela não for confirmada. Uma pendência não bloqueia outros produtos nem a atualização
-de preços. Não apagar ou liberar uma tentativa com código 6 como se não houvesse compra.
+pagamento e consulta a entrega no backend. O código 6 sem uma nova transação registra
+a rejeição da tentativa como erro, preserva o histórico e permite outra tentativa
+manual pela loja. O erro não representa uma nova cobrança pendente. Pagamentos com
+recibo ou resultado ambíguo continuam protegidos até a conciliação. Uma pendência
+não bloqueia outros produtos nem a atualização de preços.
+
+Pacotes de gemas são recompráveis, com uma transação diferente para cada compra.
+Uma transação já entregue não bloqueia a próxima. Um reembolso confirmado pelo
+backend para o recibo exato encerra a pendência como `refunded`, sem vinculá-lo por
+suposição a outras compras do mesmo produto. O código 6 antigo sem recibo também
+deixa de bloquear o pacote após a atualização do cliente.
 
 Em Ajustes → Compras e entregas, “Verificar entregas” agora consulta a loja e o servidor.
 O diagnóstico mostra códigos e IDs públicos de produtos, sem mensagens brutas do SDK,

@@ -111,3 +111,28 @@ test('erro ao recuperar não deixa controles presos em confirmação', async () 
   expect(hook.busy).toBe(false);
   expect(hook.pending).toBe(true);
 });
+
+test('mesmo pacote pode ser comprado de novo após uma compra concluída', async () => {
+  mockBuy.mockResolvedValue('confirmed');
+  await act(async () => hook.buy('zr_gems_80'));
+  expect(hook.isPending('zr_gems_80')).toBe(false);
+  await act(async () => hook.buy('zr_gems_80'));
+  expect(mockBuy).toHaveBeenCalledTimes(2);
+});
+
+test('erro item adquirido não mantém o botão bloqueado', async () => {
+  mockBuy.mockResolvedValueOnce('owned').mockResolvedValueOnce('cancelled');
+  await act(async () => hook.buy('zr_gems_80'));
+  expect(hook.status).toBe('owned');
+  expect(hook.isPending('zr_gems_80')).toBe(false);
+  expect(hook.recoverable).toBe(true);
+  await act(async () => hook.buy('zr_gems_80'));
+  expect(mockBuy).toHaveBeenCalledTimes(2);
+});
+
+test('uma antiga pendência do código 6 sem transação não trava o produto', () => {
+  mockAttempts = [{ userId: 'player', productId: 'zr_gems_80', status: 'pending', errorCode: '6', transactionId: null }];
+  act(() => { mockStoreListeners.forEach((listener) => listener({ attempts: mockAttempts })); });
+  expect(hook.status).toBe('owned');
+  expect(hook.isPending('zr_gems_80')).toBe(false);
+});
