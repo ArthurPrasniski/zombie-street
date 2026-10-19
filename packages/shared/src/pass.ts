@@ -44,13 +44,12 @@ export function stageXp(cleared: boolean, stars: number): number {
 }
 export const survivalXp = (waves: number): number => Math.min(PASS_XP.survivalMax, PASS_XP.perSurvivalWave * waves);
 
-// Gemas em alguns níveis; o resto é moeda, que cresce com o nível e com o progresso do jogador.
-const FREE_GEMS: Record<number, number> = { 10: 15, 20: 15, 30: 15 };
+// Free progression grants coins. Historical premium purchases keep their promised gems.
 const PREMIUM_GEMS: Record<number, number> = { 5: 40, 10: 40, 15: 40, 20: 40, 25: 40, 30: 150 };
 
 /** Prêmio do nível `tier` (1 a 30) na trilha, para quem está na fase `stage`. */
 export function passReward(tier: number, track: PassTrack, stage: number): PassReward {
-  const gems = (track === 'free' ? FREE_GEMS : PREMIUM_GEMS)[tier];
+  const gems = track === 'premium' ? PREMIUM_GEMS[tier] : undefined;
   if (gems) return { kind: 'gems', amount: gems };
   const base = (track === 'free' ? 100 : 250) + 10 * tier;
   return { kind: 'coins', amount: Math.round(base * progressFactor(stage)) };

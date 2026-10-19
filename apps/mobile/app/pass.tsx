@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
 import { canClaim, PASS_DAILY_XP, PASS_TIERS, passReward, type PassTrack, XP_PER_TIER } from '@zombie-road/shared/pass';
 
 import { t as pt } from '@/i18n';
+import { gemRewardsText } from '@/i18n/gemRewards';
 import { formatDate, formatDateTime } from '@/utils/format';
-import { useProductPrices } from '@/hooks/useProductPrices';
-import { useProductPurchase } from '@/hooks/useProductPurchase';
 import { resultsText } from '@/i18n/results';
 import { claimAllPass, claimPass, refreshEconomy } from '@/services/economy';
-import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 import { GemPill } from '@/ui/GemLabel';
@@ -26,22 +23,18 @@ import { colors, radius } from '@/ui/theme';
 
 const DAY_MS = 24 * 3600 * 1000;
 const TIERS = Array.from({ length: PASS_TIERS }, (_, i) => i + 1);
-const PASS_PRODUCT_IDS = [PASS_PRODUCT_ID];
 
 const dateBR = formatDate;
 
-/** Passe de Batalha: compra única por temporada de 90 dias e 30 níveis nas duas trilhas. */
+/** Seasonal progression and previously purchased premium rewards; no new pass purchases. */
 export default function PassScreen() {
   const listRef = useRef<FlatList<number>>(null);
   const scrolled = useRef(false);
   const pass = useAccountStore((s) => s.pass);
   const stage = useProgressStore((s) => s.highestCleared) + 1;
-  const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(PASS_PRODUCT_IDS);
-  const price = prices[PASS_PRODUCT_ID];
-  const purchase = useProductPurchase();
   const [acting, setActing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const busy = acting || purchase.busy;
+  const busy = acting;
   // Hora em que a tela abriu (para "termina em N dias")
   const [openedAt] = useState(() => Date.now());
 
@@ -110,25 +103,7 @@ export default function PassScreen() {
         <AppText variant="label" color={colors.accent}>
           {pt.pass.active(dateBR(pass.premiumUntil))}
         </AppText>
-      ) : (
-        <View style={{ gap: 8 }}>
-          <AppText variant="small" color={colors.textMuted}>{pt.pass.validity(formatDateTime(pass.endsAt))}</AppText>
-          <Button label={price ? pt.pass.buy(price) : (loading ? '…' : pt.shop.priceUnavailable)} disabled={busy || purchase.isPending(PASS_PRODUCT_ID) || !price || !purchasesAvailable()} onPress={() => { setError(null); void purchase.buy(PASS_PRODUCT_ID); }} />
-          {pricesError && (
-            <>
-              <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
-              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={busy || loading} onPress={retryPrices} />
-            </>
-          )}
-        </View>
-      )}
-      {purchase.message && (
-        <View accessibilityLiveRegion="polite" style={{ gap: 8 }}>
-          {purchase.busy && <ActivityIndicator color={colors.yellow} />}
-          <AppText variant="label" color={purchase.status === 'error' ? colors.danger : purchase.status === 'success' ? colors.accent : colors.yellow}>{purchase.message}</AppText>
-          {purchase.recoverable && <Button label={pt.shop.checkPurchase} variant="dark" size="s" onPress={() => { void purchase.check(); }} />}
-        </View>
-      )}
+      ) : <AppText variant="small" color={colors.textMuted}>{gemRewardsText.retired}</AppText>}
       {error && <AppText color={colors.danger}>{error}</AppText>}
       <View style={styles.tracks}>
         <AppText variant="eyebrow">{pt.pass.free}</AppText>

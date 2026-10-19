@@ -585,16 +585,11 @@ pass.ts (os mesmos no app e no servidor).
 
 ### 19.1 Gemas (moeda premium)
 
-- Compradas com dinheiro (App Store / Google Play via RevenueCat) e guardadas só no
-  servidor: valem em todos os aparelhos da conta. Preços sugeridos (definidos nas lojas):
-
-| Produto | Gemas | Preço sugerido |
-| ------- | ----- | -------------- |
-| zr_gems_80 | 80 | R$ 4,90 |
-| zr_gems_500 | 500 (Popular) | R$ 24,90 |
-| zr_gems_1200 | 1.200 | R$ 49,90 |
-| zr_gems_2600 | 2.600 | R$ 99,90 |
-| zr_gems_7000 | 7.000 (Melhor valor) | R$ 249,90 |
+Regra vigente desde 19/10/2026: não são mais vendidas em pacotes avulsos. Não assinantes
+recebem 20 gemas por anúncio premiado validado, até 5 por conta e por dia UTC (100 gemas).
+O saldo fica no servidor e vale em todos os aparelhos da conta. Assinantes recebem apenas
+as 500 gemas do ciclo mensal, sem resgates diários de anúncios. Implantação e recuperação
+em [GEM_REWARDS.md](GEM_REWARDS.md). Compras antigas continuam sendo conciliadas.
 
 ### 19.2 Moedas por gemas
 
@@ -602,21 +597,22 @@ pass.ts (os mesmos no app e no servidor).
   25 x (1 + 0,08 x (fase - 1)) moedas, a mesma curva da recompensa dos zumbis: o pacote
   continua útil em qualquer ponto do jogo (60 gemas ≈ uma fase vencida).
 
-### 19.3 Passe de Batalha (compra por temporada)
+### 19.3 Passe de Batalha (progressão e compras antigas)
 
-- Compra única `zr_pass_season` (sugestão: R$ 19,90 ou US$ 3.99 por temporada), sem renovação
-  automática. Temporadas globais de 90 dias, contadas desde 13/10/2026 às 00:00 UTC.
-  A primeira termina em 11/01/2027 às 00:00 UTC, quando começa a próxima. Comprar no meio
-  do período libera a trilha premium até o encerramento da temporada vigente, incluindo os
-  30 níveis de 100 XP já alcançados. Ao mudar o período, XP e resgates recomeçam e o novo
-  passe precisa ser comprado; os prêmios recebidos continuam na conta.
+- Não está mais à venda. A trilha gratuita entrega moedas em todos os 30 níveis de 100 XP.
+  Temporadas globais duram 90 dias desde 13/10/2026 às 00:00 UTC.
+- Premium previamente comprado continua ativo até o fim da temporada paga, com suas
+  recompensas prometidas, inclusive gemas. A assinatura mensal não libera o premium.
 - XP: vitória 40 + 10 por estrela, derrota 15, Sobrevivência 5 por onda (até 100).
-  Teto de 600 XP por dia.
-- Prêmios: moedas em quase todos os níveis (grátis 100 + 10 x nível, premium 250 + 10 x
-  nível, crescendo com a fase do jogador); gemas na grátis nos níveis 10, 20 e 30 (15
-  cada) e na premium nos 5, 10, 15, 20 e 25 (40 cada) e 30 (150): 350 gemas por temporada.
+  Teto de 600 XP por dia UTC.
+- Moedas: grátis 100 + 10 x nível; premium legado 250 + 10 x nível, crescendo com a fase.
+  Gemas do premium legado: 40 nos níveis 5, 10, 15, 20 e 25; 150 no nível 30.
+- Recompensas já resgatadas e saldos anteriores são preservados.
 
 ### 19.4 Propagandas
+
+- Loja: 20 gemas por conclusão validada pelo servidor via AdMob SSV, até 5 por dia UTC.
+  O limite é independente de dobrar moedas e de repetir fases. Assinantes não veem anúncios.
 
 - Só premiadas e só quando o jogador escolhe: no fim de cada partida (vitória, derrota
   ou Sobrevivência), "Assistir e dobrar (+N)" soma de novo as moedas da partida. Até 10
@@ -638,8 +634,8 @@ pass.ts (os mesmos no app e no servidor).
 ### 19.6 Clube da Estrada
 
 O **Clube da Estrada** (`zr_membership_monthly`) é uma assinatura com renovação automática
-mensal, separada do Passe de Batalha, com preço-base de R$ 19,90/mês. Enquanto estiver ativa,
-dispensa os anúncios para repetir fases e oculta o botão de dobrar moedas. Entrega 500 gemas e
+mensal, a única compra em dinheiro do app, com preço-base de R$ 19,90/mês. Enquanto estiver ativa,
+remove todos os anúncios e oculta o botão de dobrar moedas. Não dá resgates diários de anúncios. Entrega 500 gemas e
 10.000 moedas na contratação e em cada renovação paga confirmada pelo RevenueCat, uma vez por
 transação. Cancelar a renovação mantém o acesso até o fim do período pago; expirar ou receber
 reembolso encerra o benefício. As moedas têm recibos no save para evitar entregas duplicadas.

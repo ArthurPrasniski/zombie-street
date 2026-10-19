@@ -47,7 +47,7 @@ test('preços aguardam a troca de conta no RevenueCat', async () => {
   expect(mockGetProducts).not.toHaveBeenCalled();
   finishLogin();
   await pending;
-  expect(mockGetProducts).toHaveBeenCalledTimes(3);
+  expect(mockGetProducts).toHaveBeenCalledTimes(1);
 });
 
 test('uma falha de identificação não impede a próxima tentativa', async () => {
@@ -59,20 +59,11 @@ test('uma falha de identificação não impede a próxima tentativa', async () =
   expect(mockLogIn).toHaveBeenCalledTimes(2);
 });
 
-test('usa os preços localizados dos produtos retornados pelo SDK', async () => {
+test('consulta somente a assinatura e usa o preço localizado sem converter moedas', async () => {
   const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockImplementation((ids: string[]) => Promise.resolve(
-    ids.includes('zr_gems_80')
-      ? [{ identifier: 'zr_gems_80', priceString: 'R$ 4,90' }]
-      : [{ identifier: 'zr_pass_season', priceString: 'R$ 19,90' }],
-  ));
-  await expect(productPrices('player')).resolves.toEqual({ zr_gems_80: 'R$ 4,90', zr_pass_season: 'R$ 19,90' });
-});
-
-test('não troca USD por BRL quando a loja retorna um preço em dólares', async () => {
-  const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockResolvedValue([{ identifier: 'zr_pass_season', priceString: '$3.99' }]);
-  await expect(productPrices('player')).resolves.toEqual({ zr_pass_season: '$3.99' });
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_membership_monthly', priceString: '$3.99' }]);
+  await expect(productPrices('player')).resolves.toEqual({ zr_membership_monthly: '$3.99' });
+  expect(mockGetProducts.mock.calls.every((call) => call[1] === 'subscription')).toBe(true);
 });
 
 test('consulta a assinatura na categoria própria e usa o preço localizado da loja', async () => {
@@ -82,13 +73,11 @@ test('consulta a assinatura na categoria própria e usa o preço localizado da l
   expect(mockGetProducts).toHaveBeenCalledWith(['zr_membership_monthly'], 'subscription');
 });
 
-test('falha na assinatura preserva os preços de gemas e passe', async () => {
+test('falha da assinatura não consulta produtos de gemas ou passe', async () => {
   const { productPrices } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockImplementation(async (ids: string[], category: string) => {
-    if (category === 'subscription') throw new Error('subscription unavailable');
-    return ids.map((identifier) => ({ identifier, priceString: 'R$ 4,99' }));
-  });
-  expect(await productPrices('player')).toMatchObject({ zr_gems_80: 'R$ 4,99', zr_pass_season: 'R$ 4,99' });
+  mockGetProducts.mockRejectedValue({ code: '10' });
+  await expect(productPrices('player')).rejects.toMatchObject({ code: '10' });
+  expect(mockGetProducts.mock.calls.every((call) => call[1] === 'subscription')).toBe(true);
 });
 
 test('recupera o plano mensal Android de um pacote do RevenueCat', async () => {
@@ -104,27 +93,29 @@ test('recupera o plano mensal Android de um pacote do RevenueCat', async () => {
   expect(mockPurchaseStoreProduct).toHaveBeenCalledWith(product);
 });
 
-test('produto ausente é erro anterior à cobrança', async () => {
+test('gemas e passe antigos não abrem novas compras mesmo por chamada direta', async () => {
   const { purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  await expect(purchase('zr_gems_80')).rejects.toMatchObject({ code: 'PRODUCT_UNAVAILABLE' });
+  for (const id of ['zr_gems_80', 'zr_gems_500', 'zr_pass_season']) {
+    await expect(purchase(id)).rejects.toMatchObject({ code: 'PRODUCT_RETIRED' });
+  }
   expect(mockPurchaseStoreProduct).not.toHaveBeenCalled();
 });
 
 test('produto rejeitado pela loja não cria uma entrega pendente', async () => {
   const { productPrices, purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockResolvedValue([{ identifier: 'zr_gems_80', priceString: 'R$ 4,99' }]);
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_membership_monthly', priceString: 'R$ 4,99' }]);
   await productPrices('player');
   mockPurchaseStoreProduct.mockRejectedValue({ code: '5' });
-  await expect(purchase('zr_gems_80')).rejects.toMatchObject({ name: 'Error', message: 'Compra não iniciada', code: '5' });
+  await expect(purchase('zr_membership_monthly')).rejects.toMatchObject({ name: 'Error', message: 'Compra não iniciada', code: '5' });
 });
 
 test('item já comprado sincroniza a loja sem abrir outra cobrança nem inventar recibo', async () => {
   const { productPrices, purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockResolvedValue([{ identifier: 'zr_gems_80', priceString: 'R$ 4,99' }]);
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_membership_monthly', priceString: 'R$ 4,99' }]);
   await productPrices('player');
   mockPurchaseStoreProduct.mockRejectedValue({ code: '6' });
   const receipt = jest.fn();
-  await expect(purchase('zr_gems_80', receipt)).rejects.toMatchObject({ code: '6' });
+  await expect(purchase('zr_membership_monthly', receipt)).rejects.toMatchObject({ code: '6' });
   expect(mockSync).toHaveBeenCalledTimes(1);
   expect(mockPurchaseStoreProduct).toHaveBeenCalledTimes(1);
   expect(receipt).not.toHaveBeenCalled();
@@ -132,11 +123,11 @@ test('item já comprado sincroniza a loja sem abrir outra cobrança nem inventar
 
 test('falha na sincronização preserva o código de propriedade e seu diagnóstico', async () => {
   const { productPrices, purchase } = jest.requireActual<typeof import('../purchases')>('../purchases');
-  mockGetProducts.mockResolvedValue([{ identifier: 'zr_gems_80', priceString: 'R$ 4,99' }]);
+  mockGetProducts.mockResolvedValue([{ identifier: 'zr_membership_monthly', priceString: 'R$ 4,99' }]);
   await productPrices('player');
   mockPurchaseStoreProduct.mockRejectedValue({ code: '6' });
   mockSync.mockRejectedValue({ code: '11', message: 'secret' });
-  await expect(purchase('zr_gems_80')).rejects.toMatchObject({ code: '6' });
+  await expect(purchase('zr_membership_monthly')).rejects.toMatchObject({ code: '6' });
   const { useStoreDiagnostics } = jest.requireActual<typeof import('../storeDiagnostics')>('../storeDiagnostics');
   expect(useStoreDiagnostics.getState().entries).toEqual(expect.arrayContaining([expect.objectContaining({ stage: 'sync', code: '11' })]));
   expect(JSON.stringify(useStoreDiagnostics.getState())).not.toContain('secret');

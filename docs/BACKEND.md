@@ -4,6 +4,11 @@ Conta, save na nuvem, gemas, loja, Passe de Batalha, propagandas e notificaçõe
 continua funcionando offline: o servidor só entra para conta, nuvem, dinheiro de verdade e os
 avisos remotos.
 
+**Monetização vigente (19/10/2026):** apenas assinatura mensal é vendida. Gemas avulsas vêm
+de anúncios validados por SSV, 20 por anúncio e 5 por dia UTC; assinantes recebem só o pacote
+mensal. Procedimento atual em [GEM_REWARDS.md](GEM_REWARDS.md). As referências abaixo aos
+produtos antigos descrevem reconciliação histórica, não novos produtos à venda.
+
 ## Visão geral
 
 ```
@@ -17,7 +22,7 @@ Servidor próprio (apps/server: Node 24 + Fastify + Postgres)
  ├─ confere os tokens do Google/Apple (chaves públicas, JWKS) e dá a sessão (JWT)
  ├─ save na nuvem com revisão (detecta conflito entre aparelhos)
  ├─ carteira de gemas (só o servidor mexe), loja de moedas, Passe
- ├─ webhook do RevenueCat ◄── compras de gemas e passe confirmadas pela loja
+ ├─ webhooks ◄── assinatura RevenueCat, anúncios AdMob SSV e compras antigas
  └─ fila de notificações ──► serviço de push da Expo ──► APNs (iOS) / FCM (Android)
 ```
 
@@ -26,7 +31,7 @@ Servidor próprio (apps/server: Node 24 + Fastify + Postgres)
 | Dado | Onde | Por quê |
 | ---- | ---- | ------- |
 | Progresso (fases, cartas, deck, estrelas, moedas…) | Aparelho, com cópia na nuvem | Joga offline; trocar de aparelho não perde nada |
-| Gemas | Só no servidor | Compradas com dinheiro: só a loja (via RevenueCat) credita |
+| Gemas | Só no servidor | AdMob SSV e ciclos da assinatura creditam; histórico antigo preservado |
 | Passe (XP, prêmios pegos, premium) | Servidor | Compra única por temporada; prêmios uma vez só |
 | "Assista e dobre" | Aparelho (limite por dia) | Dobra moedas, que já são do aparelho |
 | Avisos locais (volta, melhoria, prêmios, fim de temporada) | Aparelho (agenda ao sair do app) | Dependem do progresso, que é do aparelho |

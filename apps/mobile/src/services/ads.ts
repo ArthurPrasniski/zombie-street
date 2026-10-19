@@ -2,6 +2,8 @@ import { create } from 'zustand';
 
 import { KEYS, NATIVE } from '@/services/env';
 import { adsRemoved } from '@/services/membership';
+import { displayVerifiedAd } from '@/services/verifiedAd';
+import { useAccountStore } from '@/state/accountStore';
 
 // Propaganda premiada (AdMob): dobrar moedas ou liberar uma repetição de fase. Antes, o pedido de
 // consentimento (LGPD/GDPR e o aviso de rastreamento do iOS). No Expo Go, uma propaganda de teste
@@ -73,6 +75,21 @@ export async function showRewardedAd(): Promise<boolean> {
   } finally {
     showing = false;
   }
+}
+
+/** Gem ads carry a one-use ticket validated by the server; members never watch ads. */
+export async function showGemRewardedAd(userId: string, requestId: string): Promise<boolean> {
+  if (showing || adsRemoved()) return false;
+  showing = true;
+  try {
+    if (!NATIVE) return await displayRewardedAd();
+    await initAds();
+    if (!KEYS.admobRewarded) return false;
+    const mod = require('react-native-google-mobile-ads') as AdsModule;
+    const consent = await mod.AdsConsent.getConsentInfo();
+    if (!consent.canRequestAds) return false;
+    return await displayVerifiedAd(mod, KEYS.admobRewarded, userId, requestId, () => !adsRemoved() && useAccountStore.getState().user?.id === userId);
+  } finally { showing = false; }
 }
 
 function displayRewardedAd(): Promise<boolean> {

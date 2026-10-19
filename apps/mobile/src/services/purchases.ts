@@ -1,6 +1,6 @@
 import { Linking, Platform } from 'react-native';
 
-import { GEM_PACKS, isMembershipProduct, MEMBERSHIP, PASS_PRODUCT_ID } from '@zombie-road/shared/catalog';
+import { isMembershipProduct, MEMBERSHIP } from '@zombie-road/shared/catalog';
 
 import { api } from '@/services/api';
 import { KEYS, NATIVE } from '@/services/env';
@@ -17,10 +17,7 @@ type PurchasesModule = typeof import('react-native-purchases');
 type Product = import('react-native-purchases').PurchasesStoreProduct;
 
 // Preços de exemplo para a compra simulada (os de verdade vêm da loja)
-const DEMO_PRICES = {
-  BRL: { zr_gems_80: 4.9, zr_gems_500: 24.9, zr_gems_1200: 49.9, zr_gems_2600: 99.9, zr_gems_7000: 249.9, [PASS_PRODUCT_ID]: 19.9, [MEMBERSHIP.productId]: 19.9 },
-  USD: { zr_gems_80: 0.99, zr_gems_500: 4.99, zr_gems_1200: 9.99, zr_gems_2600: 19.99, zr_gems_7000: 49.99, [PASS_PRODUCT_ID]: 3.99, [MEMBERSHIP.productId]: 3.99 },
-};
+const DEMO_PRICES = { BRL: { [MEMBERSHIP.productId]: 19.9 }, USD: { [MEMBERSHIP.productId]: 3.99 } };
 
 let configuredFor: string | null = null;
 let identification: Promise<void> = Promise.resolve();
@@ -45,7 +42,7 @@ export async function identifyPurchaser(userId: string): Promise<void> {
   await task;
 }
 
-/** Preço de cada produto (gemas e passe), no formato da loja. */
+/** Localized monthly subscription price; retired products are never queried. */
 export async function productPrices(userId?: string): Promise<Record<string, string>> {
   if (!NATIVE) {
     const currency = regionCode === 'BR' ? 'BRL' : 'USD';
@@ -56,14 +53,12 @@ export async function productPrices(userId?: string): Promise<Record<string, str
   if (!configuredFor) return {};
   const { default: Purchases, PRODUCT_CATEGORY } = rc();
   const membershipId = Platform.OS === 'android' && !KEYS.revenueCat.startsWith('test_') ? MEMBERSHIP.androidProductId : MEMBERSHIP.productId;
-  const results = await Promise.allSettled([
-    Purchases.getProducts(GEM_PACKS.map((p) => p.productId), PRODUCT_CATEGORY.NON_SUBSCRIPTION),
-    Purchases.getProducts([PASS_PRODUCT_ID], PRODUCT_CATEGORY.NON_SUBSCRIPTION),
-    Purchases.getProducts([membershipId], PRODUCT_CATEGORY.SUBSCRIPTION),
-  ]);
-  const stages = ['gems', 'pass', 'membership'] as const;
-  results.forEach((result, index) => recordStoreDiagnostic(stages[index], result.status === 'rejected' ? result.reason : result.value.length ? undefined : { code: 'PRODUCT_NOT_RETURNED' }, result.status === 'fulfilled' ? result.value.map((p) => p.identifier) : []));
-  const products = results.flatMap((result) => result.status === 'fulfilled' ? result.value : []);
+  let failure: unknown;
+  let products: Product[] = [];
+  try {
+    products = (await Purchases.getProducts([membershipId], PRODUCT_CATEGORY.SUBSCRIPTION)).filter((p) => isMembershipProduct(p.identifier));
+    recordStoreDiagnostic('membership', products.length ? undefined : { code: 'PRODUCT_NOT_RETURNED' }, products.map((p) => p.identifier));
+  } catch (error) { failure = error; recordStoreDiagnostic('membership', error); }
   if (membershipId !== MEMBERSHIP.productId && !products.some((p) => isMembershipProduct(p.identifier))) {
     try {
       // Query the subscription without a plan filter to support older native SDKs
@@ -86,9 +81,7 @@ export async function productPrices(userId?: string): Promise<Record<string, str
       recordStoreDiagnostic('offerings', products.some((p) => isMembershipProduct(p.identifier)) ? undefined : { code: 'MEMBERSHIP_NOT_RETURNED' });
     } catch (error) { recordStoreDiagnostic('offerings', error); }
   }
-  if (!products.length && results.every((result) => result.status === 'rejected')) {
-    throw (results[0] as PromiseRejectedResult).reason;
-  }
+  if (!products.length && failure) throw failure;
   const idOf = (product: Product) => isMembershipProduct(product.identifier) ? MEMBERSHIP.productId : product.identifier;
   for (const product of products) cache.set(idOf(product), product);
   return Object.fromEntries(products.map((p) => [idOf(p), p.priceString]));
@@ -117,6 +110,7 @@ export async function manageSubscriptions(): Promise<void> {
 
 /** Abre a compra. true = comprou; false = cancelou. As gemas chegam pelo servidor. */
 export async function purchase(productId: string, onReceipt?: (transactionId: string) => void): Promise<boolean> {
+  if (!isMembershipProduct(productId)) throw new PurchaseNotStartedError('PRODUCT_RETIRED');
   if (!NATIVE) {
     const res = await api<{ transactionId: string }>('POST', '/dev/purchase', { productId });
     onReceipt?.(res.transactionId);

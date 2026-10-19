@@ -1,5 +1,7 @@
 # Produção separada do desenvolvimento
 
+> Monetização atual: veja [GEM_REWARDS.md](GEM_REWARDS.md). Somente a assinatura é vendida; produtos antigos permanecem para reconciliação. Configure AdMob SSV antes do novo AAB.
+
 A API e o PostgreSQL PRD são serviços novos no Dokploy. O banco deve começar vazio,
 com volume próprio; não restaurar os dados de teste automaticamente. As migrações
 em `apps/server/migrations` são executadas na subida da API.

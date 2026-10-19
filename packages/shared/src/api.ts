@@ -37,6 +37,22 @@ export interface PutSave { baseRevision: number; version: number; data: unknown 
 
 export interface Wallet { gems: number }
 
+export interface GemAdState {
+  reward: number;
+  limit: number;
+  used: number;
+  remaining: number;
+  resetsAt: string;
+  member: boolean;
+  available: boolean;
+}
+export interface GemAdTicket {
+  requestId: string;
+  status: 'pending' | 'earned' | 'cancelled';
+  expiresAt: string;
+  gems: number;
+}
+
 export interface PurchaseRecord { transactionId: string; productId: string; deliveredAt: string; refunded: boolean }
 export interface PurchaseHistory { records: PurchaseRecord[] }
 

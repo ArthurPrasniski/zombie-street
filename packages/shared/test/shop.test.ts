@@ -55,6 +55,11 @@ describe('Passe de Batalha (GDD seção 19.3)', () => {
     assert.ok(passReward(3, 'free', 60).amount > free.amount);
   });
 
+  it('progressão gratuita entrega apenas moedas; premium antigo mantém as gemas contratadas', () => {
+    for (let tier = 1; tier <= PASS_TIERS; tier++) assert.equal(passReward(tier, 'free', 1).kind, 'coins');
+    assert.deepEqual(passReward(5, 'premium', 1), { kind: 'gems', amount: 40 });
+  });
+
   it('só resgata nível alcançado, uma vez, e a premium só com o passe', () => {
     const xp = XP_PER_TIER * 5;
     assert.equal(canClaim(xp, 5, 'free', [], false), true);

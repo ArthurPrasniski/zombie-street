@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, GEM_PACKS, MEMBERSHIP } from '@zombie-road/shared/catalog';
+import { COIN_PACK_IDS, COIN_PACKS, coinPackCoins, type CoinPackId, MEMBERSHIP } from '@zombie-road/shared/catalog';
 
 import { stageLabel } from '@/game/data/worlds';
 import { useProductPrices } from '@/hooks/useProductPrices';
@@ -15,23 +15,22 @@ import { purchasesAvailable } from '@/services/purchases';
 import { useAccountStore } from '@/state/accountStore';
 import { useProgressStore } from '@/state/progressStore';
 import { GemPill } from '@/ui/GemLabel';
-import { ICONS } from '@/ui/icons';
 import { AppText } from '@/ui/kit/AppText';
 import { Button } from '@/ui/kit/Button';
-import { Card } from '@/ui/kit/Card';
 import { ScreenHeader } from '@/ui/ScreenHeader';
-import { CoinPackCard, GemPackCard } from '@/ui/shop/ShopCards';
+import { CoinPackCard } from '@/ui/shop/ShopCards';
 import { MembershipCard } from '@/ui/shop/MembershipCard';
+import { GemRewardCard } from '@/ui/shop/GemRewardCard';
 import { colors, radius } from '@/ui/theme';
 import { formatCash } from '@/utils/format';
 
-const GEM_PRODUCT_IDS = [...GEM_PACKS.map((pack) => pack.productId), MEMBERSHIP.productId];
+const PRODUCT_IDS = [MEMBERSHIP.productId];
 
-/** Loja (GDD seção 19): Passe em destaque, gemas por dinheiro e moedas por gemas. */
+/** Loja (GDD seção 19): Gemas por anúncios, assinatura mensal e moedas por gemas. */
 export default function ShopScreen() {
   const { user, online, gems } = useAccountStore();
   const stage = useProgressStore((s) => s.highestCleared) + 1;
-  const { prices, loading, error: pricesError, retry: retryPrices } = useProductPrices(GEM_PRODUCT_IDS);
+  const { prices, loading, retry: retryPrices } = useProductPrices(PRODUCT_IDS);
   const [acting, setBusy] = useState(false);
   const purchase = useProductPurchase();
   const busy = acting || purchase.busy;
@@ -53,7 +52,7 @@ export default function ShopScreen() {
       setBusy(false);
     }
   };
-  const buyGems = (productId: string) => { setNote(null); void purchase.buy(productId); };
+  const buyMembership = () => { setNote(null); void purchase.buy(MEMBERSHIP.productId); };
   const buyPack = (pack: CoinPackId) => run(async () => pt.shop.bought(formatCash(await buyCoins(pack))));
 
   return (
@@ -77,41 +76,9 @@ export default function ShopScreen() {
           )}
           {!connected && <AppText color={colors.danger}>{pt.shop.unavailable}</AppText>}
 
-          <Card color="#5a2a8a" style={styles.promo} padding={14} onPress={() => router.push('/pass')}>
-            <View style={styles.promoRow}>
-              <Image source={ICONS.crown} style={styles.crown} />
-              <View style={styles.promoTexts}>
-                <AppText variant="title" style={styles.promoTitle}>
-                  {pt.pass.title}
-                </AppText>
-                <AppText variant="small" color="#e0c8ff">
-                  {pt.pass.pitch}
-                </AppText>
-              </View>
-            </View>
-          </Card>
+          <GemRewardCard disabled={busy || !connected} onBusyChange={setBusy} />
 
-          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} loading={loading} onRetry={retryPrices} canRestore={connected && purchasesAvailable()} disabled={busy || purchase.isPending(MEMBERSHIP.productId) || !connected || !purchasesAvailable()} onBuy={() => buyGems(MEMBERSHIP.productId)} />
-
-          <AppText variant="eyebrow" style={styles.section}>
-            {pt.shop.gems}
-          </AppText>
-          <AppText variant="small" color={colors.textMuted}>
-            {purchasesAvailable() ? pt.shop.gemsHint : pt.shop.noStore}
-          </AppText>
-          {pricesError && GEM_PACKS.some((pack) => !prices[pack.productId]) && (
-            <View style={{ gap: 8 }}>
-              <AppText variant="small" color={colors.textMuted}>{pt.shop.pricesFailed}</AppText>
-              <Button label={pt.shop.retryPrices} variant="dark" size="s" disabled={loading} onPress={retryPrices} />
-            </View>
-          )}
-          <View style={styles.grid}>
-            {GEM_PACKS.map((pack) => (
-              <View key={pack.productId} style={styles.cell}>
-                <GemPackCard pack={pack} price={prices[pack.productId] ?? null} loading={loading} disabled={busy || purchase.isPending(pack.productId) || !connected || !purchasesAvailable()} onBuy={() => buyGems(pack.productId)} />
-              </View>
-            ))}
-          </View>
+          <MembershipCard price={prices[MEMBERSHIP.productId] ?? null} loading={loading} onRetry={retryPrices} canRestore={connected && purchasesAvailable()} disabled={busy || purchase.isPending(MEMBERSHIP.productId) || !connected || !purchasesAvailable()} onBuy={buyMembership} />
 
           <AppText variant="eyebrow" style={styles.section}>
             {pt.shop.coins}
@@ -129,6 +96,7 @@ export default function ShopScreen() {
               onBuy={() => buyPack(pack)}
             />
           ))}
+          <Button label={pt.pass.open} variant="dark" size="s" onPress={() => router.push('/pass')} />
           {!connected && <Button label={pt.account.section} variant="dark" size="s" onPress={() => router.push('/settings')} />}
         </ScrollView>
       </SafeAreaView>
@@ -141,12 +109,5 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   list: { paddingHorizontal: 16, paddingBottom: 32, gap: 10 },
   note: { alignItems: 'center', paddingVertical: 8, borderRadius: radius.m, backgroundColor: 'rgba(255, 201, 40, 0.12)' },
-  promo: { borderRadius: radius.l },
-  promoRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  crown: { width: 58, height: 58 },
-  promoTexts: { flex: 1, gap: 2 },
-  promoTitle: { fontSize: 22, lineHeight: 26 },
   section: { marginTop: 10 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  cell: { width: '48%', flexGrow: 1 },
 });

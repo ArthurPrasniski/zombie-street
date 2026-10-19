@@ -25,6 +25,7 @@ export interface Config {
   production: boolean;
   discordWebhookUrl: string | null;
   discordWorker: boolean;
+  admobRewardedUnitIds: string[];
 }
 
 const list = (value: string | undefined): string[] => (value ?? '').split(',').map((v) => v.trim()).filter(Boolean);
@@ -63,5 +64,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     production,
     discordWebhookUrl,
     discordWorker: env.DISCORD_WORKER !== '0',
+    admobRewardedUnitIds: list(env.ADMOB_REWARDED_UNIT_IDS).map((id) => id.split('/').pop()!),
   };
 }

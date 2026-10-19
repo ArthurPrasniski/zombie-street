@@ -1,7 +1,7 @@
 // Catálogo da loja e regras do passe (GDD seção 19). Usado pelo app e pelo servidor: os números
 // moram aqui uma vez só. Sem imports de React Native nem de Node.
 
-/** Pacotes de gemas vendidos com dinheiro (App Store / Google Play, via RevenueCat). */
+/** Legacy purchases: retained only to deliver/refund historical store transactions. */
 export interface GemPack {
   /** Id do produto nas lojas (o mesmo no RevenueCat). */
   productId: string;
@@ -60,3 +60,8 @@ export function coinPackCoins(pack: CoinPackId, stage: number): number {
 
 /** "Assista e dobre": quantas vezes por dia (no fuso do aparelho). */
 export const AD_DOUBLES_PER_DAY = 10;
+
+/** Server-authoritative gem rewards. Subscribers receive their monthly package only. */
+export const GEM_AD_REWARD = 20;
+export const GEM_ADS_PER_DAY = 5;
+export const GEM_AD_TICKET_MS = 30 * 60 * 1000;

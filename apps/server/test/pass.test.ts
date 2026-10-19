@@ -104,12 +104,10 @@ describe('Passe de Batalha', () => {
     assert.equal((await call(ctx.app, 'GET', '/pass', user.token)).body.premium, false);
   });
 
-  it('compra simulada também libera só a temporada atual', async () => {
+  it('passe e gemas não podem mais ser comprados nem na simulação', async () => {
     const result = await call(ctx.app, 'POST', '/dev/purchase', user.token, { productId: PASS_PRODUCT_ID });
-    assert.equal(result.status, 200);
-    const state = (await call(ctx.app, 'GET', '/pass', user.token)).body;
-    assert.equal(state.premium, true);
-    assert.equal(state.premiumUntil, state.endsAt);
+    assert.equal(result.status, 400);
+    assert.equal((await call(ctx.app, 'POST', '/dev/purchase', user.token, { productId: 'zr_gems_80' })).status, 400);
   });
 
   it('migração conserva XP, resgates e teto diário do passe mensal de outubro', async () => {

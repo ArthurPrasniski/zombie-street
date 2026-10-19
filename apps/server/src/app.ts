@@ -14,6 +14,7 @@ import { authRoutes } from './routes/auth';
 import { gameRoutes } from './routes/game';
 import { pushRoutes } from './routes/push';
 import { webhookRoutes } from './routes/webhooks';
+import { gemAdRoutes } from './routes/gemAds';
 
 export interface Deps {
   db: Db;
@@ -45,5 +46,6 @@ export function buildApp(input: Omit<Deps, 'sessions' | 'now' | 'log'> & Partial
   weeklyRoutes(app, deps);
   pushRoutes(app, deps);
   webhookRoutes(app, deps);
+  gemAdRoutes(app, deps);
   return app;
 }
